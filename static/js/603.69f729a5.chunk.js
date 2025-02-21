@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkv2=self.webpackChunkv2||[]).push([[603],{1603:(e,c,t)=>{e.exports=t.p+"static/media/OCI Generative AI Certification.7f96676e547ccc087eee.pdf"}}]);
