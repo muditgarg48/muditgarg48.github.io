@@ -24,8 +24,6 @@ const EducationSection = ({education_history}) => {
         fit:'contain'
     };
 
-    // const education_history = require('../../assets/data/education_history.json');
-
     return (
         <div id="education-subsection">
             <div className="subsection-heading">

@@ -1,6 +1,5 @@
 import React from "react";
 import './WelcomeSection.css';
-// import my_resume from '../../assets/pdfs/My Resume.pdf';
 import { TypeAnimation } from 'react-type-animation';
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import ScrollFurther from "../../components/ScrollFurther/ScrollFurther";

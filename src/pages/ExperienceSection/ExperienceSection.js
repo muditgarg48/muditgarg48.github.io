@@ -4,8 +4,6 @@ import SectionHeading from '../../components/SectionHeading/SectionHeading';
 
 const ExperienceSection = ({experience_data}) => {
 
-    // const experience_data = require('../../assets/data/experience_data.json');
-
     const [expIndex, setExpIndex] = useState(0);
 
     return (

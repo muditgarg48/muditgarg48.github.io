@@ -5,7 +5,6 @@ import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 
 const ProjectsSection = ({projects_data}) => {
     
-    // const major_projects = require('../../assets/data/projects_data.json');
     let minor_projects = [];
 
     const [showMinorProjects, setShowMinorProjects] = useState(false);
