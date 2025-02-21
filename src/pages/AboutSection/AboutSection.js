@@ -81,6 +81,23 @@ const AboutSection = ({facts, education_history, skills}) => {
                     </div>
                 </div>
                 &nbsp;
+                <div id="basic_info">
+                    <div className="basic_info_item">
+                        <div className="basic_info_title">Based In</div>
+                        <div className="basic_info_content">Dublin, Ireland</div>
+                    </div>
+                    <div className="basic_info_item">
+                        <div className="basic_info_title">Visa Status</div>
+                        <div className="basic_info_content">Irish Stamp 1G</div>
+                        <div className="basic_info_footer">valid till 2026</div>
+                    </div>
+                    <div className="basic_info_item">
+                        <div className="basic_info_title">Open to Relocation</div>
+                        <div className="basic_info_content">Yes</div>
+                        <div className="basic_info_footer">assistance required</div>
+                    </div>
+                </div>
+                &nbsp;
                 <div style={{display: "flex", justifyContent: "end"}}>
                     <span>⚒️ - Professional</span>
                     &nbsp;

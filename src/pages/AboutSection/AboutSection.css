@@ -66,6 +66,64 @@
     font-size: 2rem;
 }
 
+#basic_info {
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--font-primary-color);
+    margin: 20px;
+    justify-content: space-evenly;
+}
+
+.basic_info_item {
+    border: 2px solid var(--font-secondary-color);
+    border-radius: 25px;
+    margin: 1%;
+    padding: 1rem;
+    min-width: 15%;
+    max-width: min-content;
+    transition: all 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.basic_info_item:hover {
+    transform: translateY(-5%);
+}
+
+.basic_info_title {
+    text-decoration: underline;
+}
+
+.basic_info_content {
+    color: var(--font-highlight-color);
+    font-weight: bolder;
+    font-size: larger;
+    text-align: center;
+}
+
+.basic_info_footer {
+    color: var(--font-secondary-color);
+    font-size: smaller;
+    align-self: flex-end;
+}
+
+@media (max-width: 1000px) {
+    .basic_info {
+        justify-content: space-evenly;
+    }
+}
+
+@media (max-width: 800px) {
+    .basic_info {
+        display: flex;
+        flex-direction: column;
+    }
+    .basic_info_item {
+        max-width: none;
+    }
+}
+
 .single_skill {
     padding: 0.5rem;
     margin: 1rem;
