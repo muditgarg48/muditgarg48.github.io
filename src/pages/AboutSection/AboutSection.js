@@ -27,39 +27,37 @@ const AboutSection = ({facts, education_history, skills}) => {
                         ]}
                         repeat={0}
                     />
+                    {/* &nbsp; */}
+                    <div id="basic_info">
+                        <BasicInfoItem 
+                            title="Work Status" 
+                            content="#OpenToWork"/>
+                        <BasicInfoItem 
+                            title="Based In" 
+                            content="Dublin, Ireland"/>
+                        <BasicInfoItem 
+                            title="Visa Status" 
+                            content="Irish Stamp 1G" 
+                            footer="valid till 2026"/>
+                        <BasicInfoItem 
+                            title="Open to Relocation" 
+                            content="Yes" 
+                            footer="assistance required"/>
+                    </div>
+                    {/* &nbsp; */}
                     <div>
                         <h3>Currently,</h3>
                         <ul>
-                            <li>
-                                <u>Exploring opportunities to learn and grow</u> as a professional Software Engineer based in Dublin, Ireland.
-                            </li>
-                            <li>
-                                Researching about <u>DevOps</u> and enhancing expertise in related tools and methodologies including:
-                                <ul>
-                                    <li>Docker</li>
-                                    <li>Kubernetes</li>
-                                    <li>Git</li>
-                                    <li>CI/CD</li>
-                                    <li>Telemetry</li>
-                                </ul>
-                            </li>
-                            <li>
-                                Grasping and adopting the use of <u>Golang</u> and its ecosystem.
-                            </li>
+                            <li>Sharpening my knowledge on various data structures and algorithms for performance optimised solutions.</li>
+                            <li>Diving into the concepts of System Design and Architecture.</li>
                         </ul>
                     </div>
                     <div>
                         <h3>Recently concluded</h3>
                         <ul>
-                            <li>
-                                <u>My postgraduation</u> from Trinity College Dublin in 2024.
-                            </li>
-                            <li>
-                                Exploration of Generative AI. First gained a solid theoretical background of how <u>LLMs and Generative AI</u> work using <u>Microsoft's Career Essentials in Generative AI</u>. Then gained some practical knowledge using <u>Oracle OCI Generative AI Certification</u>, diving into further depths and learning about <u>RAG systems</u> and their application. Then explored the ethics and concerns surrounding the use of Generative AI with the help of <u>Google's AI Essentials</u> course.
-                            </li>
-                            <li>
-                                Solidification of the acquired knowledge on LLMs, RAG systems and Generative AI by implementation of a personal chatbot named <a href="#chatbot-section" style={{color: 'white'}}>A.L.F.R.E.D.</a> at the end of my portfolio website to provide human-like responses to queries about my professional background.
-                            </li>
+                            <li><u>My postgraduation</u> from Trinity College Dublin in 2024.</li>
+                            <li>Certified exploration of theoretical and practical aspects of <u>LLMs, Generative AI and RAG systems</u>. Also explored the ethics and concerns surrounding the use of Gen AI systems. Gained certificates can be viewed <a href="#certificates-section" style={{color: 'white'}}>here</a>.</li>
+                            <li>Concluded the implementation of a personal chatbot named <a href="#chatbot-section" style={{color: 'white'}}>A.L.F.R.E.D.</a> at the end of my portfolio website to provide human-like responses to queries about my professional background.</li>
                         </ul>
                     </div>
                     <TypeAnimation
@@ -81,23 +79,6 @@ const AboutSection = ({facts, education_history, skills}) => {
                     </div>
                 </div>
                 &nbsp;
-                <div id="basic_info">
-                    <div className="basic_info_item">
-                        <div className="basic_info_title">Based In</div>
-                        <div className="basic_info_content">Dublin, Ireland</div>
-                    </div>
-                    <div className="basic_info_item">
-                        <div className="basic_info_title">Visa Status</div>
-                        <div className="basic_info_content">Irish Stamp 1G</div>
-                        <div className="basic_info_footer">valid till 2026</div>
-                    </div>
-                    <div className="basic_info_item">
-                        <div className="basic_info_title">Open to Relocation</div>
-                        <div className="basic_info_content">Yes</div>
-                        <div className="basic_info_footer">assistance required</div>
-                    </div>
-                </div>
-                &nbsp;
                 <div style={{display: "flex", justifyContent: "end"}}>
                     <span>⚒️ - Professional</span>
                     &nbsp;
@@ -116,6 +97,16 @@ const AboutSection = ({facts, education_history, skills}) => {
             </div>
         </div>
     );
+}
+
+const BasicInfoItem = ({title, content, footer=""}) => {
+    return (
+        <div className="basic_info_item">
+            <div className="basic_info_title">{title}</div>
+            <div className="basic_info_content">{content}</div>
+            {footer && <div className="basic_info_footer">{footer}</div>}
+        </div>
+    )
 }
 
 const DidYouKnowSection = ({facts}) => {

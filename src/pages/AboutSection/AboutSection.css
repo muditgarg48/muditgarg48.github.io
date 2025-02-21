@@ -79,8 +79,8 @@
     border-radius: 25px;
     margin: 1%;
     padding: 1rem;
-    min-width: 15%;
-    max-width: min-content;
+    /* min-width: 15%; */
+    /* max-width: min-content; */
     transition: all 0.5s;
     display: flex;
     flex-direction: column;
