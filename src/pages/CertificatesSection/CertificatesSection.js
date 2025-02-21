@@ -8,9 +8,9 @@ import ReactCardFlip from 'react-card-flip';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
-const CertificatesSection = () => {
+const CertificatesSection = ({certificates_data}) => {
     
-    const certificates_data = require('../../assets/data/certificates_data.json');
+    // const certificates_data = require('../../assets/data/certificates_data.json');
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredCertificates, setFilteredCertificates] = useState(certificates_data);
@@ -103,8 +103,9 @@ const Certificate = ({certificate}) => {
 
     useEffect(() => {
         const loadPDF = async (certi) => {
-            const module = await import(`../../assets/pdfs/${certi}`);
-            setPdfFile(module.default);
+            const documentEndPoint = 'https://muditgarg48.github.io/portfolio_data/documents/';
+            const doc = await fetch(`${documentEndPoint}${certi}`);
+            setPdfFile(doc.url);
         };
 
         loadPDF(certificate.file_name);

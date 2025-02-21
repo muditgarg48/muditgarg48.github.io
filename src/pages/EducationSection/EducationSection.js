@@ -2,7 +2,7 @@ import React from "react";
 import { Chrono } from "react-chrono";
 import './EducationSection.css';
 
-const EducationSection = () => {
+const EducationSection = ({education_history}) => {
 
     const themeSettings = {
         primary: 'var(--font-primary-color)',
@@ -24,7 +24,7 @@ const EducationSection = () => {
         fit:'contain'
     };
 
-    const education_history = require('../../assets/data/education_history.json');
+    // const education_history = require('../../assets/data/education_history.json');
 
     return (
         <div id="education-subsection">

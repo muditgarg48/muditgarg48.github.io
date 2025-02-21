@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import './ExperienceSection.css';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 
-const ExperienceSection = () => {
+const ExperienceSection = ({experience_data}) => {
 
-    const experience_data = require('../../assets/data/experience_data.json');
+    // const experience_data = require('../../assets/data/experience_data.json');
 
     const [expIndex, setExpIndex] = useState(0);
 

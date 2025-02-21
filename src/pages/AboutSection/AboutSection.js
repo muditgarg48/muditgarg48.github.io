@@ -10,7 +10,7 @@ import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import EducationSection from "../EducationSection/EducationSection.js";
 import myself from '../../assets/imgs/myself.jpg';
 
-const AboutSection = () => {
+const AboutSection = ({facts, education_history, skills}) => {
     return (
         <div id="about-section">
             <SectionHeading section_name="ABOUT"/>
@@ -89,23 +89,33 @@ const AboutSection = () => {
                     <span>⭐ - Proficient</span>
                 </div>
                 &nbsp;
-                <SkillSection/>
+                <SkillSection skills={skills}/>
                 &nbsp;
                 <ScrollFurther next="experience-section" side="right"/>
                 &nbsp;
-                <DidYouKnowSection/>
-                <EducationSection/>
+                <DidYouKnowSection facts={facts}/>
+                <EducationSection education_history={education_history}/>
                 &nbsp;
             </div>
         </div>
     );
 }
 
-const DidYouKnowSection = () => {
+const DidYouKnowSection = ({facts}) => {
     const did_you_know_icon = require('../../assets/icons/interesting.json');
-    const facts = require('../../assets/data/facts_data.json');
+    // const facts = require('../../assets/data/facts_data.json');
+    // const facts2 = fetch('https://muditgarg48.github.io/portfolio_data/facts_data.json').then(res => res.json());
     const [randomFactIndex, setRandomFactIndex] = useState(0);
+    // const [facts, setFacts] = useState([]);
     
+    // const getFacts = async () => {
+    //     let res = await fetch('https://muditgarg48.github.io/portfolio_data/facts_data.json');
+    //     let data = await res.json();
+    //     setFacts(data);
+    // }
+    
+    // getFacts();
+
     const generateRandomNumber = () => {
         const randomNumber = Math.floor(Math.random() * facts.length);
         setRandomFactIndex(randomNumber)
@@ -127,8 +137,8 @@ const DidYouKnowSection = () => {
     );
 }
 
-const SkillSection = () => {
-    const skills = require('../../assets/data/skills.json');
+const SkillSection = ({skills}) => {
+    // const skills = require('../../assets/data/skills.json');
     return (
         <div id="skills-subsection">
             {/* <div class="subsection-heading">

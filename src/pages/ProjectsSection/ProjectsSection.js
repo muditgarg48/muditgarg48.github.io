@@ -3,9 +3,9 @@ import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 
-const ProjectsSection = () => {
+const ProjectsSection = ({projects_data}) => {
     
-    const major_projects = require('../../assets/data/projects_data.json');
+    // const major_projects = require('../../assets/data/projects_data.json');
     let minor_projects = [];
 
     const [showMinorProjects, setShowMinorProjects] = useState(false);
@@ -14,7 +14,7 @@ const ProjectsSection = () => {
         <div id="projects-section">
             <SectionHeading section_name="PROJECTS"/>
             <div id="major-projects">
-                {major_projects.map((project, index) => {
+                {projects_data.map((project, index) => {
                     if (project.speciality === "") {
                         minor_projects.push(project);
                         return null;
