@@ -90,6 +90,7 @@
     display: flex;
     justify-content: end;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .project-links * {
@@ -97,16 +98,17 @@
 }
 
 .other-btn {
-    margin: 10px;
-    padding: 10px 15px;
+    margin: 7px;
+    padding: 7px 7px;
     border-radius: 20px;
     text-decoration: none;
-    color: var(--font-highlight-color);
+    color: grey;
     background-color: var(--bg-color);
     transition: all 0.3s;
 }
 
 .other-btn:hover {
+    color: var(--font-highlight-color);
     transform: translateY(-5%);
 } 
 
