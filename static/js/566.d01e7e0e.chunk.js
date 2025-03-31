@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkv2=self.webpackChunkv2||[]).push([[566],{4566:(e,p,f)=>{e.exports=f.p+"static/media/portfolio_react_app.d1594e3aff7777ff8f60.png"}}]);

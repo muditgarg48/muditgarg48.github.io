@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkv2=self.webpackChunkv2||[]).push([[328],{6328:(e,s,t)=>{e.exports=t.p+"static/media/gesture_based_device_control.a3fbd3fb4164599e544f.png"}}]);

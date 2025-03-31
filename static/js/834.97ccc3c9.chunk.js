@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkv2=self.webpackChunkv2||[]).push([[834],{8834:(e,a,c)=>{e.exports=c.p+"static/media/candle_in_dark.cb9a5a461fb8247dcc2e.png"}}]);

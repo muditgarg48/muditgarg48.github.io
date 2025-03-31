@@ -1,26 +1,17 @@
 {
   "files": {
     "main.css": "/static/css/main.9fc4a999.css",
-    "main.js": "/static/js/main.954e7e07.js",
-    "static/js/686.95d55476.chunk.js": "/static/js/686.95d55476.chunk.js",
-    "static/js/834.97ccc3c9.chunk.js": "/static/js/834.97ccc3c9.chunk.js",
-    "static/js/328.01872358.chunk.js": "/static/js/328.01872358.chunk.js",
-    "static/js/566.d01e7e0e.chunk.js": "/static/js/566.d01e7e0e.chunk.js",
-    "static/media/candle_in_dark.png": "/static/media/candle_in_dark.cb9a5a461fb8247dcc2e.png",
-    "static/media/alfred_rag_chat.png": "/static/media/alfred_rag_chat.bbb2c1455b1434531a25.png",
-    "static/media/myself.jpg": "/static/media/myself.dd0369e3ad1f1e6b4522.jpg",
-    "static/media/portfolio_react_app.png": "/static/media/portfolio_react_app.d1594e3aff7777ff8f60.png",
-    "static/media/gesture_based_device_control.png": "/static/media/gesture_based_device_control.a3fbd3fb4164599e544f.png",
+    "main.js": "/static/js/main.4d291d59.js",
     "static/media/Carpenter-Regular.eot": "/static/media/Carpenter-Regular.ce9705fc89e5238e0da2.eot",
     "static/media/Carpenter-Regular.ttf": "/static/media/Carpenter-Regular.eca4d45a6c85e181130e.ttf",
     "static/media/Carpenter-Regular.woff": "/static/media/Carpenter-Regular.78d87bd02ad1f539d9f8.woff",
     "static/media/Carpenter-Regular.woff2": "/static/media/Carpenter-Regular.044e38e83874148e0203.woff2",
     "index.html": "/index.html",
     "main.9fc4a999.css.map": "/static/css/main.9fc4a999.css.map",
-    "main.954e7e07.js.map": "/static/js/main.954e7e07.js.map"
+    "main.4d291d59.js.map": "/static/js/main.4d291d59.js.map"
   },
   "entrypoints": [
     "static/css/main.9fc4a999.css",
-    "static/js/main.954e7e07.js"
+    "static/js/main.4d291d59.js"
   ]
 }
