@@ -9,13 +9,19 @@ function Footer() {
     return new Date(dateString).toLocaleDateString('en-US', options);
   }
 
-  const [lastUpdated, setLastUpdated] = useState(Date.now());
+  // const [lastUpdated, setLastUpdated] = useState(Date.now());
+  const [dataLastUpdated, setDataLastUpdated] = useState(Date.now());
 
   useEffect(()=> {
-    axios.get("https://api.github.com/repos/muditgarg48/muditgarg48.github.io/branches/master")
+    // axios.get("https://api.github.com/repos/muditgarg48/muditgarg48.github.io/branches/master")
+    //   .then(response => response.data)
+    //   .then(data => {
+    //     setLastUpdated(data.commit.commit.committer.date)
+    //   })
+    axios.get("https://api.github.com/repos/muditgarg48/portfolio_data/branches/master")
       .then(response => response.data)
       .then(data => {
-        setLastUpdated(data.commit.commit.committer.date)
+        setDataLastUpdated(data.commit.commit.committer.date)
       })
   }, []);
 
@@ -30,7 +36,10 @@ function Footer() {
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="github"/>
             </div>
         </div>
-        Last Updated: {formatDate(lastUpdated)}
+        {/* Last Updated: {formatDate(lastUpdated)}
+        <br/>
+        Data Last Updated:{formatDate(dataLastUpdated)} */}
+        Last Updated: {formatDate(dataLastUpdated)}
     </div>
   )
 }
