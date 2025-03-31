@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState } from "react";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
@@ -41,23 +41,13 @@ const ProjectsSection = ({projects_data}) => {
 
 const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deployment, other_btns }) => {
 
-    const [projectImg, setProjectImg] = useState(null);
-
-    useEffect(() => {
-        const loadImg = async (img) => {
-            const module = await import(`../../assets/imgs/project_imgs/${img}`);
-            setProjectImg(module.default);
-        };
-        loadImg(image);
-    }, [image]);
-
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
 
     return (
         <div className="major-project-component">
             <div className="project-image">
-                <img src={projectImg} alt={name}/>
+                <img src={image} alt={name}/>
             </div>
             <div className="project-details">
                 <div className="project-headline">

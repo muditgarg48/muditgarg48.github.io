@@ -8,9 +8,11 @@ import ScrollFurther from "../../components/ScrollFurther/ScrollFurther";
 import SectionHeading from "../../components/SectionHeading/SectionHeading.js";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import EducationSection from "../EducationSection/EducationSection.js";
-import myself from '../../assets/imgs/myself.jpg';
 
 const AboutSection = ({facts, education_history, skills}) => {
+
+    const my_portrait_link = "https://muditgarg48.github.io/portfolio_data/images/myself.jpg";
+
     return (
         <div id="about-section">
             <SectionHeading section_name="ABOUT"/>
@@ -72,7 +74,7 @@ const AboutSection = ({facts, education_history, skills}) => {
                     />
                 </div>
                 <div id="myself-subsection">
-                    <img id="my-potrait" src={myself} alt="My Potrait"/>
+                    <img id="my-potrait" src={my_portrait_link} alt="My Potrait"/>
                     <div id="my-quote">
                         <span id="quotation-mark" className="highlight">"</span>
                         <span id="quote">Lets hope for the best and plan for the worst</span>
