@@ -22,6 +22,7 @@ function App() {
   const experienceDataEndPoint = 'experience_data.json';
   const educationHistoryDataEndPoint = 'education_history.json';
   const skillsDataEndPoint = 'skills.json';
+  const aboutMeDataEndPoint = 'about_data.json';
 
   const documentEndPoint = 'https://muditgarg48.github.io/portfolio_data/documents/';
   const resumeEndPoint = 'My Resume.pdf';
@@ -32,6 +33,7 @@ function App() {
   let [experienceData, setExperienceData] = useState([]);
   let [educationHistoryData, setEducationHistoryData] = useState([]);
   let [skillsData, setSkillsData] = useState([]);
+  let [aboutMeData, setAboutMeData] = useState({});
 
   useEffect(() => {
     const getData = async () => {
@@ -53,6 +55,9 @@ function App() {
       res = await fetch(dataEndPoint+skillsDataEndPoint);
       data = await res.json();
       setSkillsData(data);
+      res = await fetch(dataEndPoint+aboutMeDataEndPoint);
+      data = await res.json();
+      setAboutMeData(data);
   
       setLoading(false);
     }
@@ -68,7 +73,7 @@ function App() {
       <>
         <NavBar/>
         <WelcomeSection my_resume={documentEndPoint+resumeEndPoint}/>
-        <AboutSection facts={factsData} education_history={educationHistoryData} skills={skillsData}/>
+        <AboutSection facts={factsData} education_history={educationHistoryData} skills={skillsData} about_me={aboutMeData}/>
         <ExperienceSection experience_data={experienceData}/>
         <ProjectsSection projects_data={projectsData}/>
         <CertificatesSection certificates_data={certificatesData}/>

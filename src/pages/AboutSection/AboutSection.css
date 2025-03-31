@@ -173,7 +173,6 @@
 
 #did-you-know {
     flex: 4;
-    font-size: larger;
     padding: 10px 0;
     text-align: justify;
 }
@@ -191,4 +190,17 @@
     cursor: pointer;
     font-weight: bolder;
     color: var(--font-primary-color);
+}
+
+.more_links {
+    text-decoration: none;
+    color: white;
+}
+
+.currently {
+    list-style-type: "🚀  ";
+}
+
+.concluded {
+    list-style-type: "💯  ";
 }
