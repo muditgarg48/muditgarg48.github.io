@@ -72,6 +72,7 @@
     color: var(--font-primary-color);
     margin: 20px;
     justify-content: space-evenly;
+    font-size: 80%;
 }
 
 .basic_info_item {
