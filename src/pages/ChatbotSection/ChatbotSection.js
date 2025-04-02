@@ -133,18 +133,25 @@ function ChatbotSection() {
       <SectionHeading section_name="MEET A.L.F.R.E.D."/>
       <div id="alfred-intro">
         <p style={{textAlign: "center"}}>
-          Meet A.L.F.R.E.D. <strong>A</strong> <strong>L</strong>oyal <strong>F</strong>riend <strong>R</strong>eady to <strong>E</strong>nlighten <strong>D</strong>aily. Patent pending.
+          Meet A.L.F.R.E.D.
+        </p>
+        <p style={{textAlign: "center"}}> 
+          <strong>A</strong> <strong>L</strong>oyal <strong>F</strong>riend <strong>R</strong>eady to <strong>E</strong>nlighten <strong>D</strong>aily.
+        </p>
+        <p style={{textAlign: "center"}}>
+          Patent pending.
         </p>
         &nbsp;
         <p>
-          A.L.F.R.E.D. is my personal buddy whom I have employed on my website to cater to your every question about me in real time. Wages not disclosed.
+          A.L.F.R.E.D. is my personal buddy whom I have employed on my website to cater to your every question about me in real time. Wages not disclosed for obvious reasons. 😂
         </p>
         <p>
-          Technically, A.L.F.R.E.D is a Retrieval Augmented Generation (RAG) system powered by Gemini 1.5 Flash backed up by my personal data on the website to answer every question about me if you ever feel not wanting to explore the whole website. But thats just technical jibber-jabber.
+          On a serios note, A.L.F.R.E.D is a <strong>Retrieval Augmented Generation (RAG)</strong> based chatbot, powered by <strong>Gemini API</strong> for <strong>Natural Language Processing (NLP)</strong> and <strong>ChromaDB</strong> for semantic search. It is trained on my personal data from this website to answer every question about me if you ever feel not wanting to explore the whole website. But thats just technical jibber-jabber.
         </p>
         <p style={{textAlign: "center"}}>
           Ask Away!
         </p>
+        &nbsp;
       </div>
       <div id="chat-window">
         <div id="window-titlebar">
@@ -193,7 +200,7 @@ function ChatbotSection() {
 function ChatInactive() {
   return (
     <div id="chat-inactive">
-      A.L.F.R.E.D. currently in hibernation
+      A.L.F.R.E.D. currently in hibernation. Waking him up ...
     </div>
   );
 }

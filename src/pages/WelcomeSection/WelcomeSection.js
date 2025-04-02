@@ -23,11 +23,11 @@ const WelcomeSection = ({my_resume}) => {
             />
             <div id="name">My name is <span>Mudit Garg</span></div>
             <div id="brief">
-                I specialise in developing software solutions.
+                I specialise in engineering software solutions.
             </div>
             &nbsp;
             <div id="summary">
-                A software engineer with a specialization in developing product focused applications tailored to address specific challenges and make life simpler.
+                A software engineer with a specialization in developing optimality-focused products tailored to address challenges and make life efficient.
             </div>
             &nbsp;
             <div id="contact">
@@ -43,7 +43,7 @@ const WelcomeSection = ({my_resume}) => {
                 </div>
             </div>
             &nbsp;
-            <ScrollFurther next="about-section"/>
+            <ScrollFurther next="chatbot-section" text="Talk directly to A.L.F.R.E.D."/>
         </div>
     );
 }

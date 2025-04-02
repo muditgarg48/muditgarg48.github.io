@@ -82,7 +82,7 @@ const AboutSection = ({facts, education_history, skills, about_me}) => {
                 &nbsp;
                 <SkillSection skills={skills}/>
                 &nbsp;
-                <ScrollFurther next="experience-section" side="right"/>
+                <ScrollFurther next="experience-section" side="right" text="Skip to Experience section"/>
                 &nbsp;
                 <DidYouKnowSection facts={facts}/>
                 <EducationSection education_history={education_history}/>
