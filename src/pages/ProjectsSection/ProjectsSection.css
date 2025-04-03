@@ -72,6 +72,7 @@
 
 .project-details p {
     margin-bottom: 10px;
+    text-align: justify;
 }
 
 .project-tech {
@@ -84,6 +85,7 @@
     padding: 0 10px 0 0;
     border-radius: 20px;
     color: var(--font-secondary-color);
+    font-size: 80%;
 }
 
 .project-links {
@@ -126,6 +128,18 @@
     flex-wrap: wrap;
     color: var(--font-primary-color);
     margin: 20px;
+    justify-content: space-evenly;
+}
+
+#minor-projects-heading {
+    text-align: center;
+    color: var(--font-secondary-color);
+    flex: 1;
+    display: flex;
+    font-size: x-large;
+    font-weight: bold;
+    justify-content: center;
+    padding: 5% 0 3% 0;
 }
 
 .minor-project-component {
@@ -181,16 +195,22 @@
     #minor-projects {
         justify-content: space-evenly;
     }
+
+    .minor-project-component {
+        padding: 3%;
+    }
 }
 
 @media (max-width: 800px) {
 
     #minor-projects {
-        display: flex;
-        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        overflow-x: scroll;
     }
 
     .minor-project-component {
-        max-width: none;
+        min-width: 75vw;
+        padding: 3% 5%;
     }
 }

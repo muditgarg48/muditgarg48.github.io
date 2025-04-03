@@ -27,12 +27,17 @@ const ProjectsSection = ({projects_data}) => {
                 </div>
             </div>
             {
-                showMinorProjects && <div id="minor-projects">
-                    {
-                        minor_projects.map((project, index) => {
-                            return (<MinorProject key={index} {...project} />)
-                        })
-                    }
+                showMinorProjects && 
+                <div id="minor-projects-heading">OTHER NOTEWORTHY PROJECTS</div>
+            }
+            {
+                showMinorProjects &&
+                <div id="minor-projects">
+                {
+                    minor_projects.map((project, index) => {
+                        return (<MinorProject key={index} {...project} />)
+                    })
+                }
                 </div>
             }
         </div>
