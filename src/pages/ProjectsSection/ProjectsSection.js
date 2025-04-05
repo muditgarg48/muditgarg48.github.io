@@ -51,7 +51,7 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
 
-    const [lastUpdated, setLastUpdated] = useState(Date.now());
+    const [lastUpdated, setLastUpdated] = useState("Fetching...");
 
     useEffect(()=> {
         const trimmedUrl = github.endsWith('/')?github.slice(0, -1):github;
@@ -69,7 +69,8 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
-    const ActivityTag = () =>{
+    const ActivityTag = () => {
+        if(lastUpdated === "Fetching...") return null;
         const date = new Date(lastUpdated);
         const now = new Date();
 
@@ -119,7 +120,7 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
                 <div className="project-last-updated">
                     Last Updated: {lastUpdated}
                 </div>
-                <p>{desc}</p>
+                <p className="project-desc">{desc}</p>
                 <div className="project-tech">
                 {
                     tech_stack.map((tech, index)=> (
@@ -149,7 +150,7 @@ const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
     
-    const [lastUpdated, setLastUpdated] = useState(Date.now());
+    const [lastUpdated, setLastUpdated] = useState("Fetching...");
 
     useEffect(()=> {
         const trimmedUrl = github.endsWith('/')?github.slice(0, -1):github;
@@ -167,7 +168,8 @@ const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
-    const ActivityTag = () =>{
+    const ActivityTag = () => {
+        if(lastUpdated === "Fetching...") return null;
         const date = new Date(lastUpdated);
         const now = new Date();
 
@@ -222,7 +224,7 @@ const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }
             <div className="project-last-updated">
                 Last Updated: {lastUpdated}
             </div>
-            <p>{desc}</p>
+            <p className="project-desc">{desc}</p>
             <div className="project-tech">
                 {
                     tech_stack.map((tech, index)=> (
