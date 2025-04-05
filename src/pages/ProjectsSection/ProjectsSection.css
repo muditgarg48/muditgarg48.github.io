@@ -63,6 +63,13 @@
 
 .project-headline {
     letter-spacing: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.active-tag {
+    font-size: 70%;
 }
 
 .project-details h3 {

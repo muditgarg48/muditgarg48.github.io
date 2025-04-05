@@ -69,6 +69,42 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
+    const ActivityTag = () =>{
+        const date = new Date(lastUpdated);
+        const now = new Date();
+
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(now.getMonth() - 1);
+
+        const sixMonthAgo = new Date();
+        sixMonthAgo.setMonth(now.getMonth() - 6);
+
+        const yearAgo = new Date();
+        yearAgo.setMonth(now.getFullYear() - 1);
+
+        if (date >= oneMonthAgo && date <= now) { 
+            return (
+                <div className="active-tag">
+                    🟢 Actively developed
+                </div>
+            );
+        } else if (date < oneMonthAgo && date >= sixMonthAgo) {
+            return (
+                <div className="active-tag">
+                    🟡 Recently updated
+                </div>
+            );
+        } else if (date <= yearAgo) {
+            return (
+                <div className="active-tag">
+                    ⚪ Archived
+                </div>
+            );
+        } else {
+            return null;
+        }
+    }
+
     return (
         <div className="major-project-component">
             <div className="project-image">
@@ -77,6 +113,7 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
             <div className="project-details">
                 <div className="project-headline">
                     <p><strong>{speciality}</strong></p>
+                    <ActivityTag/>
                 </div>
                 <h3>{name}</h3>
                 <div className="project-last-updated">
@@ -130,9 +167,46 @@ const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
+    const ActivityTag = () =>{
+        const date = new Date(lastUpdated);
+        const now = new Date();
+
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(now.getMonth() - 1);
+
+        const sixMonthAgo = new Date();
+        sixMonthAgo.setMonth(now.getMonth() - 6);
+
+        const yearAgo = new Date();
+        yearAgo.setMonth(now.getFullYear() - 1);
+
+        if (date >= oneMonthAgo && date <= now) { 
+            return (
+                <div className="active-tag">
+                    🟢 Actively developed
+                </div>
+            );
+        } else if (date < oneMonthAgo && date >= sixMonthAgo) {
+            return (
+                <div className="active-tag">
+                    🟡 Recently updated
+                </div>
+            );
+        } else if (date <= yearAgo) {
+            return (
+                <div className="active-tag">
+                    ⚪ Archived
+                </div>
+            );
+        } else {
+            return null;
+        }
+    }
+
     return (
         <div className="minor-project-component">
             <div className="minor-project-links">
+                <ActivityTag/>
                 <div className="project-links">
                     <AnimatedIcon icon={git_repo} link={github} class_name="nocss"/>
                     {
