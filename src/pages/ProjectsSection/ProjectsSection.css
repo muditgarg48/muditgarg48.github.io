@@ -95,6 +95,12 @@
     flex-wrap: wrap;
 }
 
+.project-last-updated {
+    color: var(--font-secondary-color);
+    font-size: 80%;
+    text-align: end;
+}
+
 .project-links * {
     padding: 0 5px;
 }

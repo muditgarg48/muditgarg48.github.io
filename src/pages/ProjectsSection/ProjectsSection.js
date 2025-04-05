@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
+
 
 const ProjectsSection = ({projects_data}) => {
     
@@ -49,6 +51,24 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
 
+    const [lastUpdated, setLastUpdated] = useState(Date.now());
+
+    useEffect(()=> {
+        const trimmedUrl = github.endsWith('/')?github.slice(0, -1):github;
+        const parts = trimmedUrl.split('/');
+        const repoName = parts[parts.length - 1];
+        axios.get("https://api.github.com/repos/muditgarg48/"+repoName+"/branches/master")
+            .then(response => response.data)
+            .then(data => {
+                setLastUpdated(formatDate(data.commit.commit.committer.date))
+            });
+      }, [github]);
+
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: '2-digit'};
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+
     return (
         <div className="major-project-component">
             <div className="project-image">
@@ -59,15 +79,18 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
                     <p><strong>{speciality}</strong></p>
                 </div>
                 <h3>{name}</h3>
+                <div className="project-last-updated">
+                    Last Updated: {lastUpdated}
+                </div>
                 <p>{desc}</p>
                 <div className="project-tech">
-                    {
-                        tech_stack.map((tech, index)=> (
-                            <div key={index} className="tech">
-                                {tech}
-                            </div>
-                        ))
-                    }
+                {
+                    tech_stack.map((tech, index)=> (
+                        <div key={index} className="tech">
+                            {tech}
+                        </div>
+                    ))
+                }
                 </div>
                 <div className="project-links">
                     <AnimatedIcon icon={git_repo} link={github} class_name="nocss"/>
@@ -85,8 +108,28 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
 };
 
 const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }) => {
+
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
+    
+    const [lastUpdated, setLastUpdated] = useState(Date.now());
+
+    useEffect(()=> {
+        const trimmedUrl = github.endsWith('/')?github.slice(0, -1):github;
+        const parts = trimmedUrl.split('/');
+        const repoName = parts[parts.length - 1];
+        axios.get("https://api.github.com/repos/muditgarg48/"+repoName+"/branches/master")
+            .then(response => response.data)
+            .then(data => {
+                setLastUpdated(formatDate(data.commit.commit.committer.date))
+            });
+      }, [github]);
+
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: '2-digit'};
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+
     return (
         <div className="minor-project-component">
             <div className="minor-project-links">
@@ -102,6 +145,9 @@ const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }
                 </div>
             </div>
             <h3>{name}</h3>
+            <div className="project-last-updated">
+                Last Updated: {lastUpdated}
+            </div>
             <p>{desc}</p>
             <div className="project-tech">
                 {
