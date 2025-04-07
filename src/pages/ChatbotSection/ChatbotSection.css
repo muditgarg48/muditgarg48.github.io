@@ -12,6 +12,14 @@
     padding: 0 10vw;
 }
 
+#alfred-status {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 80%;
+    opacity: 80%;
+    padding: 0 5%;
+}
+
 #chat-window {
     background-color: var(--font-secondary-color);
     height: 90vh;

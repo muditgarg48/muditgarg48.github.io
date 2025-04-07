@@ -16,6 +16,7 @@ function ChatbotSection() {
   };
 
   const [query, setQuery] = useState("");
+  const [alfredStatus, setAlfredStatus] = useState("🟡 Waiting");
   const [chatHistory, setChatHistory] = useState([initMessage]);
   const [chatActive, setChatActive] = useState(false);
 
@@ -31,14 +32,17 @@ function ChatbotSection() {
       try {
         const response = await axios.get(deployment);
         if(response.status === 200) {
+          setAlfredStatus("🟢 Online");
           setChatActive(true);
           console.log("A.L.F.R.E.D. Online!");
         }
         else {
+          setAlfredStatus("🔴 Offline");
           setChatActive(false);
           console.log("A.L.F.R.E.D. is having some issues!")
         }
       } catch (Exception) {
+        setAlfredStatus("🔴 Offline");
         console.log("Theres something wrong with the server! Response: "+Exception);
       }
     }
@@ -168,6 +172,8 @@ function ChatbotSection() {
               {/* <div id="refresh-db" onClick={() => refreshDatabase()}>Database Reload</div> */}
             </div>
           }
+          &nbsp;
+          <div id="alfred-status">{alfredStatus}</div>
         </div>
         {
           chatActive === true?
@@ -200,7 +206,7 @@ function ChatbotSection() {
 function ChatInactive() {
   return (
     <div id="chat-inactive">
-      A.L.F.R.E.D. currently in hibernation. Waking him up ...
+      A.L.F.R.E.D. currently in hibernation.
     </div>
   );
 }
