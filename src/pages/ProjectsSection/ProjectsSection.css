@@ -72,6 +72,7 @@
     font-size: 70%;
     display: flex;
     align-items: center;
+    letter-spacing: normal;
 }
 
 .major-project-component .active-tag {

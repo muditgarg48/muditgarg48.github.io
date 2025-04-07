@@ -81,29 +81,18 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
         sixMonthAgo.setMonth(now.getMonth() - 6);
 
         const yearAgo = new Date();
-        yearAgo.setMonth(now.getFullYear() - 1);
+        yearAgo.setFullYear(now.getFullYear() - 1);
 
-        if (date >= oneMonthAgo && date <= now) { 
-            return (
-                <div className="active-tag">
-                    🟢 Actively developed
-                </div>
-            );
-        } else if (date < oneMonthAgo && date >= sixMonthAgo) {
-            return (
-                <div className="active-tag">
-                    🟡 Recently updated
-                </div>
-            );
-        } else if (date <= yearAgo) {
-            return (
-                <div className="active-tag">
-                    ⚪ Archived
-                </div>
-            );
-        } else {
-            return null;
-        }
+        return (
+            <div className="active-tag">
+                {
+                    (date >= oneMonthAgo && date <= now)? "🟢 Actively developed":
+                    (date < oneMonthAgo && date >= sixMonthAgo)? "🟡 Recently updated":
+                    (date <= yearAgo)? "⚪ Archived":
+                    null
+                }
+            </div>
+        );
     }
 
     return (
@@ -180,29 +169,18 @@ const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }
         sixMonthAgo.setMonth(now.getMonth() - 6);
 
         const yearAgo = new Date();
-        yearAgo.setMonth(now.getFullYear() - 1);
+        yearAgo.setFullYear(now.getFullYear() - 1);
 
-        if (date >= oneMonthAgo && date <= now) { 
-            return (
-                <div className="active-tag">
-                    🟢 Actively developed
-                </div>
-            );
-        } else if (date < oneMonthAgo && date >= sixMonthAgo) {
-            return (
-                <div className="active-tag">
-                    🟡 Recently updated
-                </div>
-            );
-        } else if (date <= yearAgo) {
-            return (
-                <div className="active-tag">
-                    ⚪ Archived
-                </div>
-            );
-        } else {
-            return null;
-        }
+        return (
+            <div className="active-tag">
+                {
+                    (date >= oneMonthAgo && date <= now)? "🟢 Actively developed":
+                    (date < oneMonthAgo && date >= sixMonthAgo)? "🟡 Recently updated":
+                    (date <= yearAgo)? "⚪ Archived":
+                    null
+                }
+            </div>
+        );
     }
 
     return (
