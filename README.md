@@ -28,15 +28,6 @@ A clean, responsive React Single Page Application (SPA) which showcases my educa
 
 Hosted via Jenkyll and GitHub Pages
 
-#### v1
-
-- HTML
-- CSS
-- JavaScript (JS)
-- Flutter and Dart (Certificate Section)
-
-#### v2 
-
 - React
 - JavaScript (JSX)
 - [A.L.F.R.E.D. Tech Stack](https://github.com/muditgarg48/self-rag-system)
