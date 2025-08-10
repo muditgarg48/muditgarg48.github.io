@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# My Portfolio Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A clean, responsive React Single Page Application (SPA) which showcases my education, work, experience and achieved certifications.
 
-## Available Scripts
+[🔗Link](https://muditgarg48.github.io)
 
-In the project directory, you can run:
+## Motivation
 
-### `npm start`
+- I always wanted to have a online front, an online portfolio to depict myself. 
+- I wanted to have the full control over my portfolio website, continuously tweaking and improving the design, content, and not be based on those templated portfolio builders, providing me with practical knowledge about UI/UX design, responsive and performant web development and SEO optimisation.
+- Just after my postgraduation in 2024, I started picking up React in an attempt to broaded my skillset and wanted to practise it. 
+- Ever since the completion of Portfolio Website v1 in 2020, I always wanted to shift my portfolio website (based on pure HTML-CSS-JavaScript) to a more framework based single page application.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Key Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### v1
 
-### `npm test`
+- Clear tab based view for separate HTML pages with necessary information including skills, education history, projects and certifications.
+- Points of contact redirects
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### v2 
 
-### `npm run build`
+- SPA with responsive and performant UI and optimised assets for all devices.
+- All necessary information with more in-depth insights and optimised screen real-estate usage.
+- Introduction of new UI elements like timelines, marquees, cards, hover effects to better convey information in a modern look.
+- Introduction of portfolio data store utilising GitHub CDN to provide website data and avoid hard coded data in the main portfolio repository. For more information, click [here](https://github.com/muditgarg48/portfolio_data).
+- Introduction of A.L.F.R.E.D., RAG (Retrieval Augmented Generation) based chatbot, responsive for ingested all the information on the website to answer any queries by the visitor in a human conversation format. For more information, click [here](https://github.com/muditgarg48/self-rag-system).
+- Introduction of new essential data like "Last Updated" of the website, its data and the projects using the GitHub API for in-depth insight of a project's age and status.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Hosted via Jenkyll and GitHub Pages
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### v1
 
-### `npm run eject`
+- HTML
+- CSS
+- JavaScript (JS)
+- Flutter and Dart (Certificate Section)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### v2 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- React
+- JavaScript (JSX)
+- Packages from [npm](https://www.npmjs.com/)
+- [A.L.F.R.E.D. Tech Stack](https://github.com/muditgarg48/self-rag-system)
+- Icons from [lordicon](https://lordicon.com/)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Future Ideas
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Introduction of a new blog section which will be my platform to convey my thoughts.
+- Introduction of a project journey and project KPIs (Key Performance Indicators) that showcase the journey of a project from `git init` to the current state and in-depth insights into the project's current state
 
-## Learn More
+## Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To replicate the project
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Fork this repository (refer [here](#branches))
+- Install all the dependencies `npm install` in the root folder (same as `package.json`)
+- Run the local instance by the command `npm start`
 
-### Code Splitting
+## Branches
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+##### master
+The SPA React Application codebase
 
-### Analyzing the Bundle Size
+##### gh-pages
+The compiled React Application codebase deployed using GitHub Pages
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+##### v1
+The HTML-CSS-JS based version 1 codebase of my portfolio website
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+##### v2_pure_html_css
+The unsuccessful attempt from 2021 to 2023 of making a second version of the website, still utilising pure HTML-CSS-JS
