@@ -83,11 +83,26 @@
     text-align: justify;
 }
 
+.project-kpis {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1% 0;
+}
+
+.kpi {
+    padding: 0 10px 0 0;
+    margin: 5px;
+    border-radius: 5px;
+    color: var(--font-primary-color);
+    font-weight: bolder;
+}
+
 .project-tech {
     display: flex;
     flex-wrap: wrap;
     margin: 1% 0;
 }
+
 
 .tech {
     padding: 0 10px 0 0;

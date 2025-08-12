@@ -4,7 +4,6 @@ import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 
-
 const ProjectsSection = ({projects_data}) => {
     
     let minor_projects = [];
@@ -46,7 +45,7 @@ const ProjectsSection = ({projects_data}) => {
     );
 }
 
-const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deployment, other_btns }) => {
+const MajorProject = ({ name, desc, speciality, image, tech_stack, kpis, github, deployment, other_btns }) => {
 
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
@@ -110,6 +109,15 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
                     Last Updated: {lastUpdated}
                 </div>
                 <p className="project-desc">{desc}</p>
+                <div className="project-kpis">
+                {
+                    kpis.map((kpi, index) => (
+                        <div key={index} className="kpi">
+                            {kpi}
+                        </div>
+                    ))
+                }
+                </div>
                 <div className="project-tech">
                 {
                     tech_stack.map((tech, index)=> (
@@ -134,7 +142,7 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, github, deplo
     );
 };
 
-const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }) => {
+const MinorProject = ({ name, desc, tech_stack, kpis, github, deployment, other_btns }) => {
 
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
@@ -203,6 +211,15 @@ const MinorProject = ({ name, desc, tech_stack, github, deployment, other_btns }
                 Last Updated: {lastUpdated}
             </div>
             <p className="project-desc">{desc}</p>
+            <div className="project-kpis">
+            {
+                kpis.map((kpi, index) => (
+                    <div key={index} className="kpi">
+                        {kpi}
+                    </div>
+                ))
+            }
+            </div>
             <div className="project-tech">
                 {
                     tech_stack.map((tech, index)=> (
