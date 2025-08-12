@@ -140,6 +140,13 @@
     text-wrap: pretty;
 }
 
+.user-message {
+    border: 1px solid var(--font-secondary-color);
+    padding: 5px;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+}
+
 .context-sources {
     font-size: 80%;
     color: var(--bg-color);
