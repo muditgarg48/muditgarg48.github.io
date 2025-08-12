@@ -86,13 +86,13 @@
 .project-kpis {
     display: flex;
     flex-wrap: wrap;
-    margin: 1% 0;
 }
 
 .kpi {
-    padding: 0 10px 0 0;
+    padding: 2px 7px;
     margin: 5px;
-    border-radius: 5px;
+    border-radius: 10px;
+    border: 1px solid var(--font-secondary-color);
     color: var(--font-primary-color);
     font-weight: bolder;
 }
