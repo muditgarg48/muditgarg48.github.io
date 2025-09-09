@@ -103,7 +103,6 @@
     margin: 1% 0;
 }
 
-
 .tech {
     padding: 0 10px 0 0;
     border-radius: 20px;
@@ -143,14 +142,93 @@
     transform: translateY(-5%);
 } 
 
-#load-more {
-    background-color: var(--font-secondary-color);
-    color: var(--bg-color);
-    font-weight: bolder;
-    padding: 1% 5%;
+/* Tab View */
+#projects-tabs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    color: var(--font-primary-color);
+    /* background-color: white; */
+}
+
+/* Coming Soon Project CSS */
+
+.coming-soon-project-component {
+    display: flex;
+    margin: 20px;
+    padding: 2%;
+    align-items: center;
     border-radius: 20px;
+    min-height: 250px;
+    justify-content: center;
+    background: transparent;
+    transition: all 0.5s;
+}
+
+.coming-soon-project-details {
+    margin: 20px;
+    padding: 30px;
+    background: var(--bg-color);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid var(--font-secondary-color);
+}
+
+.coming-soon-mini-section-heading {
+    font-size: small;
+    color: var(--font-highlight-color);
+    margin-bottom: 10px;
+}
+
+.coming-soon-mini-section {
+    padding: 15px;
+    margin: 5px;
+    border: 2px dashed var(--font-secondary-color);
+    border-radius: 10px;
+}
+
+.planned-task {
+    padding: 2px;
+}
+
+.coming-soon-commit-history {
+    margin: 10px;
+    padding: 20px;
+}
+
+.commit-details {
+    display: flex;
+    justify-content: flex-end;
+    font-size: small;
+    color: var(--font-secondary-color);
+}
+
+.commit-msg {
+    font-size: small;
+}
+
+.commit-id {
+    text-decoration: underline;
+    color: var(--font-highlight-color);
     cursor: pointer;
 }
+
+.commit-additions {
+    color: green;
+    font-weight: bolder;
+}
+
+.commit-deletions {
+    color: red;
+    font-weight: bolder;
+}
+
+/* Major Project CSS */
+
+/* Minor Project CSS */
 
 #minor-projects {
     display: flex;
@@ -160,24 +238,12 @@
     justify-content: space-evenly;
 }
 
-#minor-projects-heading {
-    text-align: center;
-    color: var(--font-secondary-color);
-    flex: 1;
-    display: flex;
-    font-size: x-large;
-    font-weight: bold;
-    justify-content: center;
-    padding: 5% 0 3% 0;
-}
-
 .minor-project-component {
     border: 2px solid var(--font-secondary-color);
     border-radius: 20px;
     margin: 1%;
-    padding: 1%;
-    min-width: 29%;
-    max-width: min-content;
+    padding: 1.5%;
+    width: 100%;
     transition: all 0.5s;
     display: flex;
     flex-direction: column;
@@ -187,6 +253,8 @@
 .minor-project-component:hover {
     transform: translateY(-3%);
 }
+
+/* Responsive Design CSS */
 
 @media (max-width: 1000px) {
     .major-project-component {

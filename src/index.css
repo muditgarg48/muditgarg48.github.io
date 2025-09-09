@@ -57,3 +57,49 @@ body {
 .highlight {
   color: var(--font-highlight-color);
 }
+
+/* related to tabs styling */
+
+.react-tabs__tab-list {
+  margin: 10px;
+  padding: 10px 0;
+  border-radius: var(--border-radius);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.react-tabs__tab {
+  display: inline-block;
+  position: relative;
+  list-style: none;
+  padding: 3px 10px;
+  margin: 0 10px;
+  cursor: pointer;
+  font-weight: lighter;
+  transition: all 0.15s;
+}
+
+.react-tabs__tab:hover {
+  transform: translateY(-10%);
+}
+
+.react-tabs__tab:focus {
+  outline: none;
+}
+
+.react-tabs__tab--selected {
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1) inset;
+  font-weight: normal;
+  font-size: x-large;
+  font-weight: bold;
+  border: 2px solid var(--font-primary-color);
+}
+
+.react-tabs__tab--disabled {
+  color: gray;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
