@@ -153,7 +153,7 @@
 }
 
 .system-message {
-    color: var(--font-secondary-color);
+    color: red;
     display: flex;
     justify-content: center;
     text-align: center;    

@@ -8,6 +8,7 @@ import SectionHeading from '../../components/SectionHeading/SectionHeading';
 function ChatbotSection() {
 
   const deployment = "https://self-rag-system.onrender.com";
+  // const deployment = "http://127.0.0.1:4000";
 
   const initMessage = {
     person: "alfred",
@@ -28,6 +29,16 @@ function ChatbotSection() {
   };
 
   useEffect(() => {
+    const pingServer = async () => {
+      try {
+        const response = await axios.get(deployment + "/stay-alive");
+        if (response.status === 200)
+          console.log("Stay-alive ping successful:", response.data);
+      } catch (error) {
+        console.error("Stay-alive ping failed:", error);
+      }
+    };
+
     async function checkServerStatus() {
       try {
         const response = await axios.get(deployment);
@@ -47,6 +58,9 @@ function ChatbotSection() {
       }
     }
     checkServerStatus();
+    pingServer();
+    const intervalId = setInterval(pingServer, 14 * 60 * 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -124,9 +138,12 @@ function ChatbotSection() {
       }];
       setChatHistory(newHistory);
     } catch (error) {
+      let errorMessage
+      if(error.response) errorMessage = "Could not retrieve an answer because "+error.response.data.error
+      else errorMessage = "Could not retrieve an answer because invalid server response: "+error.response
       setChatHistory([...chatHistory, {
         person: "system",
-        message: "Could not retrieve an answer because "+error.response.data.error
+        message: errorMessage 
       }]);
       console.error(error);
     }
