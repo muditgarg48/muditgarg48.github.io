@@ -31,7 +31,7 @@ function ChatbotSection() {
   useEffect(() => {
     const pingServer = async () => {
       try {
-        const response = await axios.get(deployment + "/stay-alive");
+        const response = await axios.get(deployment + "/stay_alive");
         if (response.status === 200)
           console.log("Stay-alive ping successful:", response.data);
       } catch (error) {
