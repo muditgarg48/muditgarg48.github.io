@@ -194,3 +194,47 @@
     font-weight: bolder;
     color: var(--bg-color);
 }
+
+.certificate-thumbnail {
+    width: 280px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 172, 240, 0.1);
+    border: 2px dashed var(--font-secondary-color);
+    border-radius: 10px;
+    color: var(--font-secondary-color);
+}
+
+.thumbnail-icon {
+    font-size: 4rem;
+    margin-bottom: 10px;
+}
+
+.thumbnail-text {
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0 10px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.thumbnail-loading {
+    font-size: 0.8rem;
+    margin-top: 10px;
+    color: var(--font-primary-color);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
