@@ -203,7 +203,7 @@ const ComingSoonProject = ({ name, desc, speciality, tech_stack, planned_tasks, 
                 </div>
                 <div className={`commit-list ${isExpanded ? 'expanded' : 'collapsed'}`}>
                     {
-                        latestCommitHistory.map((commit, index) => <SingleCommit key={index} commit={commit}/>)
+                        latestCommitHistory.map((commit) => <SingleCommit key={commit.sha} commit={commit}/>)
                     }
                     {isExpanded && commitsUrl && (
                         <div className="view-full-history-btn-container">
@@ -366,9 +366,9 @@ const ProjectsSection = ({projects_data}) => {
                 <TabPanel>
                     <div id="major-projects">
                     {
-                        projects_data.map((project, index) => {
+                        projects_data.map((project) => {
                             if (project.speciality === "COMING SOON")
-                                return (<ComingSoonProject key={index} {...project} />)
+                                return (<ComingSoonProject key={project.name || project.github?.repo_name} {...project} />)
                             return null;
                         })
                     }
@@ -377,9 +377,9 @@ const ProjectsSection = ({projects_data}) => {
                 <TabPanel>
                     <div id="major-projects">
                     {
-                        projects_data.map((project, index) => {
+                        projects_data.map((project) => {
                             if (project.speciality !== "COMING SOON" && project.speciality !== "")
-                                return (<MajorProject key={index} {...project} />)
+                                return (<MajorProject key={project.name || project.github?.repo_name} {...project} />)
                             return null;
                         })
                     }
@@ -388,9 +388,9 @@ const ProjectsSection = ({projects_data}) => {
                 <TabPanel> 
                     <div id="minor-projects">
                     {
-                        projects_data.map((project, index) => {
+                        projects_data.map((project) => {
                             if (project.speciality === "")
-                                return (<MinorProject key={index} {...project} />)
+                                return (<MinorProject key={project.name || project.github?.repo_name} {...project} />)
                             return null;
                         })
                     }

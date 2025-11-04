@@ -63,8 +63,8 @@ const CertificatesSection = ({certificates_data}) => {
             <div id="certificates">
                 {
                     filteredCertificates.length > 0?
-                    filteredCertificates.map((certificate, index) => 
-                        <Certificate certificate={certificate} key={index}/>
+                    filteredCertificates.map((certificate) => 
+                        <Certificate certificate={certificate} key={certificate.cert_id || certificate.file_name}/>
                 ):
                 <span>No certificates found!</span>
             }
