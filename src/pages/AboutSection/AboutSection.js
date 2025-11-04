@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useMemo, useCallback } from "react";
 import './AboutSection.css';
 import { TypeAnimation } from "react-type-animation";
 import Marquee from "react-fast-marquee";
@@ -172,73 +172,80 @@ const DidYouKnowSection = ({facts}) => {
     );
 }
 
-const SkillSection = ({skills}) => {
+const SkillSection = memo(({skills}) => {
+    const skillSubsections = useMemo(() => {
+        return Object.keys(skills).map((key, index) => {
+            return (
+                <SkillSubSection
+                    key={key}
+                    skills={skills[key]}
+                    section_name={key}
+                    dir={index%2===0?"right":"left"}/>
+            );
+        });
+    }, [skills]);
+
     return (
         <div id="skills-subsection">
             {/* <div class="subsection-heading">
                 My Skillset
             </div> */}
-            {
-                Object.keys(skills).map((key, index) => {
-                    return (
-                        <SkillSubSection
-                            key={index}
-                            skills={skills[key]}
-                            section_name={key}
-                            dir={index%2===0?"right":"left"}/>
-                    );
-                })
-            }
+            {skillSubsections}
         </div>
     );
-}
+});
 
-const SkillSubSection = ({skills, section_name,dir}) => {
+const SkillSubSection = memo(({skills, section_name,dir}) => {
+    const skillElements = useMemo(() => {
+        return skills.map((skill, index) => {
+            if ("ribbon" in skill) {
+                return (
+                    <RibbonContainer key={skill.name || index}>
+                        <Ribbon
+                            side="right"
+                            type="edge"
+                            size="normal"
+                            backgroundColor="transparent"
+                            withStripes={false}
+                        >
+                            {skill.ribbon}
+                        </Ribbon>
+                        <Skill icon={skill.icon} name={skill.name} key={skill.name}/>
+                    </RibbonContainer>
+                );
+            } else {
+                return (
+                    <Skill icon={skill.icon} name={skill.name} key={skill.name || index}/>
+                );
+            }
+        });
+    }, [skills]);
+
     return (
         <div className="skill_subsection">
             <div style={{display: "flex", justifyContent: "center"}}>{section_name}</div>
             <Marquee pauseOnHover speed={70} direction={dir}>
-            {
-                skills.map((skill, index) => {
-                    if ("ribbon" in skill) {
-                        return (
-                            <RibbonContainer key={index}>
-                                <Ribbon
-                                    side="right"
-                                    type="edge"
-                                    size="normal"
-                                    backgroundColor="transparent"
-                                    withStripes={false}
-                                >
-                                    {skill.ribbon}
-                                </Ribbon>
-                                <Skill icon={skill.icon} name={skill.name} key={skill.name}/>
-                            </RibbonContainer>
-                        );
-                    } else {
-                        return (
-                            <Skill icon={skill.icon} name={skill.name} key={skill.name}/>
-                        );
-                    }
-                })
-            }
+                {skillElements}
             </Marquee>
         </div>
     );
-}
+});
 
-const Skill = ({icon=null, name=''}) => {
+const Skill = memo(({icon=null, name=''}) => {
 
     const [showName, setShowName] = useState(false);
 
+    const handleMouseEnter = useCallback(() => setShowName(true), []);
+    const handleMouseLeave = useCallback(() => setShowName(false), []);
+
     return (
-        <div className="single_skill" onMouseEnter={()=>setShowName(true)} onMouseLeave={()=>setShowName(false)}>
+        <div className="single_skill" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <img src={icon} alt={name}></img>
             &nbsp;
             {showName && <>{name}</>}
             {!showName && <>&nbsp;</>}
         </div>
     );
-}
+});
 
 export default AboutSection;

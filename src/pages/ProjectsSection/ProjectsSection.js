@@ -1,35 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo, useMemo } from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import axios from "axios";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 
-const ActivityTag = ({lastUpdated}) => {
-    if(lastUpdated === "Fetching...") return null;
-    const date = new Date(lastUpdated);
-    const now = new Date();
+const ActivityTag = memo(({lastUpdated}) => {
+    const tag = useMemo(() => {
+        if(lastUpdated === "Fetching...") return null;
+        const date = new Date(lastUpdated);
+        const now = new Date();
 
-    const oneMonthAgo = new Date();
-    oneMonthAgo.setMonth(now.getMonth() - 1);
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(now.getMonth() - 1);
 
-    const sixMonthAgo = new Date();
-    sixMonthAgo.setMonth(now.getMonth() - 6);
+        const sixMonthAgo = new Date();
+        sixMonthAgo.setMonth(now.getMonth() - 6);
 
-    const yearAgo = new Date();
-    yearAgo.setFullYear(now.getFullYear() - 1);
+        const yearAgo = new Date();
+        yearAgo.setFullYear(now.getFullYear() - 1);
+
+        if (date >= oneMonthAgo && date <= now) return "🟢 Actively developed";
+        if (date < oneMonthAgo && date >= sixMonthAgo) return "🟡 Recently updated";
+        if (date <= yearAgo) return "⚪ Archived";
+        return null;
+    }, [lastUpdated]);
+
+    if (!tag) return null;
 
     return (
         <div className="active-tag">
-            {
-                (date >= oneMonthAgo && date <= now)? "🟢 Actively developed":
-                (date < oneMonthAgo && date >= sixMonthAgo)? "🟡 Recently updated":
-                (date <= yearAgo)? "⚪ Archived":
-                null
-            }
+            {tag}
         </div>
     );
-}
+});
 
 function formatDate(dateString) {
     const options = { year: 'numeric', month: 'short', day: '2-digit'};
@@ -70,7 +74,7 @@ const ProjectImage = ({image, name}) => {
     );
 }
 
-const ComingSoonProject = ({ name, desc, speciality, tech_stack, planned_tasks, github, deployment, other_btns }) => {
+const ComingSoonProject = memo(({ name, desc, speciality, tech_stack, planned_tasks, github, deployment, other_btns }) => {
 
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
@@ -154,7 +158,7 @@ const ComingSoonProject = ({ name, desc, speciality, tech_stack, planned_tasks, 
         );
     }
 
-    const SingleCommit = ({ commit }) => {
+    const SingleCommit = memo(({ commit }) => {
         const details = commit.details;
         const message = commit.commit.message;
         const redirectUrl = commit.html_url;
@@ -181,7 +185,7 @@ const ComingSoonProject = ({ name, desc, speciality, tech_stack, planned_tasks, 
                 </div>
             </div>
         );
-    };
+    });
 
     const ProjectCommitHistory = () => {
         const [isExpanded, setIsExpanded] = useState(false);
@@ -238,9 +242,9 @@ const ComingSoonProject = ({ name, desc, speciality, tech_stack, planned_tasks, 
             </div>
         </div>
     );
-};
+});
 
-const MajorProject = ({ name, desc, speciality, image, tech_stack, kpis, github, deployment, other_btns }) => {
+const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, github, deployment, other_btns }) => {
 
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
@@ -299,9 +303,9 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, kpis, github,
             </div>
         </div>
     );
-};
+});
 
-const MinorProject = ({ name, desc, tech_stack, kpis, github, deployment, other_btns }) => {
+const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, other_btns }) => {
 
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
@@ -350,7 +354,7 @@ const MinorProject = ({ name, desc, tech_stack, kpis, github, deployment, other_
             <ProjectTechStack tech_stack={tech_stack}/>
         </div>
     );
-};
+});
 
 const ProjectsSection = ({projects_data}) => {
 
