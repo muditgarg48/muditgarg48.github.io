@@ -37,27 +37,50 @@ function App() {
 
   useEffect(() => {
     const getData = async () => {
-      let res = await fetch(dataEndPoint+factsEndPoint);
-      let data = await res.json();
-      setFactsData(data);
-      res = await fetch(dataEndPoint+projectsDataEndPoint);
-      data = await res.json();
-      setProjectsData(data);
-      res = await fetch(dataEndPoint+certificatesDataEndPoint);
-      data = await res.json();
-      setCertificatesData(data);
-      res = await fetch(dataEndPoint+experienceDataEndPoint);
-      data = await res.json();
-      setExperienceData(data);
-      res = await fetch(dataEndPoint+educationHistoryDataEndPoint);
-      data = await res.json();
-      setEducationHistoryData(data);
-      res = await fetch(dataEndPoint+skillsDataEndPoint);
-      data = await res.json();
-      setSkillsData(data);
-      res = await fetch(dataEndPoint+aboutMeDataEndPoint);
-      data = await res.json();
-      setAboutMeData(data);
+      // Fetch all data in parallel instead of sequentially
+      const [
+        factsResponse,
+        projectsResponse,
+        certificatesResponse,
+        experienceResponse,
+        educationResponse,
+        skillsResponse,
+        aboutMeResponse
+      ] = await Promise.all([
+        fetch(dataEndPoint+factsEndPoint),
+        fetch(dataEndPoint+projectsDataEndPoint),
+        fetch(dataEndPoint+certificatesDataEndPoint),
+        fetch(dataEndPoint+experienceDataEndPoint),
+        fetch(dataEndPoint+educationHistoryDataEndPoint),
+        fetch(dataEndPoint+skillsDataEndPoint),
+        fetch(dataEndPoint+aboutMeDataEndPoint)
+      ]);
+
+      const [
+        factsData,
+        projectsData,
+        certificatesData,
+        experienceData,
+        educationHistoryData,
+        skillsData,
+        aboutMeData
+      ] = await Promise.all([
+        factsResponse.json(),
+        projectsResponse.json(),
+        certificatesResponse.json(),
+        experienceResponse.json(),
+        educationResponse.json(),
+        skillsResponse.json(),
+        aboutMeResponse.json()
+      ]);
+
+      setFactsData(factsData);
+      setProjectsData(projectsData);
+      setCertificatesData(certificatesData);
+      setExperienceData(experienceData);
+      setEducationHistoryData(educationHistoryData);
+      setSkillsData(skillsData);
+      setAboutMeData(aboutMeData);
   
       setLoading(false);
     }
