@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useCallback} from 'react'
 // import React, {useState, useEffect} from 'react'
 import './ChatbotSection.css'
 import axios from 'axios';
@@ -23,10 +23,10 @@ function ChatbotSection() {
 
   const alfredEndRef = useRef(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     if (chatHistory.length > 5)
       alfredEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, [chatHistory.length]);
 
   useEffect(() => {
     const pingServer = async () => {
@@ -65,51 +65,12 @@ function ChatbotSection() {
 
   useEffect(() => {
     scrollToBottom(); 
-  }, [chatHistory]);
+  }, [chatHistory, scrollToBottom]);
 
   const resetChat = () => {
     setChatHistory([initMessage]);
   }
 
-  const refreshData = async () => {
-    let message = "";
-    try {
-      const response = await axios.get(deployment+'/refresh_files');
-      if(response.status === 200) {
-        message = "Data successfully refreshed";
-      } else {
-        message = response.data;
-      }
-    } catch (error) {
-      message = error.response.data.error;
-    }
-    let newHistory = [ ...chatHistory, {
-        person: "system",
-        message: message
-      }
-    ]
-    setChatHistory(newHistory);
-  }
-
-  const refreshDatabase = async () => {
-    let message = "";
-    try {
-      const response = await axios.get(deployment+'/prepare_database');
-      if(response.status === 200) {
-        message = "Chroma Vector database successfully refreshed"
-      } else {
-        message = response.data;
-      }
-    } catch (error) {
-      message = error.response.data.error
-    }
-    let newHistory = [ ...chatHistory, {
-        person: "system",
-        message: message
-      }
-    ]
-    setChatHistory(newHistory);
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

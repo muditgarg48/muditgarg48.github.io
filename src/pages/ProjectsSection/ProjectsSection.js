@@ -111,8 +111,9 @@ const ComingSoonProject = ({ name, desc, speciality, tech_stack, planned_tasks, 
                         <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
                     }
                     {other_btns && other_btns.map((btn, index) => {
-                        if (btn.link != "")
+                        if (btn.link !== "")
                             return (<a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>)
+                        return null;
                     })}
                 </div>
                 <ActivityTag lastUpdated={lastUpdated}/>
@@ -368,6 +369,7 @@ const ProjectsSection = ({projects_data}) => {
                         projects_data.map((project, index) => {
                             if (project.speciality === "COMING SOON")
                                 return (<ComingSoonProject key={index} {...project} />)
+                            return null;
                         })
                     }
                     </div>            
@@ -378,6 +380,7 @@ const ProjectsSection = ({projects_data}) => {
                         projects_data.map((project, index) => {
                             if (project.speciality !== "COMING SOON" && project.speciality !== "")
                                 return (<MajorProject key={index} {...project} />)
+                            return null;
                         })
                     }
                     </div>   
@@ -388,6 +391,7 @@ const ProjectsSection = ({projects_data}) => {
                         projects_data.map((project, index) => {
                             if (project.speciality === "")
                                 return (<MinorProject key={index} {...project} />)
+                            return null;
                         })
                     }
                     </div>

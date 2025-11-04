@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import './CertificatesSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
@@ -15,15 +15,11 @@ const CertificatesSection = ({certificates_data}) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredCertificates, setFilteredCertificates] = useState(certificates_data);
 
-    useEffect(() => {
-        filterCertificates(searchQuery);
-    }, [searchQuery]);
+    function sortCertificatesByDate(certificates) {
+        return certificates.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
 
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value.toLowerCase());
-    };
-
-    const filterCertificates = (query) => {
+    const filterCertificates = useCallback((query) => {
         const filtered = certificates_data.filter((cert) => {
             return (
                 cert.name.toLowerCase().includes(query) ||
@@ -37,11 +33,15 @@ const CertificatesSection = ({certificates_data}) => {
             );
         });
         setFilteredCertificates(sortCertificatesByDate(filtered));
-    };
+    }, [certificates_data]);
 
-    function sortCertificatesByDate(certificates) {
-        return certificates.sort((a, b) => new Date(b.date) - new Date(a.date));
-    }
+    useEffect(() => {
+        filterCertificates(searchQuery);
+    }, [searchQuery, filterCertificates]);
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value.toLowerCase());
+    };
 
     const search_icon = require('../../assets/icons/search.json');
     const clear_query = require('../../assets/icons/fill_bin.json');

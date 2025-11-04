@@ -4,6 +4,7 @@
   "homepage": "https://muditgarg48.github.io",
   "private": true,
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.4.0",
     "@emotion/react": "^11.13.0",
     "@lordicon/react": "^1.6.0",
     "@uidotdev/usehooks": "^2.4.1",

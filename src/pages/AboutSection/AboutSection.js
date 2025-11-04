@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './AboutSection.css';
 import { TypeAnimation } from "react-type-animation";
 import Marquee from "react-fast-marquee";
-import { Ribbon, RibbonContainer,  RightCornerRibbon } from "react-ribbons";
+import { Ribbon, RibbonContainer } from "react-ribbons";
 
 import ScrollFurther from "../../components/ScrollFurther/ScrollFurther";
 import SectionHeading from "../../components/SectionHeading/SectionHeading.js";
