@@ -15,9 +15,9 @@ const CertificatesSection = ({certificates_data}) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredCertificates, setFilteredCertificates] = useState(certificates_data);
 
-    function sortCertificatesByDate(certificates) {
-        return certificates.sort((a, b) => new Date(b.date) - new Date(a.date));
-    }
+    const sortCertificatesByDate = useCallback((certificates) => {
+        return [...certificates].sort((a, b) => new Date(b.date) - new Date(a.date));
+    }, []);
 
     const filterCertificates = useCallback((query) => {
         const filtered = certificates_data.filter((cert) => {
@@ -33,7 +33,7 @@ const CertificatesSection = ({certificates_data}) => {
             );
         });
         setFilteredCertificates(sortCertificatesByDate(filtered));
-    }, [certificates_data]);
+    }, [certificates_data, sortCertificatesByDate]);
 
     useEffect(() => {
         filterCertificates(searchQuery);
