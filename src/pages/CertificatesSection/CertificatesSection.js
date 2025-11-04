@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, useRef, useMemo, memo} from "react";
 import './CertificatesSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
@@ -74,7 +74,7 @@ const CertificatesSection = ({certificates_data}) => {
     );
 }
 
-const Certificatev1 = () => {
+const Certificatev1 = memo(() => {
     
     const legacy = require('../../assets/icons/legacy.json');
     
@@ -94,62 +94,118 @@ const Certificatev1 = () => {
             </div>
         </div>
     )
-}
+});
 
-const Certificate = ({certificate}) => {
+const Certificate = memo(({certificate}) => {
 
     const [pdfFile, setPdfFile] = useState(null);
     const [isFlipped, setIsFlipped] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const certificateRef = useRef(null);
 
+    // Intersection Observer for lazy loading
     useEffect(() => {
-        const loadPDF = async (certi) => {
-            const documentEndPoint = 'https://muditgarg48.github.io/portfolio_data/documents/';
-            const doc = await fetch(`${documentEndPoint}${certi}`);
-            setPdfFile(doc.url);
-        };
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                rootMargin: '50px', // Start loading 50px before it becomes visible
+                threshold: 0.1
+            }
+        );
 
-        loadPDF(certificate.file_name);
-    }, [certificate.file_name]);
+        if (certificateRef.current) {
+            observer.observe(certificateRef.current);
+        }
+
+        return () => {
+            if (certificateRef.current) {
+                observer.unobserve(certificateRef.current);
+            }
+        };
+    }, []);
+
+    // Load PDF only when certificate becomes visible
+    useEffect(() => {
+        if (isVisible && !pdfFile && !isLoading) {
+            setIsLoading(true);
+            const loadPDF = async (certi) => {
+                try {
+                    const documentEndPoint = 'https://muditgarg48.github.io/portfolio_data/documents/';
+                    const doc = await fetch(`${documentEndPoint}${certi}`);
+                    setPdfFile(doc.url);
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            loadPDF(certificate.file_name);
+        }
+    }, [isVisible, certificate.file_name, pdfFile, isLoading]);
     
     return (
-        <ReactCardFlip
-        flipDirection="horizontal" 
-        isFlipped={isFlipped}
-        >
-            <CertificateFront 
-                certificate={certificate} 
-                pdfFile={pdfFile} 
-                isFlipped={isFlipped}
-                setIsFlipped={setIsFlipped}/>
-            <CertificateBack 
-                certificate={certificate} 
-                pdfFile={pdfFile} 
-                isFlipped={isFlipped}
-                setIsFlipped={setIsFlipped}/>
-        </ReactCardFlip>
+        <div ref={certificateRef}>
+            <ReactCardFlip
+            flipDirection="horizontal" 
+            isFlipped={isFlipped}
+            >
+                <CertificateFront 
+                    certificate={certificate} 
+                    pdfFile={pdfFile} 
+                    isVisible={isVisible}
+                    isLoading={isLoading}
+                    isFlipped={isFlipped}
+                    setIsFlipped={setIsFlipped}/>
+                <CertificateBack 
+                    certificate={certificate} 
+                    pdfFile={pdfFile} 
+                    isFlipped={isFlipped}
+                    setIsFlipped={setIsFlipped}/>
+            </ReactCardFlip>
+        </div>
     );
 
-}
+});
 
-const CertificateFront = ({certificate, pdfFile, isFlipped, setIsFlipped}) => {
+const CertificateFront = memo(({certificate, pdfFile, isVisible, isLoading, isFlipped, setIsFlipped}) => {
     
-    function formatDate(dateString) {
+    const formatDate = useCallback((dateString) => {
         const options = { year: 'numeric', month: 'short', day: '2-digit' };
         return new Date(dateString).toLocaleDateString('en-US', options);
-    }
+    }, []);
+
+    const formattedDate = useMemo(() => formatDate(certificate.date), [certificate.date, formatDate]);
+
+    // Thumbnail placeholder component
+    const CertificateThumbnail = () => (
+        <div className="certificate-thumbnail">
+            <div className="thumbnail-icon">📄</div>
+            <div className="thumbnail-text">{certificate.name}</div>
+            {isLoading && <div className="thumbnail-loading">Loading...</div>}
+        </div>
+    );
 
     return (
         <div className="certificate-front">
             <div className="certificate-title">{certificate.name}</div>
-            {pdfFile ? (
-                <Document file={pdfFile}>
+            {pdfFile && isVisible ? (
+                <Document file={pdfFile} loading={<CertificateThumbnail />}>
                     <Page pageNumber={1} renderAnnotationLayer={false} renderTextLayer={false} width="280"/>
                 </Document>
             ) : (
-                <div>Loading PDF...</div>
+                <CertificateThumbnail />
             )}
             <div className="certificate-date">
-                Issued on {formatDate(certificate.date)}
+                Issued on {formattedDate}
             </div>
             <div className='certificate-issuing-auth'>
                 {certificate.issuing_auth.map(authority => (
@@ -161,12 +217,15 @@ const CertificateFront = ({certificate, pdfFile, isFlipped, setIsFlipped}) => {
             </div>
         </div>
     );
-}
+});
 
-const CertificateBack = ({certificate, pdfFile, isFlipped, setIsFlipped}) => {
+const CertificateBack = memo(({certificate, pdfFile, isFlipped, setIsFlipped}) => {
     
-    const categories = certificate.cat;
-    const topics = certificate.topics;
+    const categories = useMemo(() => certificate.cat, [certificate.cat]);
+    const topics = useMemo(() => certificate.topics, [certificate.topics]);
+
+    // Get PDF URL directly from document endpoint if pdfFile is not loaded yet
+    const pdfUrl = pdfFile || `https://muditgarg48.github.io/portfolio_data/documents/${certificate.file_name}`;
 
     return (
         <div className="certificate-back">
@@ -190,7 +249,7 @@ const CertificateBack = ({certificate, pdfFile, isFlipped, setIsFlipped}) => {
                     </a>
                 </div>
                 <div className='open-button'>
-                    <a href={pdfFile} target="_blank" rel="noreferrer">
+                    <a href={pdfUrl} target="_blank" rel="noreferrer">
                         Open 
                         {/* <img src={share} height='25px' width='25px' alt='' /> */}
                     </a>
@@ -199,16 +258,20 @@ const CertificateBack = ({certificate, pdfFile, isFlipped, setIsFlipped}) => {
             <FlipButton isFlipped={isFlipped} setIsFlipped={setIsFlipped}/>
         </div>
     );
-}
+});
 
-const FlipButton = ({isFlipped, setIsFlipped}) => {
+const FlipButton = memo(({isFlipped, setIsFlipped}) => {
+    const handleClick = useCallback(() => {
+        setIsFlipped(!isFlipped);
+    }, [isFlipped, setIsFlipped]);
+
     return (
         <div className="flip-button">
-            <div onClick={() => setIsFlipped(!isFlipped)}>
+            <div onClick={handleClick}>
                 {isFlipped? "Less": "More"} Details
             </div>
         </div>
     );
-}
+});
 
 export default CertificatesSection;
