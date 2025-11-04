@@ -149,7 +149,6 @@
     align-items: center;
     width: 100%;
     color: var(--font-primary-color);
-    /* background-color: white; */
 }
 
 /* Coming Soon Project CSS */
@@ -196,7 +195,129 @@
 
 .coming-soon-commit-history {
     margin: 10px;
-    padding: 20px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px dashed var(--font-secondary-color);
+    background-color: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s ease;
+}
+
+.coming-soon-commit-history:hover:not(.expanded) {
+    border-color: var(--font-highlight-color);
+}
+
+.coming-soon-commit-history.expanded {
+    padding-bottom: 15px;
+}
+
+.coming-soon-commit-history .coming-soon-mini-section-heading {
+    margin-bottom: 0;
+}
+
+.commit-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.commit-history-header:hover {
+    color: var(--font-highlight-color);
+}
+
+.commit-history-header span:first-child {
+    font-size: small;
+    color: var(--font-highlight-color);
+}
+
+.expand-indicator {
+    font-size: 0.9em;
+    transition: transform 0.3s ease, color 0.3s ease;
+    color: var(--font-secondary-color);
+    margin-left: 10px;
+}
+
+.commit-history-header:hover .expand-indicator {
+    color: var(--font-highlight-color);
+}
+
+.commit-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease-out, opacity 0.2s ease-out, margin-top 0.2s ease-out, padding-top 0.2s ease-out, border-top 0.2s ease-out;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 1px solid transparent;
+}
+
+.commit-list.expanded {
+    max-height: 800px;
+    opacity: 1;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--font-secondary-color);
+    transition: max-height 0.3s ease-in, opacity 0.25s ease-in, margin-top 0.25s ease-in, padding-top 0.25s ease-in, border-top 0.25s ease-in;
+}
+
+.commit-list.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 1px solid transparent;
+}
+
+.latest-commit {
+    margin-top: 10px;
+    margin-bottom: 8px;
+    padding: 10px;
+    border-left: 2px solid var(--font-secondary-color);
+    padding-left: 15px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+
+.latest-commit:first-child {
+    margin-top: 0;
+}
+
+.latest-commit:hover {
+    border-left-color: var(--font-highlight-color);
+    transform: translateX(5px);
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.view-full-history-btn-container {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--font-secondary-color);
+    display: flex;
+    justify-content: center;
+}
+
+.view-full-history-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--font-secondary-color);
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--font-secondary-color);
+    transition: all 0.3s ease;
+    font-size: small;
+    font-weight: 500;
+}
+
+.view-full-history-btn:hover {
+    color: var(--font-highlight-color);
+    border-color: var(--font-highlight-color);
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
 }
 
 .commit-details {
@@ -204,6 +325,42 @@
     justify-content: flex-end;
     font-size: small;
     color: var(--font-secondary-color);
+    align-items: center;
+    gap: 4px;
+}
+
+.commit-stats {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-enclosure {
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid;
+    font-size: small;
+    white-space: nowrap;
+}
+
+.stat-enclosure.files-changed {
+    color: var(--font-secondary-color);
+    border-color: var(--font-secondary-color);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.stat-enclosure.commit-additions {
+    color: green;
+    font-weight: bolder;
+    border-color: rgba(0, 128, 0, 0.5);
+    background-color: rgba(0, 128, 0, 0.1);
+}
+
+.stat-enclosure.commit-deletions {
+    color: red;
+    font-weight: bolder;
+    border-color: rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.1);
 }
 
 .commit-msg {
@@ -214,16 +371,6 @@
     text-decoration: underline;
     color: var(--font-highlight-color);
     cursor: pointer;
-}
-
-.commit-additions {
-    color: green;
-    font-weight: bolder;
-}
-
-.commit-deletions {
-    color: red;
-    font-weight: bolder;
 }
 
 /* Major Project CSS */
@@ -284,10 +431,6 @@
         border: none;
     }
 
-    #blurImg {
-        filter: blur(0);
-        -webkit-filter: blur(0);
-    }
 
     #minor-projects {
         justify-content: space-evenly;

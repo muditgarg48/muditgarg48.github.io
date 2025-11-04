@@ -70,7 +70,7 @@ const ProjectImage = ({image, name}) => {
     );
 }
 
-const ComingSoonProject = ({ name, desc, speciality, image, tech_stack, planned_tasks, github, deployment, other_btns }) => {
+const ComingSoonProject = ({ name, desc, speciality, tech_stack, planned_tasks, github, deployment, other_btns }) => {
 
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
@@ -170,11 +170,9 @@ const ComingSoonProject = ({ name, desc, speciality, image, tech_stack, planned_
                 </div>
                 <div className="commit-details">
                     <span className="commit-stats">
-                        <span>{filesChanged} files changed</span>
-                        &nbsp;
-                        <span className="commit-additions">+ {stats.additions}</span>
-                        &nbsp;
-                        <span className="commit-deletions">- {stats.deletions}</span>
+                        <span className="stat-enclosure files-changed">{filesChanged} files changed</span>
+                        <span className="stat-enclosure commit-additions">+ {stats.additions}</span>
+                        <span className="stat-enclosure commit-deletions">- {stats.deletions}</span>
                     </span>
                     &nbsp;
                     &nbsp;
@@ -185,22 +183,46 @@ const ComingSoonProject = ({ name, desc, speciality, image, tech_stack, planned_
     };
 
     const ProjectCommitHistory = () => {
+        const [isExpanded, setIsExpanded] = useState(false);
+        
         if (!latestCommitHistory.length) return null;
+        
+        const commitsUrl = github && github.repo_owner && github.repo_name 
+            ? `https://github.com/${github.repo_owner}/${github.repo_name}/commits/${github.repo_branch || 'main'}`
+            : null;
+        
         return (
-            <div className="coming-soon-commit-history">
-                <div className="coming-soon-mini-section-heading">
-                    Last 7 Commits:
+            <div className={`coming-soon-commit-history ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                <div 
+                    className="coming-soon-mini-section-heading commit-history-header"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                >
+                    <span>Last 7 Commits:</span>
+                    <span className="expand-indicator">{isExpanded ? '▼' : '▶'}</span>
                 </div>
-                {
-                    latestCommitHistory.map((commit, index) => <SingleCommit key={index} commit={commit}/>)
-                }
+                <div className={`commit-list ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                    {
+                        latestCommitHistory.map((commit, index) => <SingleCommit key={index} commit={commit}/>)
+                    }
+                    {isExpanded && commitsUrl && (
+                        <div className="view-full-history-btn-container">
+                            <a 
+                                href={commitsUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="view-full-history-btn"
+                            >
+                                View Full History
+                            </a>
+                        </div>
+                    )}
+                </div>
             </div>
         );
     }
 
     return (
         <div className="coming-soon-project-component">
-            {/* <ProjectImage/> */}
             <div className="coming-soon-project-details">
                 <ProjectHeadline/>
                 <h3>{name}</h3>

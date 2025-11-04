@@ -90,7 +90,7 @@ body {
 }
 
 .react-tabs__tab--selected {
-  border-radius: 10px;
+  border-radius: 7rem;
   box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1) inset;
   font-weight: normal;
   font-size: x-large;
