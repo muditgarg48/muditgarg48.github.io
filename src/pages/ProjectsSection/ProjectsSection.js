@@ -79,14 +79,12 @@ const ComingSoonProject = ({ name, desc, speciality, image, tech_stack, planned_
     const [latestCommitHistory, setLatestCommitHistory] = useState([]);
 
     useEffect(() => {
-        const trimmedUrl = github.endsWith('/') ? github.slice(0, -1) : github;
-        const parts = trimmedUrl.split('/');
-        const repoName = parts[parts.length - 1];
+        if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
 
-        axios.get(`https://api.github.com/repos/muditgarg48/${repoName}/branches/master`)
+        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/branches/${github.repo_branch}`)
             .then(res => setLastUpdated(formatDate(res.data.commit.commit.committer.date)));
 
-        axios.get(`https://api.github.com/repos/muditgarg48/${repoName}/commits?per_page=7`)
+        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/commits?per_page=7`)
             .then(async res => {
                 const commits = res.data;
 
@@ -105,7 +103,9 @@ const ComingSoonProject = ({ name, desc, speciality, image, tech_stack, planned_
         return (
             <div className="project-headline">
                 <div className="project-links">
-                    <AnimatedIcon icon={git_repo} link={github} class_name="nocss"/>
+                    {github && github.repo_link && (
+                        <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
+                    )}
                     {
                         deployment &&
                         <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
@@ -225,10 +225,9 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, kpis, github,
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
 
     useEffect(()=> {
-        const trimmedUrl = github.endsWith('/')?github.slice(0, -1):github;
-        const parts = trimmedUrl.split('/');
-        const repoName = parts[parts.length - 1];
-        axios.get("https://api.github.com/repos/muditgarg48/"+repoName+"/branches/master")
+        if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
+        
+        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/branches/${github.repo_branch}`)
             .then(response => response.data)
             .then(data => {
                 setLastUpdated(formatDate(data.commit.commit.committer.date))
@@ -247,13 +246,15 @@ const MajorProject = ({ name, desc, speciality, image, tech_stack, kpis, github,
     const ProjectLinks = () => {
         return (
             <div className="project-links">
-                <AnimatedIcon icon={git_repo} link={github} class_name="nocss"/>
+                {github && github.repo_link && (
+                    <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
+                )}
                 {
                     deployment &&
                     <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
                 }
                 {other_btns && other_btns.map((btn, index) => (
-                    <a href={btn.github} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>
+                    <a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>
                 ))}
             </div>
         );
@@ -285,10 +286,9 @@ const MinorProject = ({ name, desc, tech_stack, kpis, github, deployment, other_
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
 
     useEffect(()=> {
-        const trimmedUrl = github.endsWith('/')?github.slice(0, -1):github;
-        const parts = trimmedUrl.split('/');
-        const repoName = parts[parts.length - 1];
-        axios.get("https://api.github.com/repos/muditgarg48/"+repoName+"/branches/master")
+        if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
+        
+        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/branches/${github.repo_branch}`)
             .then(response => response.data)
             .then(data => {
                 setLastUpdated(formatDate(data.commit.commit.committer.date))
@@ -300,13 +300,15 @@ const MinorProject = ({ name, desc, tech_stack, kpis, github, deployment, other_
             <div className="minor-project-links">
                 <ActivityTag lastUpdated={lastUpdated}/>
                 <div className="project-links">
-                    <AnimatedIcon icon={git_repo} link={github} class_name="nocss"/>
+                    {github && github.repo_link && (
+                        <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
+                    )}
                     {
                         deployment &&
                         <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
                     }
                     {other_btns && other_btns.map((btn, index) => (
-                        <a href={btn.github} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>
+                        <a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>
                     ))}
                 </div>
             </div>
