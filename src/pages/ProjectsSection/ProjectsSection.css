@@ -9,6 +9,8 @@
     margin: 20px;
     padding: 2%;
     align-items: center;
+    transform: translateZ(0); /* Force GPU acceleration */
+    will-change: transform;
 }
 
 .project-image {
@@ -40,12 +42,13 @@
     border: none;
     position: relative;
     left: 0;
-    transition: all 1s;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    will-change: transform;
     color: var(--font-primary-color);
 }
 
 .project-details:hover {
-    left: -10%;
+    transform: translateX(-10%);
     background: var(--bg-color);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -202,7 +205,10 @@
     min-height: 250px;
     justify-content: center;
     background: transparent;
-    transition: all 0.5s;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform;
+    contain: layout style paint; /* Isolate rendering calculations */
+    transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .coming-soon-project-details {
@@ -211,9 +217,11 @@
     background: var(--bg-color);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
     border: 1px solid var(--font-secondary-color);
+    will-change: transform;
+    transform: translateZ(0); /* Force GPU acceleration */
+    contain: layout style paint; /* Isolate rendering calculations */
+    /* Removed backdrop-filter as it's expensive during scroll */
 }
 
 .coming-soon-mini-section-heading {
@@ -227,6 +235,7 @@
     margin: 5px;
     border: 2px dashed var(--font-secondary-color);
     border-radius: 10px;
+    contain: layout style paint; /* Isolate rendering calculations */
 }
 
 .planned-task {
@@ -239,7 +248,8 @@
     border-radius: 10px;
     border: 2px dashed var(--font-secondary-color);
     background-color: rgba(255, 255, 255, 0.02);
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease;
+    contain: layout style paint; /* Isolate rendering calculations */
 }
 
 .coming-soon-commit-history:hover:not(.expanded) {
@@ -288,20 +298,21 @@
 .commit-list {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.25s ease-out, opacity 0.2s ease-out, margin-top 0.2s ease-out, padding-top 0.2s ease-out, border-top 0.2s ease-out;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out 0.05s, margin-top 0.25s ease-out 0.05s, padding-top 0.25s ease-out 0.05s, border-top 0.25s ease-out 0.05s;
     opacity: 0;
     margin-top: 0;
     padding-top: 0;
     border-top: 1px solid transparent;
+    contain: layout style paint; /* Isolate rendering calculations */
 }
 
 .commit-list.expanded {
-    max-height: 800px;
+    max-height: 1000px; /* Fixed value large enough for content, allows smooth transition */
     opacity: 1;
     margin-top: 15px;
     padding-top: 15px;
     border-top: 1px solid var(--font-secondary-color);
-    transition: max-height 0.3s ease-in, opacity 0.25s ease-in, margin-top 0.25s ease-in, padding-top 0.25s ease-in, border-top 0.25s ease-in;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-in, margin-top 0.25s ease-in, padding-top 0.25s ease-in, border-top 0.25s ease-in;
 }
 
 .commit-list.collapsed {
@@ -310,6 +321,7 @@
     margin-top: 0;
     padding-top: 0;
     border-top: 1px solid transparent;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-out, margin-top 0.2s ease-out, padding-top 0.2s ease-out, border-top 0.2s ease-out;
 }
 
 .latest-commit {
@@ -318,9 +330,10 @@
     padding: 10px;
     border-left: 2px solid var(--font-secondary-color);
     padding-left: 15px;
-    transition: all 0.3s ease;
+    transition: border-left-color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
     background-color: rgba(255, 255, 255, 0.02);
     border-radius: 4px;
+    contain: layout style paint; /* Isolate rendering calculations */
 }
 
 .latest-commit:first-child {
@@ -431,14 +444,16 @@
     margin: 1%;
     padding: 1.5%;
     width: 100%;
-    transition: all 0.5s;
+    transition: transform 0.3s ease;
+    will-change: transform;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .minor-project-component:hover {
-    transform: translateY(-3%);
+    transform: translateY(-3%) translateZ(0);
 }
 
 /* Responsive Design CSS */

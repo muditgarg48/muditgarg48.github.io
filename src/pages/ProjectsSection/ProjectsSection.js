@@ -40,7 +40,7 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString('en-US', options);
 }
 
-const ProjectKPIs = ({kpis}) => {
+const ProjectKPIs = memo(({kpis}) => {
     return (
         <div className="project-kpis">
         {
@@ -52,9 +52,9 @@ const ProjectKPIs = ({kpis}) => {
         }
         </div>
     );
-}
+});
 
-const ProjectTechStack = ({tech_stack}) => {
+const ProjectTechStack = memo(({tech_stack}) => {
     return (
         <div className="project-tech">
             {
@@ -64,21 +64,19 @@ const ProjectTechStack = ({tech_stack}) => {
             }
         </div>
     );
-}
+});
 
-const ProjectImage = ({image, name}) => {
+const ProjectImage = memo(({image, name}) => {
     return (
         <div className="project-image">
-            <img src={image} alt={name}/>
+            <img src={image} alt={name} loading="lazy" decoding="async"/>
         </div>
     );
-}
+});
 
-// Error display component
 const ErrorMessage = memo(({ error, className = "" }) => {
     if (!error) return null;
     
-    // Extract user-friendly error message
     const getErrorMessage = (error) => {
         if (typeof error === 'string') return error;
         if (error.message) return error.message;
@@ -94,10 +92,92 @@ const ErrorMessage = memo(({ error, className = "" }) => {
     );
 });
 
-const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github, deployment, other_btns }) => {
-
+const ComingSoonProjectHeadline = memo(({ github, deployment, other_btns, lastUpdated }) => {
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
+    
+    return (
+        <div className="project-headline">
+            <div className="project-links">
+                {github && github.repo_link && (
+                    <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
+                )}
+                {
+                    deployment &&
+                    <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
+                }
+                {other_btns && other_btns.map((btn, index) => {
+                    if (btn.link !== "")
+                        return (<a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>)
+                    return null;
+                })}
+            </div>
+            <ActivityTag lastUpdated={lastUpdated}/>
+        </div>
+    );
+});
+
+const ComingSoonProjectTech = memo(({ tech_stack }) => {
+    return (
+        <div className="project-tech">
+        {
+            tech_stack.map((tech, index)=> (
+                <div key={index} className="tech">
+                    {tech}
+                </div>
+            ))
+        }
+        </div>
+    );
+});
+
+const ComingSoonProjectPlannedTasks = memo(({ planned_tasks }) => {
+    return (
+        <div className="coming-soon-mini-section">
+            <div className="coming-soon-mini-section-heading">
+                Planned Tasks:
+            </div>
+            <ul className="planned-tasks">
+            {
+                planned_tasks.map((task, index) => (
+                    <li key={index} className="planned-task">
+                        {task}
+                    </li>
+                ))
+            }
+            </ul>
+        </div>
+    );
+});
+
+const SingleCommit = memo(({ commit }) => {
+    const details = commit.details;
+    const message = commit.commit.message;
+    const redirectUrl = commit.html_url;
+    const commitId = commit.sha.substring(0, 7);
+
+    const stats = details ? details.stats : { additions: 0, deletions: 0 };
+    const filesChanged = details ? details.files.length : 0;
+    const commitDate = details ? formatDate(details.commit.committer.date) : "";
+
+    return (
+        <div className="latest-commit">
+            <div className="commit-msg">
+                <a href={redirectUrl} target="_blank" rel="noopener noreferrer" className="commit-id">{commitId}</a> &nbsp; {message}
+            </div>
+            <div className="commit-details">
+                <span className="commit-stats">
+                    <span className="stat-enclosure files-changed">{filesChanged} files changed</span>
+                    <span className="stat-enclosure commit-additions">+ {stats.additions}</span>
+                    <span className="stat-enclosure commit-deletions">- {stats.deletions}</span>
+                </span>
+                <span className="commit-date">{commitDate}</span>
+            </div>
+        </div>
+    );
+});
+
+const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github, deployment, other_btns }) => {
 
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
     const [lastUpdatedError, setLastUpdatedError] = useState(null);
@@ -106,7 +186,6 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
     const [commitsExpanded, setCommitsExpanded] = useState(false);
     const [commitsError, setCommitsError] = useState(null);
 
-    // Fetch branch info on mount (cached)
     useEffect(() => {
         if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
 
@@ -160,144 +239,25 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
         }
     }, [commitsExpanded, fetchCommitHistory, latestCommitHistory.length]);
 
-    const ProjectHeadline = () => {
-        return (
-            <div className="project-headline">
-                <div className="project-links">
-                    {github && github.repo_link && (
-                        <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
-                    )}
-                    {
-                        deployment &&
-                        <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
-                    }
-                    {other_btns && other_btns.map((btn, index) => {
-                        if (btn.link !== "")
-                            return (<a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>)
-                        return null;
-                    })}
-                </div>
-                <ActivityTag lastUpdated={lastUpdated}/>
-            </div>
-        );
-    }
-
-    const ProjectTech = () => {
-        return (
-            <div className="project-tech">
-            {
-                tech_stack.map((tech, index)=> (
-                    <div key={index} className="tech">
-                        {tech}
-                    </div>
-                ))
-            }
-            </div>
-        );
-    }
-
-    const ProjectPlannedTasks = () => {
-        return (
-            <div className="coming-soon-mini-section">
-                <div className="coming-soon-mini-section-heading">
-                    Planned Tasks:
-                </div>
-                <ul className="planned-tasks">
-                {
-                    planned_tasks.map((task, index) => (
-                        <li key={index} className="planned-task">
-                            {task}
-                        </li>
-                    ))
-                }
-                </ul>
-            </div>
-        );
-    }
-
-    const SingleCommit = memo(({ commit }) => {
-        const details = commit.details;
-        const message = commit.commit.message;
-        const redirectUrl = commit.html_url;
-        const commitId = commit.sha.substring(0, 7);
-
-        const stats = details ? details.stats : { additions: 0, deletions: 0 };
-        const filesChanged = details ? details.files.length : 0;
-        const commitDate = details ? formatDate(details.commit.committer.date) : "";
-
-        return (
-            <div className="latest-commit">
-                <div className="commit-msg">
-                    <a href={redirectUrl} target="_blank" rel="noopener noreferrer" className="commit-id">{commitId}</a> &nbsp; {message}
-                </div>
-                <div className="commit-details">
-                    <span className="commit-stats">
-                        <span className="stat-enclosure files-changed">{filesChanged} files changed</span>
-                        <span className="stat-enclosure commit-additions">+ {stats.additions}</span>
-                        <span className="stat-enclosure commit-deletions">- {stats.deletions}</span>
-                    </span>
-                    <span className="commit-date">{commitDate}</span>
-                </div>
-            </div>
-        );
-    });
-
-    const ProjectCommitHistory = () => {
-        const commitsUrl = github && github.repo_owner && github.repo_name 
+    const commitsUrl = useMemo(() => {
+        return github && github.repo_owner && github.repo_name 
             ? `https://github.com/${github.repo_owner}/${github.repo_name}/commits/${github.repo_branch || 'main'}`
             : null;
-        
-        const handleToggle = () => {
-            const newExpanded = !commitsExpanded;
-            setCommitsExpanded(newExpanded);
-        };
-        
-        return (
-            <div className={`coming-soon-commit-history ${commitsExpanded ? 'expanded' : 'collapsed'}`}>
-                <div 
-                    className="coming-soon-mini-section-heading commit-history-header"
-                    onClick={handleToggle}
-                    style={{ cursor: 'pointer' }}
-                >
-                    <span>Last 7 Commits:</span>
-                    <span className="expand-indicator">
-                        {isLoadingCommits ? '⏳' : commitsExpanded ? '▼' : '▶'}
-                    </span>
-                </div>
-                <div className={`commit-list ${commitsExpanded ? 'expanded' : 'collapsed'}`}>
-                    {isLoadingCommits && (
-                        <div style={{ padding: '10px', textAlign: 'center' }}>Loading commits...</div>
-                    )}
-                    {commitsError && (
-                        <ErrorMessage error={commitsError} className="commit-error" />
-                    )}
-                    {!isLoadingCommits && !commitsError && latestCommitHistory.length === 0 && commitsExpanded && (
-                        <div style={{ padding: '10px', textAlign: 'center' }}>No commits found</div>
-                    )}
-                    {!isLoadingCommits && !commitsError && latestCommitHistory.map((commit) => (
-                        <SingleCommit key={commit.sha} commit={commit}/>
-                    ))}
-                    {commitsExpanded && commitsUrl && !isLoadingCommits && (
-                        <div className="view-full-history-btn-container">
-                            <a 
-                                href={commitsUrl} 
-                                target="_blank" 
-                                rel="noreferrer" 
-                                className="view-full-history-btn"
-                            >
-                                View Full History
-                            </a>
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    }
+    }, [github]);
+    
+    const handleToggle = useCallback(() => {
+        setCommitsExpanded(prev => !prev);
+    }, []);
 
     return (
         <div className="coming-soon-project-component">
             <div className="coming-soon-project-details">
-                <ProjectHeadline/>
+                <ComingSoonProjectHeadline 
+                    github={github} 
+                    deployment={deployment} 
+                    other_btns={other_btns} 
+                    lastUpdated={lastUpdated}
+                />
                 <h3>{name}</h3>
                 <div className="project-last-updated">
                     {lastUpdatedError ? (
@@ -307,19 +267,102 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
                     )}
                 </div>
                 <p className="project-desc">{desc}</p>
-                <ProjectTech/>
+                <ComingSoonProjectTech tech_stack={tech_stack}/>
                 &nbsp;
-                <ProjectPlannedTasks/>
-                <ProjectCommitHistory/>
+                <ComingSoonProjectPlannedTasks planned_tasks={planned_tasks}/>
+                <ComingSoonProjectCommitHistory
+                    commitsExpanded={commitsExpanded}
+                    isLoadingCommits={isLoadingCommits}
+                    commitsError={commitsError}
+                    latestCommitHistory={latestCommitHistory}
+                    commitsUrl={commitsUrl}
+                    onToggle={handleToggle}
+                />
             </div>
         </div>
     );
 });
 
-const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, github, deployment, other_btns }) => {
+const ComingSoonProjectCommitHistory = memo(({ 
+    commitsExpanded, 
+    isLoadingCommits, 
+    commitsError, 
+    latestCommitHistory, 
+    commitsUrl, 
+    onToggle 
+}) => {
+    return (
+        <div className={`coming-soon-commit-history ${commitsExpanded ? 'expanded' : 'collapsed'}`}>
+            <div 
+                className="coming-soon-mini-section-heading commit-history-header"
+                onClick={onToggle}
+                style={{ cursor: 'pointer' }}
+            >
+                <span>Last 7 Commits:</span>
+                <span className="expand-indicator">
+                    {isLoadingCommits ? '⏳' : commitsExpanded ? '▼' : '▶'}
+                </span>
+            </div>
+            <div className={`commit-list ${commitsExpanded ? 'expanded' : 'collapsed'}`}>
+                {isLoadingCommits && (
+                    <div style={{ padding: '10px', textAlign: 'center' }}>Loading commits...</div>
+                )}
+                {commitsError && (
+                    <ErrorMessage error={commitsError} className="commit-error" />
+                )}
+                {!isLoadingCommits && !commitsError && latestCommitHistory.length === 0 && commitsExpanded && (
+                    <div style={{ padding: '10px', textAlign: 'center' }}>No commits found</div>
+                )}
+                {!isLoadingCommits && !commitsError && latestCommitHistory.map((commit) => (
+                    <SingleCommit key={commit.sha} commit={commit}/>
+                ))}
+                {commitsExpanded && commitsUrl && !isLoadingCommits && (
+                    <div className="view-full-history-btn-container">
+                        <a 
+                            href={commitsUrl} 
+                            target="_blank" 
+                            rel="noreferrer" 
+                            className="view-full-history-btn"
+                        >
+                            View Full History
+                        </a>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+});
 
+const MajorProjectHeadline = memo(({ speciality, lastUpdated }) => {
+    return (
+        <div className="project-headline">
+            <p><strong>{speciality}</strong></p>
+            <ActivityTag lastUpdated={lastUpdated}/>
+        </div>
+    );
+});
+
+const MajorProjectLinks = memo(({ github, deployment, other_btns }) => {
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
+    
+    return (
+        <div className="project-links">
+            {github && github.repo_link && (
+                <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
+            )}
+            {
+                deployment &&
+                <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
+            }
+            {other_btns && other_btns.map((btn, index) => (
+                <a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>
+            ))}
+        </div>
+    );
+});
+
+const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, github, deployment, other_btns }) => {
 
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
     const [lastUpdatedError, setLastUpdatedError] = useState(null);
@@ -338,17 +381,35 @@ const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, gi
             });
     }, [github]);
 
-    const ProjectHeadline = () => {
-        return (
-            <div className="project-headline">
-                <p><strong>{speciality}</strong></p>
-                <ActivityTag lastUpdated={lastUpdated}/>
+    return (
+        <div className="major-project-component">
+            <ProjectImage image={image} name={name}/>
+            <div className="project-details">
+                <MajorProjectHeadline speciality={speciality} lastUpdated={lastUpdated}/>
+                <h3>{name}</h3>
+                <div className="project-last-updated">
+                    {lastUpdatedError ? (
+                        <ErrorMessage error={lastUpdatedError} />
+                    ) : (
+                        <>Last Updated: {lastUpdated}</>
+                    )}
+                </div>
+                <p className="project-desc">{desc}</p>
+                <ProjectKPIs kpis={kpis}/>
+                <ProjectTechStack tech_stack={tech_stack}/>
+                <MajorProjectLinks github={github} deployment={deployment} other_btns={other_btns}/>
             </div>
-        );
-    }
+        </div>
+    );
+});
 
-    const ProjectLinks = () => {
-        return (
+const MinorProjectLinks = memo(({ github, deployment, other_btns, lastUpdated }) => {
+    const git_repo = require('../../assets/icons/repo.json');
+    const redirect = require('../../assets/icons/redirect.json');
+    
+    return (
+        <div className="minor-project-links">
+            <ActivityTag lastUpdated={lastUpdated}/>
             <div className="project-links">
                 {github && github.repo_link && (
                     <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
@@ -361,35 +422,11 @@ const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, gi
                     <a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>
                 ))}
             </div>
-        );
-    }
-
-    return (
-        <div className="major-project-component">
-            <ProjectImage image={image} name={name}/>
-            <div className="project-details">
-                <ProjectHeadline/>
-                <h3>{name}</h3>
-                <div className="project-last-updated">
-                    {lastUpdatedError ? (
-                        <ErrorMessage error={lastUpdatedError} />
-                    ) : (
-                        <>Last Updated: {lastUpdated}</>
-                    )}
-                </div>
-                <p className="project-desc">{desc}</p>
-                <ProjectKPIs kpis={kpis}/>
-                <ProjectTechStack tech_stack={tech_stack}/>
-                <ProjectLinks/>
-            </div>
         </div>
     );
 });
 
 const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, other_btns }) => {
-
-    const git_repo = require('../../assets/icons/repo.json');
-    const redirect = require('../../assets/icons/redirect.json');
     
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
     const [lastUpdatedError, setLastUpdatedError] = useState(null);
@@ -408,29 +445,14 @@ const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, o
             });
     }, [github]);
 
-    const ProjectLinks = () => {
-        return (
-            <div className="minor-project-links">
-                <ActivityTag lastUpdated={lastUpdated}/>
-                <div className="project-links">
-                    {github && github.repo_link && (
-                        <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
-                    )}
-                    {
-                        deployment &&
-                        <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={25}/>
-                    }
-                    {other_btns && other_btns.map((btn, index) => (
-                        <a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="other-btn">{btn.text}</a>
-                    ))}
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="minor-project-component">
-            <ProjectLinks/>
+            <MinorProjectLinks 
+                github={github} 
+                deployment={deployment} 
+                other_btns={other_btns} 
+                lastUpdated={lastUpdated}
+            />
             <h3>{name}</h3>
             <div className="project-last-updated">
                 {lastUpdatedError ? (
@@ -446,7 +468,22 @@ const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, o
     );
 });
 
-const ProjectsSection = ({projects_data}) => {
+const ProjectsSection = memo(({projects_data}) => {
+    // Memoize filtered arrays to prevent recalculation on every render
+    const comingSoonProjects = useMemo(() => {
+        if (!projects_data) return [];
+        return projects_data.filter(project => project.speciality === "COMING SOON");
+    }, [projects_data]);
+
+    const majorProjects = useMemo(() => {
+        if (!projects_data) return [];
+        return projects_data.filter(project => project.speciality !== "COMING SOON" && project.speciality !== "");
+    }, [projects_data]);
+
+    const minorProjects = useMemo(() => {
+        if (!projects_data) return [];
+        return projects_data.filter(project => project.speciality === "");
+    }, [projects_data]);
 
     return (
         <div id="projects-section">
@@ -460,39 +497,33 @@ const ProjectsSection = ({projects_data}) => {
                 <TabPanel>
                     <div id="major-projects">
                     {
-                        projects_data.map((project) => {
-                            if (project.speciality === "COMING SOON")
-                                return (<ComingSoonProject key={project.name || project.github?.repo_name} {...project} />)
-                            return null;
-                        })
+                        comingSoonProjects.map((project) => (
+                            <ComingSoonProject key={project.name || project.github?.repo_name} {...project} />
+                        ))
                     }
                     </div>            
                 </TabPanel>
                 <TabPanel>
                     <div id="major-projects">
                     {
-                        projects_data.map((project) => {
-                            if (project.speciality !== "COMING SOON" && project.speciality !== "")
-                                return (<MajorProject key={project.name || project.github?.repo_name} {...project} />)
-                            return null;
-                        })
+                        majorProjects.map((project) => (
+                            <MajorProject key={project.name || project.github?.repo_name} {...project} />
+                        ))
                     }
                     </div>   
                 </TabPanel>
                 <TabPanel> 
                     <div id="minor-projects">
                     {
-                        projects_data.map((project) => {
-                            if (project.speciality === "")
-                                return (<MinorProject key={project.name || project.github?.repo_name} {...project} />)
-                            return null;
-                        })
+                        minorProjects.map((project) => (
+                            <MinorProject key={project.name || project.github?.repo_name} {...project} />
+                        ))
                     }
                     </div>
                 </TabPanel>
             </Tabs>}
         </div>
     );
-}
+});
 
 export default ProjectsSection;
