@@ -1,9 +1,9 @@
-import React, { useState, useEffect, memo, useMemo } from "react";
+import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import axios from "axios";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
+import { getBranchInfo, getCommitsList, getCommitDetails } from "../../services/githubCache";
 
 const ActivityTag = memo(({lastUpdated}) => {
     const tag = useMemo(() => {
@@ -74,34 +74,91 @@ const ProjectImage = ({image, name}) => {
     );
 }
 
-const ComingSoonProject = memo(({ name, desc, speciality, tech_stack, planned_tasks, github, deployment, other_btns }) => {
+// Error display component
+const ErrorMessage = memo(({ error, className = "" }) => {
+    if (!error) return null;
+    
+    // Extract user-friendly error message
+    const getErrorMessage = (error) => {
+        if (typeof error === 'string') return error;
+        if (error.message) return error.message;
+        if (error.includes?.('rate limit')) return error;
+        return 'Failed to fetch data from GitHub';
+    };
+    
+    return (
+        <div className={`github-error-message ${className}`}>
+            <span className="error-icon">⚠️</span>
+            <span className="error-text">{getErrorMessage(error)}</span>
+        </div>
+    );
+});
+
+const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github, deployment, other_btns }) => {
 
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
 
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
+    const [lastUpdatedError, setLastUpdatedError] = useState(null);
     const [latestCommitHistory, setLatestCommitHistory] = useState([]);
+    const [isLoadingCommits, setIsLoadingCommits] = useState(false);
+    const [commitsExpanded, setCommitsExpanded] = useState(false);
+    const [commitsError, setCommitsError] = useState(null);
 
+    // Fetch branch info on mount (cached)
     useEffect(() => {
         if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
 
-        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/branches/${github.repo_branch}`)
-            .then(res => setLastUpdated(formatDate(res.data.commit.commit.committer.date)));
-
-        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/commits?per_page=7`)
-            .then(async res => {
-                const commits = res.data;
-
-                const detailedCommits = await Promise.all(
-                    commits.map(async (commit) => {
-                        const detailRes = await axios.get(commit.url);
-                        return { ...commit, details: detailRes.data };
-                    })
-                );
-
-                setLatestCommitHistory(detailedCommits);
+        getBranchInfo(github.repo_owner, github.repo_name, github.repo_branch)
+            .then(data => {
+                setLastUpdated(formatDate(data.commit.commit.committer.date));
+                setLastUpdatedError(null);
+            })
+            .catch(error => {
+                console.error('Error fetching branch info:', error);
+                setLastUpdatedError(error.message || error.toString());
             });
     }, [github]);
+
+    // Fetch commit history on demand (only when expanded)
+    const fetchCommitHistory = useCallback(async () => {
+        if (!github || !github.repo_owner || !github.repo_name || latestCommitHistory.length > 0) return;
+        
+        setIsLoadingCommits(true);
+        setCommitsError(null);
+        try {
+            const commits = await getCommitsList(github.repo_owner, github.repo_name, 7);
+            
+            // Fetch commit details in batches to avoid overwhelming the API
+            const detailedCommits = await Promise.all(
+                commits.map(async (commit) => {
+                    try {
+                        const details = await getCommitDetails(commit.url);
+                        return { ...commit, details };
+                    } catch (error) {
+                        console.error('Error fetching commit details:', error);
+                        // Return commit without details instead of failing completely
+                        return { ...commit, details: null, error: error.message || error.toString() };
+                    }
+                })
+            );
+            
+            setLatestCommitHistory(detailedCommits);
+        } catch (error) {
+            console.error('Error fetching commit history:', error);
+            setCommitsError(error.message || error.toString());
+        } finally {
+            setIsLoadingCommits(false);
+        }
+    }, [github, latestCommitHistory.length]);
+
+    // Fetch commits when user expands the section
+    useEffect(() => {
+        if (commitsExpanded && latestCommitHistory.length === 0) {
+            fetchCommitHistory();
+        }
+    }, [commitsExpanded, fetchCommitHistory, latestCommitHistory.length]);
 
     const ProjectHeadline = () => {
         return (
@@ -164,7 +221,7 @@ const ComingSoonProject = memo(({ name, desc, speciality, tech_stack, planned_ta
         const redirectUrl = commit.html_url;
         const commitId = commit.sha.substring(0, 7);
 
-        const stats = details ? details.stats : { total: 0, additions: 0, deletions: 0 };
+        const stats = details ? details.stats : { additions: 0, deletions: 0 };
         const filesChanged = details ? details.files.length : 0;
         const commitDate = details ? formatDate(details.commit.committer.date) : "";
 
@@ -179,8 +236,6 @@ const ComingSoonProject = memo(({ name, desc, speciality, tech_stack, planned_ta
                         <span className="stat-enclosure commit-additions">+ {stats.additions}</span>
                         <span className="stat-enclosure commit-deletions">- {stats.deletions}</span>
                     </span>
-                    &nbsp;
-                    &nbsp;
                     <span className="commit-date">{commitDate}</span>
                 </div>
             </div>
@@ -188,33 +243,46 @@ const ComingSoonProject = memo(({ name, desc, speciality, tech_stack, planned_ta
     });
 
     const ProjectCommitHistory = () => {
-        const [isExpanded, setIsExpanded] = useState(false);
-        
-        if (!latestCommitHistory.length) return null;
-        
         const commitsUrl = github && github.repo_owner && github.repo_name 
             ? `https://github.com/${github.repo_owner}/${github.repo_name}/commits/${github.repo_branch || 'main'}`
             : null;
         
+        const handleToggle = () => {
+            const newExpanded = !commitsExpanded;
+            setCommitsExpanded(newExpanded);
+        };
+        
         return (
-            <div className={`coming-soon-commit-history ${isExpanded ? 'expanded' : 'collapsed'}`}>
+            <div className={`coming-soon-commit-history ${commitsExpanded ? 'expanded' : 'collapsed'}`}>
                 <div 
                     className="coming-soon-mini-section-heading commit-history-header"
-                    onClick={() => setIsExpanded(!isExpanded)}
+                    onClick={handleToggle}
+                    style={{ cursor: 'pointer' }}
                 >
                     <span>Last 7 Commits:</span>
-                    <span className="expand-indicator">{isExpanded ? '▼' : '▶'}</span>
+                    <span className="expand-indicator">
+                        {isLoadingCommits ? '⏳' : commitsExpanded ? '▼' : '▶'}
+                    </span>
                 </div>
-                <div className={`commit-list ${isExpanded ? 'expanded' : 'collapsed'}`}>
-                    {
-                        latestCommitHistory.map((commit) => <SingleCommit key={commit.sha} commit={commit}/>)
-                    }
-                    {isExpanded && commitsUrl && (
+                <div className={`commit-list ${commitsExpanded ? 'expanded' : 'collapsed'}`}>
+                    {isLoadingCommits && (
+                        <div style={{ padding: '10px', textAlign: 'center' }}>Loading commits...</div>
+                    )}
+                    {commitsError && (
+                        <ErrorMessage error={commitsError} className="commit-error" />
+                    )}
+                    {!isLoadingCommits && !commitsError && latestCommitHistory.length === 0 && commitsExpanded && (
+                        <div style={{ padding: '10px', textAlign: 'center' }}>No commits found</div>
+                    )}
+                    {!isLoadingCommits && !commitsError && latestCommitHistory.map((commit) => (
+                        <SingleCommit key={commit.sha} commit={commit}/>
+                    ))}
+                    {commitsExpanded && commitsUrl && !isLoadingCommits && (
                         <div className="view-full-history-btn-container">
                             <a 
                                 href={commitsUrl} 
                                 target="_blank" 
-                                rel="noopener noreferrer" 
+                                rel="noreferrer" 
                                 className="view-full-history-btn"
                             >
                                 View Full History
@@ -232,7 +300,11 @@ const ComingSoonProject = memo(({ name, desc, speciality, tech_stack, planned_ta
                 <ProjectHeadline/>
                 <h3>{name}</h3>
                 <div className="project-last-updated">
-                    Last Updated: {lastUpdated}
+                    {lastUpdatedError ? (
+                        <ErrorMessage error={lastUpdatedError} />
+                    ) : (
+                        <>Last Updated: {lastUpdated}</>
+                    )}
                 </div>
                 <p className="project-desc">{desc}</p>
                 <ProjectTech/>
@@ -250,14 +322,19 @@ const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, gi
     const redirect = require('../../assets/icons/redirect.json');
 
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
+    const [lastUpdatedError, setLastUpdatedError] = useState(null);
 
     useEffect(()=> {
         if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
         
-        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/branches/${github.repo_branch}`)
-            .then(response => response.data)
+        getBranchInfo(github.repo_owner, github.repo_name, github.repo_branch)
             .then(data => {
-                setLastUpdated(formatDate(data.commit.commit.committer.date))
+                setLastUpdated(formatDate(data.commit.commit.committer.date));
+                setLastUpdatedError(null);
+            })
+            .catch(error => {
+                console.error('Error fetching branch info:', error);
+                setLastUpdatedError(error.message || error.toString());
             });
     }, [github]);
 
@@ -294,7 +371,11 @@ const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, gi
                 <ProjectHeadline/>
                 <h3>{name}</h3>
                 <div className="project-last-updated">
-                    Last Updated: {lastUpdated}
+                    {lastUpdatedError ? (
+                        <ErrorMessage error={lastUpdatedError} />
+                    ) : (
+                        <>Last Updated: {lastUpdated}</>
+                    )}
                 </div>
                 <p className="project-desc">{desc}</p>
                 <ProjectKPIs kpis={kpis}/>
@@ -311,14 +392,19 @@ const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, o
     const redirect = require('../../assets/icons/redirect.json');
     
     const [lastUpdated, setLastUpdated] = useState("Fetching...");
+    const [lastUpdatedError, setLastUpdatedError] = useState(null);
 
     useEffect(()=> {
         if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
         
-        axios.get(`https://api.github.com/repos/${github.repo_owner}/${github.repo_name}/branches/${github.repo_branch}`)
-            .then(response => response.data)
+        getBranchInfo(github.repo_owner, github.repo_name, github.repo_branch)
             .then(data => {
-                setLastUpdated(formatDate(data.commit.commit.committer.date))
+                setLastUpdated(formatDate(data.commit.commit.committer.date));
+                setLastUpdatedError(null);
+            })
+            .catch(error => {
+                console.error('Error fetching branch info:', error);
+                setLastUpdatedError(error.message || error.toString());
             });
     }, [github]);
 
@@ -347,7 +433,11 @@ const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, o
             <ProjectLinks/>
             <h3>{name}</h3>
             <div className="project-last-updated">
-                Last Updated: {lastUpdated}
+                {lastUpdatedError ? (
+                    <ErrorMessage error={lastUpdatedError} />
+                ) : (
+                    <>Last Updated: {lastUpdated}</>
+                )}
             </div>
             <p className="project-desc">{desc}</p>
             <ProjectKPIs kpis={kpis}/>
