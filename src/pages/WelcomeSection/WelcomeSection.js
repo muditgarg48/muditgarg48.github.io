@@ -2,7 +2,6 @@ import React from "react";
 import './WelcomeSection.css';
 import { TypeAnimation } from 'react-type-animation';
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
-import ScrollFurther from "../../components/ScrollFurther/ScrollFurther";
 
 const WelcomeSection = ({my_resume}) => {
 
@@ -42,8 +41,6 @@ const WelcomeSection = ({my_resume}) => {
                     </a>
                 </div>
             </div>
-            &nbsp;
-            <ScrollFurther next="chatbot-section" text="Talk directly to A.L.F.R.E.D."/>
         </div>
     );
 }

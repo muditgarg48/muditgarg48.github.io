@@ -9,101 +9,99 @@ import ExperienceSection from './pages/ExperienceSection/ExperienceSection';
 import ProjectsSection from './pages/ProjectsSection/ProjectsSection';
 import CertificatesSection from './pages/CertificatesSection/CertificatesSection';
 import Footer from './pages/Footer/Footer';
-import ChatbotSection from './pages/ChatbotSection/ChatbotSection';
+import FloatingButton from './components/FloatingButton/FloatingButton';
+import Modal from './components/Modal/Modal';
+import ChatWindowContainer from './pages/ChatbotSection/ChatWindowContainer';
+
+const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
+const DOCUMENT_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/documents/';
+const RESUME_ENDPOINT = 'My Resume.pdf';
+
+const DATA_FILES = {
+  facts: 'facts_data.json',
+  projects: 'projects_data.json',
+  certificates: 'certificates_data.json',
+  experience: 'experience_data.json',
+  education: 'education_history.json',
+  skills: 'skills.json',
+  about: 'about_data.json'
+};
 
 function App() {
-  
-  let [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [isChatbotModalOpen, setIsChatbotModalOpen] = useState(false);
 
-  const dataEndPoint = 'https://muditgarg48.github.io/portfolio_data/data/';
-  const factsEndPoint = 'facts_data.json';
-  const projectsDataEndPoint = 'projects_data.json';
-  const certificatesDataEndPoint = 'certificates_data.json';
-  const experienceDataEndPoint = 'experience_data.json';
-  const educationHistoryDataEndPoint = 'education_history.json';
-  const skillsDataEndPoint = 'skills.json';
-  const aboutMeDataEndPoint = 'about_data.json';
-
-  const documentEndPoint = 'https://muditgarg48.github.io/portfolio_data/documents/';
-  const resumeEndPoint = 'My Resume.pdf';
-
-  let [factsData, setFactsData] = useState([]);
-  let [projectsData, setProjectsData] = useState([]);
-  let [certificatesData, setCertificatesData] = useState([]);
-  let [experienceData, setExperienceData] = useState([]);
-  let [educationHistoryData, setEducationHistoryData] = useState([]);
-  let [skillsData, setSkillsData] = useState([]);
-  let [aboutMeData, setAboutMeData] = useState({});
+  const [factsData, setFactsData] = useState([]);
+  const [projectsData, setProjectsData] = useState([]);
+  const [certificatesData, setCertificatesData] = useState([]);
+  const [experienceData, setExperienceData] = useState([]);
+  const [educationHistoryData, setEducationHistoryData] = useState([]);
+  const [skillsData, setSkillsData] = useState([]);
+  const [aboutMeData, setAboutMeData] = useState({});
 
   useEffect(() => {
-    const getData = async () => {
-      // Fetch all data in parallel instead of sequentially
-      const [
-        factsResponse,
-        projectsResponse,
-        certificatesResponse,
-        experienceResponse,
-        educationResponse,
-        skillsResponse,
-        aboutMeResponse
-      ] = await Promise.all([
-        fetch(dataEndPoint+factsEndPoint),
-        fetch(dataEndPoint+projectsDataEndPoint),
-        fetch(dataEndPoint+certificatesDataEndPoint),
-        fetch(dataEndPoint+experienceDataEndPoint),
-        fetch(dataEndPoint+educationHistoryDataEndPoint),
-        fetch(dataEndPoint+skillsDataEndPoint),
-        fetch(dataEndPoint+aboutMeDataEndPoint)
-      ]);
+    const fetchData = async () => {
+      const fetchPromises = Object.values(DATA_FILES).map(file => 
+        fetch(`${DATA_ENDPOINT}${file}`).then(res => res.json())
+      );
 
-      const [
-        factsData,
-        projectsData,
-        certificatesData,
-        experienceData,
-        educationHistoryData,
-        skillsData,
-        aboutMeData
-      ] = await Promise.all([
-        factsResponse.json(),
-        projectsResponse.json(),
-        certificatesResponse.json(),
-        experienceResponse.json(),
-        educationResponse.json(),
-        skillsResponse.json(),
-        aboutMeResponse.json()
-      ]);
+      try {
+        const [
+          factsData,
+          projectsData,
+          certificatesData,
+          experienceData,
+          educationHistoryData,
+          skillsData,
+          aboutMeData
+        ] = await Promise.all(fetchPromises);
 
-      setFactsData(factsData);
-      setProjectsData(projectsData);
-      setCertificatesData(certificatesData);
-      setExperienceData(experienceData);
-      setEducationHistoryData(educationHistoryData);
-      setSkillsData(skillsData);
-      setAboutMeData(aboutMeData);
+        setFactsData(factsData);
+        setProjectsData(projectsData);
+        setCertificatesData(certificatesData);
+        setExperienceData(experienceData);
+        setEducationHistoryData(educationHistoryData);
+        setSkillsData(skillsData);
+        setAboutMeData(aboutMeData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
   
-      setLoading(false);
-    }
-  
-    getData();
+    fetchData();
   }, []);
 
   return (
     <div className="App">
       {/* <CustomCursor/> */}
-      {loading === true? 
-      <LoadingScreen/>: 
-      <>
+      {loading ? (
+        <LoadingScreen/>
+      ) : (
+        <>
         <NavBar/>
-        <WelcomeSection my_resume={documentEndPoint+resumeEndPoint}/>
+        <WelcomeSection my_resume={`${DOCUMENT_ENDPOINT}${RESUME_ENDPOINT}`}/>
         <AboutSection facts={factsData} education_history={educationHistoryData} skills={skillsData} about_me={aboutMeData}/>
         <ExperienceSection experience_data={experienceData}/>
         <ProjectsSection projects_data={projectsData}/>
         <CertificatesSection certificates_data={certificatesData}/>
-        <ChatbotSection/>
         <Footer/>
-      </>
-      }
+        <FloatingButton 
+          onClick={() => setIsChatbotModalOpen(true)} 
+          isVisible={!isChatbotModalOpen}
+          text="Ask A.L.F.R.E.D."
+          title="Chat with A.L.F.R.E.D."
+        />
+        <Modal 
+          isOpen={isChatbotModalOpen} 
+          onClose={() => setIsChatbotModalOpen(false)} 
+          onMinimize
+        >
+          <ChatWindowContainer />
+        </Modal>
+        </>
+      )}
     </div>
   );
 }
