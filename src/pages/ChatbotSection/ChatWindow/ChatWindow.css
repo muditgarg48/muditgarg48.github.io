@@ -135,20 +135,25 @@
 }
 
 .titlebar-header {
-    display: flex;
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
     align-items: center;
-    justify-content: space-between;
     padding: 8px 15px;
-    gap: 10px;
+    gap: 15px;
     min-height: 50px;
     flex-shrink: 0;
+    position: relative;
 }
 
 #window-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    grid-column: 2;
+    justify-self: center;
     pointer-events: none;
+    z-index: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .title-text {
@@ -163,15 +168,16 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    flex: 1;
     justify-content: flex-end;
+    min-width: fit-content;
+    flex-shrink: 0;
 }
 
 #control-buttons {
-    flex: 1;
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 #control-buttons > * {
