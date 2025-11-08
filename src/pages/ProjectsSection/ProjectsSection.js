@@ -469,7 +469,8 @@ const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, o
 });
 
 const ProjectsSection = memo(({projects_data}) => {
-    // Memoize filtered arrays to prevent recalculation on every render
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
     const comingSoonProjects = useMemo(() => {
         if (!projects_data) return [];
         return projects_data.filter(project => project.speciality === "COMING SOON");
@@ -485,10 +486,39 @@ const ProjectsSection = memo(({projects_data}) => {
         return projects_data.filter(project => project.speciality === "");
     }, [projects_data]);
 
+    // Center the active tab on mobile
+    useEffect(() => {
+        if (window.innerWidth <= 800) {
+            // Small delay to ensure DOM is updated
+            const timeoutId = setTimeout(() => {
+                const tabList = document.querySelector('#projects-tabs .react-tabs__tab-list');
+                const selectedTab = document.querySelector('#projects-tabs .react-tabs__tab--selected');
+                if (tabList && selectedTab && tabList.scrollWidth > tabList.clientWidth) {
+                    const tabListRect = tabList.getBoundingClientRect();
+                    const tabRect = selectedTab.getBoundingClientRect();
+                    const scrollLeft = tabList.scrollLeft;
+                    const tabCenter = tabRect.left - tabListRect.left + tabRect.width / 2;
+                    const scrollTarget = scrollLeft + tabCenter - tabListRect.width / 2;
+                    
+                    tabList.scrollTo({
+                        left: Math.max(0, scrollTarget),
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50);
+            
+            return () => clearTimeout(timeoutId);
+        }
+    }, [selectedIndex]);
+
     return (
         <div id="projects-section">
             <SectionHeading section_name="PROJECTS"/>
-            {projects_data && <Tabs id="projects-tabs">
+            {projects_data && <Tabs 
+                id="projects-tabs"
+                selectedIndex={selectedIndex}
+                onSelect={(index) => setSelectedIndex(index)}
+            >
                 <TabList>
                     <Tab>🚧 COMING SOON</Tab>
                     <Tab>⭐ FEATURED</Tab>

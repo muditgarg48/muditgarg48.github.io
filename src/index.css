@@ -68,6 +68,30 @@ body {
   align-items: center;
 }
 
+@media (max-width: 800px) {
+  .react-tabs__tab-list {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    scroll-snap-type: x mandatory;
+    padding: 10px;
+    margin: 10px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .react-tabs__tab-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .react-tabs__tab {
+    scroll-snap-align: center;
+    flex-shrink: 0;
+  }
+}
+
 .react-tabs__tab {
   display: inline-block;
   position: relative;
