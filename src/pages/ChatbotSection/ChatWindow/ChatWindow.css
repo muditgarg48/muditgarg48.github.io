@@ -228,6 +228,18 @@
 
 #minimize-button {
     background-color: #28C840;
+    cursor: pointer;
+}
+
+#minimize-button:hover::before {
+    content: '+';
+    font-weight: bolder;
+    position: absolute;
+    font-size: 10px;
+    color: #000;
+    font-weight: 600;
+    line-height: 1;
+    display: block;
 }
 
 .info-overlay {

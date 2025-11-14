@@ -29,7 +29,8 @@ const DATA_FILES = {
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [isChatbotModalOpen, setIsChatbotModalOpen] = useState(false);
+  const [isChatbotMainModalOpen, setIsChatbotMainModalOpen] = useState(false);
+  const [isChatbotMiniModalOpen, setIsChatbotMiniModalOpen] = useState(false);
 
   const [factsData, setFactsData] = useState([]);
   const [projectsData, setProjectsData] = useState([]);
@@ -88,18 +89,36 @@ function App() {
         <CertificatesSection certificates_data={certificatesData}/>
         <Footer/>
         <FloatingButton 
-          onClick={() => setIsChatbotModalOpen(true)} 
-          isVisible={!isChatbotModalOpen}
+          onClick={() => setIsChatbotMainModalOpen(true)} 
+          isVisible={!isChatbotMainModalOpen && !isChatbotMiniModalOpen}
           text="Ask A.L.F.R.E.D."
           title="Chat with A.L.F.R.E.D."
         />
-        <Modal 
-          isOpen={isChatbotModalOpen} 
-          onClose={() => setIsChatbotModalOpen(false)} 
-          onMinimize
-        >
-          <ChatWindowContainer />
-        </Modal>
+        {!isChatbotMiniModalOpen && (
+          <Modal 
+            isOpen={isChatbotMainModalOpen} 
+            onClose={() => setIsChatbotMainModalOpen(false)} 
+            onMinimize
+          >
+            <ChatWindowContainer 
+              onPopup={() => {
+                setIsChatbotMainModalOpen(false);
+                setIsChatbotMiniModalOpen(true);
+              }}
+            />
+          </Modal>
+        )}
+        {isChatbotMiniModalOpen && (
+          <div className="chat-popup-container">
+            <ChatWindowContainer 
+              onClose={() => setIsChatbotMiniModalOpen(false)}
+              onPopup={() => {
+                setIsChatbotMiniModalOpen(false);
+                setIsChatbotMainModalOpen(true);
+              }}
+            />
+          </div>
+        )}
         </>
       )}
     </div>

@@ -125,3 +125,49 @@ body {
   cursor: not-allowed;
   text-decoration: line-through;
 }
+
+/* Chat popup container - fixed on right bottom */
+.chat-popup-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2000;
+  width: 380px;
+  max-width: calc(100vw - 40px);
+  height: 600px;
+  max-height: calc(100vh - 40px);
+  animation: popupSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100px) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+.chat-popup-container #chat-window {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 20px;
+  max-width: 100%;
+}
+
+.chat-popup-container #window-titlebar {
+  border-radius: 20px 20px 0 0;
+}
+
+@media (max-width: 768px) {
+  .chat-popup-container {
+    width: calc(100vw - 40px);
+    height: 500px;
+    right: 20px;
+    left: 20px;
+    max-width: none;
+  }
+}

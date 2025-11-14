@@ -13,7 +13,7 @@ const INIT_MESSAGE = {
   sources: [],
 };
 
-const ChatWindowContainer = ({ onClose, onMinimize }) => {
+const ChatWindowContainer = ({ onClose, onMinimize, onPopup }) => {
   const [query, setQuery] = useState("");
   const [botStatus, setBotStatus] = useState("waiting");
   const [chatHistory, setChatHistory] = useState([INIT_MESSAGE]);
@@ -132,6 +132,7 @@ const ChatWindowContainer = ({ onClose, onMinimize }) => {
       resetChat={resetChat}
       onClose={onClose}
       onMinimize={onMinimize}
+      onPopup={onPopup}
     />
   );
 };

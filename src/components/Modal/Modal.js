@@ -76,7 +76,11 @@ const Modal = ({ isOpen, onClose, children, onMinimize, className = '' }) => {
   if (!shouldRender) return null;
 
   const childProps = React.isValidElement(children) 
-    ? { onClose: onCloseRef.current, onMinimize: handleMinimize }
+    ? { 
+        onClose: onCloseRef.current, 
+        onMinimize: handleMinimize,
+        ...(children.props?.onPopup ? { onPopup: children.props.onPopup } : {})
+      }
     : {};
 
   const overlayClasses = [

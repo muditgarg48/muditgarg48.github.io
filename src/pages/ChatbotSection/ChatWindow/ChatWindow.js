@@ -111,7 +111,8 @@ const ChatWindow = ({
   handleSubmit,
   resetChat,
   onClose,
-  onMinimize
+  onMinimize,
+  onPopup
 }) => {
   const [typingMessages, setTypingMessages] = useState({});
   const [isInfoOverlayOpen, setIsInfoOverlayOpen] = useState(false);
@@ -177,7 +178,11 @@ const ChatWindow = ({
           <div id="control-buttons">
             {onClose && <div id="close-button" onClick={onClose} title="Close"></div>}
             {onMinimize && <div id="expand-button" onClick={onMinimize} title="Minimize"></div>}
-            <div id="minimize-button" title="Does nothing"></div>
+            {onPopup ? (
+              <div id="minimize-button" onClick={(e) => { e.stopPropagation(); onPopup(); }} title="Switch to popup"></div>
+            ) : (
+              <div id="minimize-button" title="Does nothing"></div>
+            )}
           </div>
           <div id="window-title">
             <span className="title-text">A.L.F.R.E.D.</span>
