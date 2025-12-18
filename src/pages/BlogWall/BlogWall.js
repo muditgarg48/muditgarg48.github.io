@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BlogWall.css';
-import { fetchAllBlogs, formatBlogDate, isBlogLiked, shareBlog } from '../../services/blogUtils';
+import { fetchAllBlogs, fetchAuthorById, getAuthorId, getAuthorDisplayName, formatBlogDate, isBlogLiked, shareBlog } from '../../services/blogUtils';
 import BlogPostCard from './BlogPostCard';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import AnimatedIcon from '../../components/AnimatedIcon/AnimatedIcon';
@@ -16,6 +16,7 @@ const home_icon = require('../../assets/icons/home.json');
 const BlogWall = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
+  const [authors, setAuthors] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showToast, setShowToast] = useState(false);
@@ -27,6 +28,18 @@ const BlogWall = () => {
         setError(null);
         const fetchedBlogs = await fetchAllBlogs();
         setBlogs(fetchedBlogs);
+        
+        const authorsMap = {};
+        await Promise.all(fetchedBlogs.map(async (blog) => {
+          const authorId = getAuthorId(blog);
+          if (authorId) {
+            try {
+              const author = await fetchAuthorById(authorId);
+              if (author) authorsMap[blog.id] = author;
+            } catch (err) {}
+          }
+        }));
+        setAuthors(authorsMap);
       } catch (err) {
         console.error('Error loading blogs:', err);
         setError('Failed to load blogs. Please try again later.');
@@ -110,14 +123,28 @@ const BlogWall = () => {
               onClick={() => navigate(`/blogs/${blog.id}`)}
             >
               <div className="blog-card-content">
-                <h3 className="blog-card-title">
-                  {blog.title || 'Untitled'}
-                </h3>
+                <div className="blog-card-title-author-row">
+                  <h3 className="blog-card-title">
+                    {blog.title || 'Untitled'}
+                  </h3>
+                  {authors[blog.id] && getAuthorDisplayName(authors[blog.id]) && (
+                    <div className="blog-card-author">
+                      <span className="blog-card-author-label">By</span>
+                      <span className="blog-card-author-name">{getAuthorDisplayName(authors[blog.id])}</span>
+                    </div>
+                  )}
+                </div>
                 
                 {blog.subtitle && (
                   <p className="blog-card-subtitle">
                     {blog.subtitle}
                   </p>
+                )}
+
+                {blog.timeToRead && (
+                  <div className="blog-card-time-to-read">
+                    {blog.timeToRead} read
+                  </div>
                 )}
 
                 <div className="blog-card-tags-stats-row">

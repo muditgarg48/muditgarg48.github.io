@@ -198,6 +198,37 @@ export const toggleBlogLike = async (blogId) => {
   }
 };
 
+export const getAuthorId = (blog) => {
+  return blog.authorId || blog.author_id || blog.authorID || blog.author;
+};
+
+export const getAuthorDisplayName = (author) => {
+  return author?.displayName || author?.display_name || author?.name;
+};
+
+export const fetchAuthorById = async (authorId) => {
+  try {
+    if (!authorId) {
+      throw new Error('Author ID is required');
+    }
+    
+    const authorRef = doc(db, 'authors', authorId);
+    const authorSnapshot = await getDoc(authorRef);
+    
+    if (!authorSnapshot.exists()) {
+      return null;
+    }
+    
+    return {
+      id: authorSnapshot.id,
+      ...authorSnapshot.data()
+    };
+  } catch (error) {
+    console.error(`Error fetching author with ID ${authorId}:`, error);
+    throw error;
+  }
+};
+
 export const shareBlog = async (blogId) => {
   try {
     if (!blogId) {

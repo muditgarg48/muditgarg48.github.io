@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BlogDetail.css';
-import { fetchBlogById, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
+import { fetchBlogById, fetchAuthorById, getAuthorId, getAuthorDisplayName, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
 import BackIcon from '../../assets/svg/BackIcon';
 import HeartIcon from '../../assets/svg/HeartIcon';
 import EyeIcon from '../../assets/svg/EyeIcon';
@@ -13,6 +13,7 @@ const BlogDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
+  const [author, setAuthor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
@@ -31,6 +32,14 @@ const BlogDetail = () => {
         } else {
           setBlog(fetchedBlog);
           setIsLiked(isBlogLiked(id));
+          
+          const authorId = getAuthorId(fetchedBlog);
+          if (authorId) {
+            try {
+              const fetchedAuthor = await fetchAuthorById(authorId);
+              if (fetchedAuthor) setAuthor(fetchedAuthor);
+            } catch (err) {}
+          }
         }
       } catch (err) {
         console.error('Error loading blog:', err);
@@ -173,9 +182,17 @@ const BlogDetail = () => {
 
       <article className="blog-detail-content">
         <header className="blog-detail-header">
-          <h1 className="blog-detail-title">
-            {blog.title || 'Untitled'}
-          </h1>
+          <div className="blog-detail-title-author-row">
+            <h1 className="blog-detail-title">
+              {blog.title || 'Untitled'}
+            </h1>
+            {author && getAuthorDisplayName(author) && (
+              <div className="blog-detail-author">
+                <span className="blog-detail-author-label">By</span>
+                <span className="blog-detail-author-name">{getAuthorDisplayName(author)}</span>
+              </div>
+            )}
+          </div>
 
           <div className="blog-detail-tags-stats-row">
             {blog.tags?.length > 0 && (
@@ -259,6 +276,12 @@ const BlogDetail = () => {
             </div>
           </div>
         </header>
+
+        {blog.timeToRead && (
+          <div className="blog-detail-time-to-read">
+            {blog.timeToRead} read
+          </div>
+        )}
 
         <div className="blog-detail-body">
           {blog.content?.length > 0 ? (
