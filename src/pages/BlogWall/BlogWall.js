@@ -10,6 +10,9 @@ import HeartIcon from '../../assets/svg/HeartIcon';
 import ShareIcon from '../../assets/svg/ShareIcon';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import Toast from '../../components/Toast/Toast';
+import Modal from '../../components/Modal/Modal';
+import AuthorVerificationModal from '../../components/AuthorVerificationModal/AuthorVerificationModal';
+import AddBlogModal from '../../components/AddBlogModal/AddBlogModal';
 
 const home_icon = require('../../assets/icons/home.json');
 
@@ -20,6 +23,8 @@ const BlogWall = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [showAuthorVerificationModal, setShowAuthorVerificationModal] = useState(false);
+  const [showAddBlogModal, setShowAddBlogModal] = useState(false);
 
   useEffect(() => {
     const loadBlogs = async () => {
@@ -51,8 +56,18 @@ const BlogWall = () => {
     loadBlogs();
   }, []);
 
+  // Check if we should open AddBlogModal after email verification
+  useEffect(() => {
+    const shouldOpenModal = sessionStorage.getItem('openAddBlogModal');
+    if (shouldOpenModal === 'true') {
+      setShowAddBlogModal(true);
+      // Clear the flag so it doesn't open again on refresh
+      sessionStorage.removeItem('openAddBlogModal');
+    }
+  }, []);
+
   const handlePublishClick = () => {
-    // TODO: Implement publish logic
+    setShowAuthorVerificationModal(true);
   };
 
   const handleShare = async (e, blogId) => {
@@ -204,6 +219,22 @@ const BlogWall = () => {
         message="Link copied to clipboard!"
         onClose={() => setShowToast(false)}
       />
+      <Modal
+        isOpen={showAuthorVerificationModal}
+        onClose={() => setShowAuthorVerificationModal(false)}
+      >
+        <AuthorVerificationModal
+          onClose={() => setShowAuthorVerificationModal(false)}
+        />
+      </Modal>
+      <Modal
+        isOpen={showAddBlogModal}
+        onClose={() => setShowAddBlogModal(false)}
+      >
+        <AddBlogModal
+          onClose={() => setShowAddBlogModal(false)}
+        />
+      </Modal>
     </div>
   );
 };

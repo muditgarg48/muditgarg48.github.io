@@ -1,0 +1,90 @@
+@import '../Modal/ModalContent.css';
+
+.author-verification-modal {
+  max-width: 500px;
+}
+
+.author-verification-content {
+  color: var(--font-secondary-color);
+}
+
+.author-verification-instruction {
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: var(--font-secondary-color);
+}
+
+.author-verification-error {
+  margin-top: -0.5rem;
+}
+
+.author-verification-submit {
+  margin-top: 0.5rem;
+}
+
+.author-verification-success {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.author-verification-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--font-secondary-color) 100%);
+  color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 auto 1.5rem;
+  animation: successPulse 0.6s ease;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.author-verification-success-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--font-highlight-color);
+  font-family: var(--font-style);
+}
+
+.author-verification-success-message {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  color: var(--font-secondary-color);
+  font-size: 0.95rem;
+}
+
+.author-verification-success-message strong {
+  color: var(--font-primary-color);
+  font-weight: 600;
+}
+
+.author-verification-success-note {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.85rem;
+  color: var(--font-secondary-color);
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.author-verification-close-button {
+  padding: 0.75rem 2rem;
+}

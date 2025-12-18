@@ -199,11 +199,11 @@ export const toggleBlogLike = async (blogId) => {
 };
 
 export const getAuthorId = (blog) => {
-  return blog.authorId || blog.author_id || blog.authorID || blog.author;
+  return blog.authorId;
 };
 
 export const getAuthorDisplayName = (author) => {
-  return author?.displayName || author?.display_name || author?.name;
+  return author?.displayName;
 };
 
 export const fetchAuthorById = async (authorId) => {
@@ -225,6 +225,36 @@ export const fetchAuthorById = async (authorId) => {
     };
   } catch (error) {
     console.error(`Error fetching author with ID ${authorId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Check if an author with the given email exists in the authors collection
+ * Uses email as document ID for fast O(1) lookup
+ */
+export const checkAuthorEmailExists = async (email) => {
+  try {
+    if (!email) {
+      return { exists: false, author: null };
+    }
+
+    const authorRef = doc(db, 'authors', email);
+    const authorSnapshot = await getDoc(authorRef);
+    
+    if (authorSnapshot.exists()) {
+      return {
+        exists: true,
+        author: {
+          id: authorSnapshot.id,
+          ...authorSnapshot.data()
+        }
+      };
+    }
+    
+    return { exists: false, author: null };
+  } catch (error) {
+    console.error(`Error checking if author email exists:`, error);
     throw error;
   }
 };

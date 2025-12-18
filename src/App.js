@@ -5,6 +5,7 @@ import LoadingScreen from './components/LoadingScreen/LoadingScreen';
 import HomePage from './pages/HomePage/HomePage';
 import BlogWall from './pages/BlogWall/BlogWall';
 import BlogDetail from './pages/BlogDetail/BlogDetail';
+import BlogPublish from './pages/BlogPublish/BlogPublish';
 
 const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 const DOCUMENT_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/documents/';
@@ -77,6 +78,10 @@ function App() {
       ) : (
         <BrowserRouter>
           <Routes>
+            <Route 
+              path="/blogs/publish" 
+              element={<BlogPublish />} 
+            />
             <Route 
               path="/blogs/:id" 
               element={<BlogDetail />} 
