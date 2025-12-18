@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BlogDetail.css';
-import { fetchBlogById, formatBlogDate } from '../../services/blogUtils';
+import { fetchBlogById, formatBlogDate, trackBlogView } from '../../services/blogUtils';
 import BackIcon from '../../assets/svg/BackIcon';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 
@@ -11,6 +11,7 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const viewCountedRef = useRef(false);
 
   useEffect(() => {
     const loadBlog = async () => {
@@ -35,6 +36,23 @@ const BlogDetail = () => {
       loadBlog();
     }
   }, [id]);
+
+  useEffect(() => {
+    const trackView = async () => {
+      if (!id || viewCountedRef.current || loading || error) return;
+
+      try {
+        await trackBlogView(id);
+        viewCountedRef.current = true;
+      } catch (err) {
+        console.error('Error tracking view:', err);
+      }
+    };
+
+    if (blog && !viewCountedRef.current) {
+      trackView();
+    }
+  }, [id, blog, loading, error]);
 
   const renderContentBlock = (block, index) => {
     switch (block.type) {

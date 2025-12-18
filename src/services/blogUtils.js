@@ -4,7 +4,9 @@ import {
   orderBy, 
   getDocs, 
   getDoc, 
-  doc 
+  doc,
+  updateDoc,
+  increment
 } from 'firebase/firestore';
 import { db } from './firebase';
 
@@ -66,4 +68,48 @@ export const formatBlogDate = (dateValue, options = { year: 'numeric', month: 's
 export const parseBlogDate = (dateValue) => {
   if (!dateValue) return null;
   return dateValue.toDate ? dateValue.toDate() : new Date(dateValue);
+};
+
+export const incrementBlogViews = async (blogId) => {
+  try {
+    if (!blogId) {
+      throw new Error('Blog ID is required');
+    }
+    
+    const blogRef = doc(db, 'blogs', blogId);
+    await updateDoc(blogRef, {
+      views: increment(1)
+    });
+  } catch (error) {
+    console.error(`Error incrementing views for blog ${blogId}:`, error);
+    throw error;
+  }
+};
+
+export const trackBlogView = async (blogId) => {
+  try {
+    if (!blogId) {
+      throw new Error('Blog ID is required');
+    }
+
+    const storageKey = process.env.REACT_APP_BLOG_VIEWED_IDS_KEY;
+    if (!storageKey) {
+      throw new Error('REACT_APP_BLOG_VIEWED_IDS_KEY environment variable is not set');
+    }
+
+    const viewedIds = JSON.parse(sessionStorage.getItem(storageKey) || '[]');
+    
+    if (viewedIds.includes(blogId)) {
+      return false; // Already viewed in this session
+    }
+
+    await incrementBlogViews(blogId);
+    viewedIds.push(blogId);
+    sessionStorage.setItem(storageKey, JSON.stringify(viewedIds));
+    
+    return true; // View tracked successfully
+  } catch (error) {
+    console.error(`Error tracking view for blog ${blogId}:`, error);
+    throw error;
+  }
 };
