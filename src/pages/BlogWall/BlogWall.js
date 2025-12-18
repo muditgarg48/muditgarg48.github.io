@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BlogWall.css';
-import { fetchAllBlogs, formatBlogDate } from '../../services/blogUtils';
+import { fetchAllBlogs, formatBlogDate, isBlogLiked } from '../../services/blogUtils';
 import BlogPostCard from './BlogPostCard';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import AnimatedIcon from '../../components/AnimatedIcon/AnimatedIcon';
+import EyeIcon from '../../assets/svg/EyeIcon';
+import HeartIcon from '../../assets/svg/HeartIcon';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 
 const home_icon = require('../../assets/icons/home.json');
@@ -104,25 +106,42 @@ const BlogWall = () => {
                     {blog.subtitle}
                   </p>
                 )}
-                
-                <div className="blog-card-meta">
-                  <span className="blog-card-meta-text">
-                    {formatBlogDate(blog.createdAt)}
-                  </span>
-                </div>
 
-                <div className="blog-card-stats">
-                  <span className="blog-card-stats-text">
-                    {blog.views || 0} views
-                  </span>
-                  {blog.timeToRead && (
-                    <>
-                      <span className="blog-card-separator">•</span>
-                      <span className="blog-card-stats-text">
-                        {blog.timeToRead}
-                      </span>
-                    </>
+                <div className="blog-card-tags-stats-row">
+                  {blog.tags?.length > 0 && (
+                    <div className="blog-card-tags">
+                      {blog.tags.map((tag, index) => (
+                        <span key={index} className="blog-card-tag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   )}
+                  <div className="blog-card-meta-stats">
+                    <span className="blog-card-date-pill">
+                      {formatBlogDate(blog.createdAt)}
+                    </span>
+                    <div className="blog-card-stats">
+                      <div className="blog-card-stat-item">
+                        <div className="blog-card-stat-icon" title="Views">
+                          <EyeIcon />
+                        </div>
+                        <span className="blog-card-stats-text">
+                          {blog.views || 0}
+                        </span>
+                      </div>
+                      {blog.likes != null && (
+                        <div className={`blog-card-stat-item ${isBlogLiked(blog.id) ? 'liked' : ''}`}>
+                          <div className="blog-card-like-icon" title="Likes">
+                            <HeartIcon filled={isBlogLiked(blog.id)} />
+                          </div>
+                          <span className="blog-card-stats-text">
+                            {blog.likes}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </BlogPostCard>

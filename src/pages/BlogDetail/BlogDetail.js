@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BlogDetail.css';
-import { fetchBlogById, formatBlogDate, trackBlogView } from '../../services/blogUtils';
+import { fetchBlogById, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike } from '../../services/blogUtils';
 import BackIcon from '../../assets/svg/BackIcon';
+import HeartIcon from '../../assets/svg/HeartIcon';
+import EyeIcon from '../../assets/svg/EyeIcon';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 
 const BlogDetail = () => {
@@ -11,6 +13,8 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
   const viewCountedRef = useRef(false);
 
   useEffect(() => {
@@ -23,6 +27,7 @@ const BlogDetail = () => {
           setError('Blog not found');
         } else {
           setBlog(fetchedBlog);
+          setIsLiked(isBlogLiked(id));
         }
       } catch (err) {
         console.error('Error loading blog:', err);
@@ -159,44 +164,77 @@ const BlogDetail = () => {
           <h1 className="blog-detail-title">
             {blog.title || 'Untitled'}
           </h1>
-          
-          <div className="blog-detail-meta">
-            <span className="blog-detail-meta-text">
-              {formatBlogDate(blog.createdAt, { year: 'numeric', month: 'long', day: 'numeric' })}
-            </span>
-            {blog.timeToRead && (
-              <>
-                <span className="blog-detail-separator">•</span>
-                <span className="blog-detail-meta-text">
-                  {blog.timeToRead}
-                </span>
-              </>
-            )}
-          </div>
 
-          <div className="blog-detail-stats">
-            <span className="blog-detail-stats-text">
-              {blog.views || 0} views
-            </span>
-            {blog.likes != null && (
-              <>
-                <span className="blog-detail-separator">•</span>
-                <span className="blog-detail-stats-text">
-                  {blog.likes} likes
-                </span>
-              </>
+          <div className="blog-detail-tags-stats-row">
+            {blog.tags?.length > 0 && (
+              <div className="blog-detail-tags">
+                {blog.tags.map((tag, index) => (
+                  <span key={index} className="blog-detail-tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             )}
-          </div>
-
-          {blog.tags?.length > 0 && (
-            <div className="blog-detail-tags">
-              {blog.tags.map((tag, index) => (
-                <span key={index} className="blog-detail-tag">
-                  {tag}
-                </span>
-              ))}
+            <div className="blog-detail-meta-stats">
+                    <span className="blog-detail-date-pill">
+                      {formatBlogDate(blog.createdAt, { year: 'numeric', month: 'long', day: 'numeric' }, true)}
+                    </span>
+              <div className="blog-detail-stats">
+                <div className="blog-stat-item">
+                  <div className="blog-stat-icon" title="Views">
+                    <EyeIcon />
+                  </div>
+                  <span className="blog-detail-stats-text">
+                    {blog.views || 0}
+                  </span>
+                </div>
+                {blog.likes != null && (
+                  <div className="blog-stat-item">
+                    <button
+                      className={`blog-like-button ${isLiked ? 'liked' : ''}`}
+                      onClick={async () => {
+                        if (isLiking) return;
+                        
+                        setIsLiking(true);
+                        const previousLiked = isLiked;
+                        const previousLikes = blog.likes || 0;
+                        
+                        // Optimistic update
+                        setIsLiked(!previousLiked);
+                        setBlog(prev => ({
+                          ...prev,
+                          likes: previousLiked ? previousLikes - 1 : previousLikes + 1
+                        }));
+                        
+                        try {
+                          await toggleBlogLike(id);
+                        } catch (err) {
+                          console.error('Error toggling like:', err);
+                          // Revert optimistic update on error
+                          setIsLiked(previousLiked);
+                          setBlog(prev => ({
+                            ...prev,
+                            likes: previousLikes
+                          }));
+                        } finally {
+                          setIsLiking(false);
+                        }
+                      }}
+                      disabled={isLiking}
+                      title={isLiked ? 'Unlike this blog' : 'Like this blog'}
+                    >
+                      <div className="blog-like-icon">
+                        <HeartIcon filled={isLiked} />
+                      </div>
+                    </button>
+                    <span className="blog-detail-stats-text">
+                      {blog.likes}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </header>
 
         <div className="blog-detail-body">

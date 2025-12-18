@@ -118,8 +118,8 @@
 }
 
 .blog-detail-header {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(0, 171, 240, 0.2);
 }
 
@@ -131,37 +131,57 @@
   color: var(--font-primary-color);
 }
 
-.blog-detail-meta {
+.blog-detail-tags-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.blog-detail-meta-stats {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-left: auto;
 }
 
-.blog-detail-meta-text {
-  font-size: 0.875rem;
+.blog-detail-date-pill {
+  background: rgba(0, 171, 240, 0.1);
+  border: 1px solid rgba(0, 171, 240, 0.3);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  transition: all 0.3s ease;
+  font-size: 0.75rem;
   font-weight: 400;
   color: var(--font-secondary-color);
-}
-
-.blog-detail-separator {
-  color: var(--font-secondary-color);
-  opacity: 0.5;
+  white-space: nowrap;
 }
 
 .blog-detail-stats {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.blog-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 171, 240, 0.1);
+  border: 1px solid rgba(0, 171, 240, 0.3);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  transition: all 0.3s ease;
 }
 
 .blog-detail-stats-text {
   font-size: 0.75rem;
   font-weight: 400;
-  color: var(--font-secondary-color);
+  color: var(--font-highlight-color);
+  white-space: nowrap;
 }
 
 .blog-detail-tags {
@@ -186,6 +206,59 @@
   border-color: var(--font-primary-color);
 }
 
+.blog-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--font-highlight-color);
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.blog-like-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-style);
+  flex-shrink: 0;
+}
+
+.blog-like-button:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+.blog-like-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.blog-like-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.blog-like-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--font-highlight-color);
+  transition: all 0.3s ease;
+}
+
+.blog-like-button.liked .blog-like-icon {
+  color: #ff4d4d;
+}
+
 .blog-detail-body {
   line-height: 1.8;
 }
@@ -194,14 +267,18 @@
   margin-bottom: 1.5rem;
 }
 
-.blog-content-text p {
+.blog-content-text p,
+.blog-detail-body p {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.8;
   color: var(--font-highlight-color);
+  margin: 0;
+}
+
+.blog-content-text p {
   white-space: pre-wrap;
   word-wrap: break-word;
-  margin: 0;
 }
 
 .blog-content-image {
@@ -292,7 +369,6 @@
   min-height: 50vh;
   text-align: center;
   gap: 1.5rem;
-  color: var(--font-primary-color);
 }
 
 .blog-detail-error p {
@@ -307,14 +383,6 @@
   position: relative;
   bottom: auto;
   left: auto;
-}
-
-.blog-detail-body p {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--font-highlight-color);
-  margin: 0;
 }
 
 @media (max-width: 800px) {
@@ -352,5 +420,44 @@
   .blog-detail-header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
+  }
+
+  .blog-detail-tags-stats-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .blog-detail-meta-stats {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .blog-detail-stats {
+    gap: 0.75rem;
+  }
+
+  .blog-stat-item {
+    padding: 0.2rem 0.6rem;
+  }
+
+  .blog-stat-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .blog-like-button {
+    width: 14px;
+    height: 14px;
+  }
+
+  .blog-like-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .blog-detail-stats-text {
+    font-size: 0.7rem;
   }
 }
