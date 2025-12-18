@@ -226,6 +226,12 @@
   gap: 0.5rem;
 }
 
+.blog-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .blog-stat-icon,
 .blog-like-icon,
 .blog-share-icon {
