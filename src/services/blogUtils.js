@@ -76,11 +76,6 @@ export const formatBlogDate = (dateValue, options = { year: 'numeric', month: 's
   }
 };
 
-export const parseBlogDate = (dateValue) => {
-  if (!dateValue) return null;
-  return dateValue.toDate ? dateValue.toDate() : new Date(dateValue);
-};
-
 export const incrementBlogViews = async (blogId) => {
   try {
     if (!blogId) {
@@ -199,6 +194,48 @@ export const toggleBlogLike = async (blogId) => {
     }
   } catch (error) {
     console.error(`Error toggling like for blog ${blogId}:`, error);
+    throw error;
+  }
+};
+
+export const shareBlog = async (blogId) => {
+  try {
+    if (!blogId) {
+      throw new Error('Blog ID is required');
+    }
+
+    const blogUrl = `${window.location.origin}/blogs/${blogId}`;
+
+    try {
+      await navigator.clipboard.writeText(blogUrl);
+      return true;
+    } catch {
+      // Fallback for older browsers or when clipboard API is not available
+      const textArea = document.createElement('textarea');
+      textArea.value = blogUrl;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        if (!successful) {
+          throw new Error('Fallback copy command failed');
+        }
+        
+        return true;
+      } catch (fallbackError) {
+        document.body.removeChild(textArea);
+        throw fallbackError;
+      }
+    }
+  } catch (error) {
+    console.error(`Error sharing blog ${blogId}:`, error);
     throw error;
   }
 };

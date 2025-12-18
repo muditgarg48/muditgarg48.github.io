@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BlogWall.css';
-import { fetchAllBlogs, formatBlogDate, isBlogLiked } from '../../services/blogUtils';
+import { fetchAllBlogs, formatBlogDate, isBlogLiked, shareBlog } from '../../services/blogUtils';
 import BlogPostCard from './BlogPostCard';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import AnimatedIcon from '../../components/AnimatedIcon/AnimatedIcon';
 import EyeIcon from '../../assets/svg/EyeIcon';
 import HeartIcon from '../../assets/svg/HeartIcon';
+import ShareIcon from '../../assets/svg/ShareIcon';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
+import Toast from '../../components/Toast/Toast';
 
 const home_icon = require('../../assets/icons/home.json');
 
@@ -16,6 +18,7 @@ const BlogWall = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const loadBlogs = async () => {
@@ -37,7 +40,17 @@ const BlogWall = () => {
 
   const handlePublishClick = () => {
     // TODO: Implement publish logic
-    console.log('Publish button clicked');
+  };
+
+  const handleShare = async (e, blogId) => {
+    e.stopPropagation(); // Prevent card click navigation
+    
+    try {
+      await shareBlog(blogId);
+      setShowToast(true);
+    } catch (err) {
+      console.error('Failed to share blog:', err);
+    }
   };
 
   if (loading) {
@@ -140,6 +153,17 @@ const BlogWall = () => {
                           </span>
                         </div>
                       )}
+                      <div className="blog-card-stat-item">
+                        <button
+                          className="blog-card-share-button"
+                          onClick={(e) => handleShare(e, blog.id)}
+                          title="Share blog"
+                        >
+                          <div className="blog-card-share-icon">
+                            <ShareIcon />
+                          </div>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -148,6 +172,11 @@ const BlogWall = () => {
           ))}
         </div>
       )}
+      <Toast 
+        show={showToast} 
+        message="Link copied to clipboard!"
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 };

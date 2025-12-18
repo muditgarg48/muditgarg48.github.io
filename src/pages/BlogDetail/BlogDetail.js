@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BlogDetail.css';
-import { fetchBlogById, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike } from '../../services/blogUtils';
+import { fetchBlogById, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
 import BackIcon from '../../assets/svg/BackIcon';
 import HeartIcon from '../../assets/svg/HeartIcon';
 import EyeIcon from '../../assets/svg/EyeIcon';
+import ShareIcon from '../../assets/svg/ShareIcon';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
+import Toast from '../../components/Toast/Toast';
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -15,6 +17,7 @@ const BlogDetail = () => {
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const viewCountedRef = useRef(false);
 
   useEffect(() => {
@@ -121,6 +124,15 @@ const BlogDetail = () => {
     }
   };
 
+  const handleShare = async () => {
+    try {
+      await shareBlog(id);
+      setShowToast(true);
+    } catch (err) {
+      console.error('Failed to share blog:', err);
+    }
+  };
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -176,9 +188,9 @@ const BlogDetail = () => {
               </div>
             )}
             <div className="blog-detail-meta-stats">
-                    <span className="blog-detail-date-pill">
-                      {formatBlogDate(blog.createdAt, { year: 'numeric', month: 'long', day: 'numeric' }, true)}
-                    </span>
+              <span className="blog-detail-date-pill">
+                {formatBlogDate(blog.createdAt, { year: 'numeric', month: 'long', day: 'numeric' }, true)}
+              </span>
               <div className="blog-detail-stats">
                 <div className="blog-stat-item">
                   <div className="blog-stat-icon" title="Views">
@@ -232,6 +244,17 @@ const BlogDetail = () => {
                     </span>
                   </div>
                 )}
+                <div className="blog-stat-item">
+                  <button
+                    className="blog-share-button"
+                    onClick={handleShare}
+                    title="Share blog"
+                  >
+                    <div className="blog-share-icon">
+                      <ShareIcon />
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -245,9 +268,13 @@ const BlogDetail = () => {
           )}
         </div>
       </article>
+      <Toast 
+        show={showToast} 
+        message="Link copied to clipboard!"
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 };
 
 export default BlogDetail;
-
