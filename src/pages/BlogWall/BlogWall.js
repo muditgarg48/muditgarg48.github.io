@@ -4,7 +4,7 @@ import './BlogWall.css';
 import { fetchAllBlogs, fetchAuthorById, getAuthorId, getAuthorDisplayName, formatBlogDate, isBlogLiked, shareBlog } from '../../services/blogUtils';
 import BlogPostCard from './BlogPostCard';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
-import AnimatedIcon from '../../components/AnimatedIcon/AnimatedIcon';
+import WebsiteLogo from '../../components/WebsiteLogo/WebsiteLogo';
 import EyeIcon from '../../assets/svg/EyeIcon';
 import HeartIcon from '../../assets/svg/HeartIcon';
 import ShareIcon from '../../assets/svg/ShareIcon';
@@ -13,8 +13,6 @@ import Toast from '../../components/Toast/Toast';
 import Modal from '../../components/Modal/Modal';
 import AuthorVerificationModal from '../../components/AuthorVerificationModal/AuthorVerificationModal';
 import AddBlogModal from '../../components/AddBlogModal/AddBlogModal';
-
-const home_icon = require('../../assets/icons/home.json');
 
 const BlogWall = () => {
   const navigate = useNavigate();
@@ -97,20 +95,18 @@ const BlogWall = () => {
 
   return (
     <div className="blog-wall">
-      <button 
-        className="back-button"
-        onClick={() => navigate('/')}
-        title="Back to Home"
-      >
-        <div className="back-button-icon">
-          <AnimatedIcon icon={home_icon} class_name="nocss" />
-        </div>
-        <span className="back-button-text">Back to Home</span>
-        <div className="back-button-glow"></div>
-      </button>
-
       <div className="blog-wall-title-section">
-        <SectionHeading section_name="BLOG WALL" />
+        <div className="blog-wall-integrated-heading">
+          <div 
+            className="blog-wall-logo-inline" 
+            onClick={() => navigate('/')}
+            title="Click to go home"
+          >
+            <WebsiteLogo />
+          </div>
+          <span className="blog-wall-heading-separator">|</span>
+          <SectionHeading section_name="BLOG WALL" />
+        </div>
         <p className="blog-wall-catchphrase">
           Written end-to-end by a human. No AI rewriting, paraphrasing, or polishing.
         </p>
