@@ -37,8 +37,12 @@ const BlogDetail = () => {
           if (authorId) {
             try {
               const fetchedAuthor = await fetchAuthorById(authorId);
-              if (fetchedAuthor) setAuthor(fetchedAuthor);
-            } catch (err) {}
+              if (fetchedAuthor) {
+                setAuthor(fetchedAuthor);
+              }
+            } catch (err) {
+              console.error('Error fetching author:', err);
+            }
           }
         }
       } catch (err) {

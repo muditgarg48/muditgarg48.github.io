@@ -205,7 +205,9 @@ export const getAuthorId = (blog) => {
 };
 
 export const getAuthorDisplayName = (author) => {
-  return author?.displayName;
+  if (!author) return null;
+  // Firebase stores the field as 'display_name' (with underscore)
+  return author.display_name || null;
 };
 
 export const fetchAuthorById = async (authorId) => {
@@ -335,6 +337,7 @@ export const createBlog = async (blogData) => {
     const blogRef = doc(db, 'blogs', id);
     
     const blogDocument = {
+      id: id, // Store id as a field in the document
       authorId: authorId,
       title: title.trim(),
       subtitle: subtitle ? subtitle.trim() : '',

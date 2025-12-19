@@ -44,7 +44,7 @@ const AddBlogModal = ({ onClose }) => {
         try {
           const { author } = await checkAuthorEmailExists(verifiedEmail);
           if (author) {
-            setAuthorName(author.displayName || verifiedEmail);
+            setAuthorName(author.display_name || verifiedEmail);
             setAuthorId(author.id); // Author ID is the email
           } else {
             setAuthorName(verifiedEmail);

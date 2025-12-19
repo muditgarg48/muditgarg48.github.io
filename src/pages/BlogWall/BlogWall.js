@@ -38,8 +38,12 @@ const BlogWall = () => {
           if (authorId) {
             try {
               const author = await fetchAuthorById(authorId);
-              if (author) authorsMap[blog.id] = author;
-            } catch (err) {}
+              if (author) {
+                authorsMap[blog.id] = author;
+              }
+            } catch (err) {
+              console.error(`Error fetching author for blog ${blog.id}:`, err);
+            }
           }
         }));
         setAuthors(authorsMap);
