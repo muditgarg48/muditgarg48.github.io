@@ -124,7 +124,7 @@ const AuthorVerificationModal = ({ onClose }) => {
               Click the link in the email to continue with publishing your blog.
             </p>
             <p className="author-verification-success-note">
-              The link will redirect you to the blog publishing page.
+              You can close this window. The email link will open in a new tab when you're ready to continue.
             </p>
             <button
               onClick={onClose}
