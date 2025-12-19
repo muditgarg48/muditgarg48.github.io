@@ -6,7 +6,9 @@ import {
   getDoc, 
   doc,
   updateDoc,
-  increment
+  increment,
+  setDoc,
+  Timestamp
 } from 'firebase/firestore';
 import { db } from './firebase';
 
@@ -297,6 +299,58 @@ export const shareBlog = async (blogId) => {
     }
   } catch (error) {
     console.error(`Error sharing blog ${blogId}:`, error);
+    throw error;
+  }
+};
+
+export const createBlog = async (blogData) => {
+  try {
+    const {
+      id,
+      authorId,
+      title,
+      subtitle,
+      timeToRead,
+      tags,
+      content
+    } = blogData;
+
+    if (!id) {
+      throw new Error('Blog ID is required');
+    }
+
+    if (!authorId) {
+      throw new Error('Author ID is required');
+    }
+
+    if (!title || !title.trim()) {
+      throw new Error('Blog title is required');
+    }
+
+    if (!content || !Array.isArray(content) || content.length === 0) {
+      throw new Error('Blog content is required and must contain at least one content block');
+    }
+
+    // Create the blog document
+    const blogRef = doc(db, 'blogs', id);
+    
+    const blogDocument = {
+      authorId: authorId,
+      title: title.trim(),
+      subtitle: subtitle ? subtitle.trim() : '',
+      createdAt: Timestamp.now(),
+      timeToRead: timeToRead ? timeToRead.trim() : '',
+      tags: Array.isArray(tags) ? tags.filter(tag => tag && tag.trim()) : [],
+      content: content, // Content array with proper structure (order preserved)
+      views: 0,
+      likes: 0
+    };
+
+    await setDoc(blogRef, blogDocument);
+
+    return id;
+  } catch (error) {
+    console.error('Error creating blog:', error);
     throw error;
   }
 };

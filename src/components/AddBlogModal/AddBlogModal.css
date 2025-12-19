@@ -4,10 +4,20 @@
   max-width: 700px;
   max-height: 90vh;
   overflow-y: auto;
+  padding: 1.25rem;
+}
+
+.add-blog-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
 }
 
 .add-blog-form {
-  gap: 1.5rem;
+  gap: 0.75rem;
+}
+
+.add-blog-field-group {
+  gap: 0.35rem;
 }
 
 .add-blog-required {
@@ -18,27 +28,26 @@
   background: rgba(0, 171, 240, 0.02);
 }
 
-.add-blog-content-placeholder {
-  background: rgba(0, 171, 240, 0.05);
-  border: 2px dashed rgba(0, 171, 240, 0.3);
-  border-radius: 8px;
-  padding: 2rem;
-  text-align: center;
+.add-blog-input {
+  padding: 0.6rem 0.875rem;
+  font-size: 0.95rem;
 }
 
-.add-blog-placeholder-text {
-  margin: 0.5rem 0;
-  color: var(--font-secondary-color);
-  font-size: 0.9rem;
-}
 
 .add-blog-actions {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   justify-content: flex-end;
-  margin-top: 1rem;
-  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
   border-top: 1px solid rgba(0, 171, 240, 0.2);
+}
+
+.add-blog-cancel-button,
+.add-blog-submit-button {
+  border-radius: 20px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
 }
 
 .add-blog-loading {
@@ -46,6 +55,137 @@
   padding: 2rem;
   color: var(--font-secondary-color);
   font-family: var(--font-style);
+}
+
+/* Content editor form styles */
+.add-blog-content-form {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 171, 240, 0.2);
+}
+
+.add-content-type-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.add-content-type-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--font-primary-color);
+  font-family: var(--font-style);
+}
+
+.add-content-type-grid {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.add-content-type-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 171, 240, 0.1);
+  border: 1px solid rgba(0, 171, 240, 0.3);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-style);
+  white-space: nowrap;
+}
+
+.add-content-type-option:hover {
+  background: rgba(0, 171, 240, 0.2);
+  border-color: var(--font-primary-color);
+}
+
+.add-content-type-option.selected {
+  border-color: var(--font-primary-color);
+  background: rgba(0, 171, 240, 0.2);
+}
+
+.add-content-type-icon {
+  font-size: 1.25rem;
+}
+
+.add-content-type-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--font-primary-color);
+}
+
+.modal-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: var(--font-style);
+}
+
+.modal-code-textarea {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.modal-file-input {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.modal-file-input::-webkit-file-upload-button {
+  background: rgba(0, 171, 240, 0.1);
+  border: 1px solid rgba(0, 171, 240, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  font-family: var(--font-style);
+  color: var(--font-primary-color);
+  transition: all 0.3s ease;
+}
+
+.modal-file-input::-webkit-file-upload-button:hover {
+  background: rgba(0, 171, 240, 0.2);
+  border-color: var(--font-primary-color);
+}
+
+.add-content-image-preview {
+  margin-top: 0.75rem;
+  border: 1px solid rgba(0, 171, 240, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.add-content-image-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.add-content-form-divider {
+  height: 1px;
+  background: rgba(0, 171, 240, 0.2);
+  margin: 0.75rem 0;
+}
+
+.add-content-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 171, 240, 0.2);
+}
+
+.add-content-actions button {
+  border-radius: 20px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {
@@ -64,6 +204,23 @@
 
   .add-blog-cancel-button,
   .add-blog-submit-button {
+    width: 100%;
+  }
+
+  .add-content-type-grid {
+    flex-direction: column;
+  }
+  
+  .add-content-type-option {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .add-content-actions {
+    flex-direction: column;
+  }
+
+  .add-content-actions button {
     width: 100%;
   }
 }
