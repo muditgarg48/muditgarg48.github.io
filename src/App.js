@@ -76,7 +76,7 @@ function App() {
       {loading ? (
         <LoadingScreen/>
       ) : (
-        <BrowserRouter>
+        <BrowserRouter basename="/">
           <Routes>
             <Route 
               path="/blogs/publish" 
