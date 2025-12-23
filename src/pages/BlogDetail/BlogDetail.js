@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BlogDetail.css';
-import { fetchBlogById, fetchAuthorById, getAuthorId, getAuthorDisplayName, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
+import { fetchBlogById, fetchAuthorById, fetchAllBlogs, getAuthorId, getAuthorDisplayName, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
 import BackIcon from '../../assets/svg/BackIcon';
 import HeartIcon from '../../assets/svg/HeartIcon';
 import EyeIcon from '../../assets/svg/EyeIcon';
@@ -19,6 +19,8 @@ const BlogDetail = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [prevBlog, setPrevBlog] = useState(null);
+  const [nextBlog, setNextBlog] = useState(null);
   const viewCountedRef = useRef(false);
 
   useEffect(() => {
@@ -75,6 +77,33 @@ const BlogDetail = () => {
     }
   }, [id, blog, loading, error]);
 
+  useEffect(() => {
+    const loadNavigationBlogs = async () => {
+      if (!blog) return;
+
+      try {
+        const allBlogs = await fetchAllBlogs();
+        const currentIndex = allBlogs.findIndex(b => b.id === id);
+
+        if (currentIndex > 0) {
+          setPrevBlog(allBlogs[currentIndex - 1]);
+        } else {
+          setPrevBlog(null);
+        }
+
+        if (currentIndex < allBlogs.length - 1) {
+          setNextBlog(allBlogs[currentIndex + 1]);
+        } else {
+          setNextBlog(null);
+        }
+      } catch (err) {
+        console.error('Error loading navigation blogs:', err);
+      }
+    };
+
+    loadNavigationBlogs();
+  }, [blog, id]);
+
   const renderContentBlock = (block, index) => {
     switch (block.type) {
       case 'text':
@@ -129,6 +158,14 @@ const BlogDetail = () => {
             <pre className="blog-content-code-block">
               <code>{block.value}</code>
             </pre>
+          </div>
+        );
+
+      case 'quote':
+        return (
+          <div key={index} className="blog-content-quote">
+            <span className="blog-quote-mark">"</span>
+            <span className="blog-quote-text">{block.value}</span>
           </div>
         );
 
@@ -295,8 +332,33 @@ const BlogDetail = () => {
           )}
         </div>
       </article>
-      <Toast 
-        show={showToast} 
+
+      {/* Navigation buttons */}
+      <div className="blog-navigation">
+        {prevBlog && (
+          <button
+            className="blog-nav-button blog-nav-prev"
+            onClick={() => navigate(`/blogs/${prevBlog.id}`)}
+            title={`Previous: ${prevBlog.title}`}
+          >
+            <span className="blog-nav-arrow">←</span>
+            <span className="blog-nav-title">{prevBlog.title}</span>
+          </button>
+        )}
+        {nextBlog && (
+          <button
+            className="blog-nav-button blog-nav-next"
+            onClick={() => navigate(`/blogs/${nextBlog.id}`)}
+            title={`Next: ${nextBlog.title}`}
+          >
+            <span className="blog-nav-title">{nextBlog.title}</span>
+            <span className="blog-nav-arrow">→</span>
+          </button>
+        )}
+      </div>
+
+      <Toast
+        show={showToast}
         message="Link copied to clipboard!"
         onClose={() => setShowToast(false)}
       />

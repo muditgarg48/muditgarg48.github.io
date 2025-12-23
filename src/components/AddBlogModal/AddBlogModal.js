@@ -8,7 +8,8 @@ const CONTENT_TYPES = {
   TEXT: 'text',
   IMAGE: 'image',
   CODE: 'code',
-  LINK: 'link'
+  LINK: 'link',
+  QUOTE: 'quote'
 };
 
 const AddBlogModal = ({ onClose }) => {
@@ -33,6 +34,7 @@ const AddBlogModal = ({ onClose }) => {
   const [codeValue, setCodeValue] = useState('');
   const [linkPlaceholder, setLinkPlaceholder] = useState('');
   const [linkValue, setLinkValue] = useState('');
+  const [quoteValue, setQuoteValue] = useState('');
 
   useEffect(() => {
     // Get verified author email from sessionStorage
@@ -132,6 +134,16 @@ const AddBlogModal = ({ onClose }) => {
           value: normalizedUrl
         };
 
+      case CONTENT_TYPES.QUOTE:
+        if (!quoteValue.trim()) {
+          alert('Please enter quote content');
+          return null;
+        }
+        return {
+          type: 'quote',
+          value: quoteValue.trim()
+        };
+
       default:
         return null;
     }
@@ -157,6 +169,7 @@ const AddBlogModal = ({ onClose }) => {
     setCodeValue('');
     setLinkPlaceholder('');
     setLinkValue('');
+    setQuoteValue('');
   };
 
   const handleSubmit = async (e) => {
@@ -362,6 +375,14 @@ const AddBlogModal = ({ onClose }) => {
                   <span className="add-content-type-icon">🔗</span>
                   <span className="add-content-type-label">Link</span>
                 </button>
+                <button
+                  type="button"
+                  className={`add-content-type-option ${contentType === CONTENT_TYPES.QUOTE ? 'selected' : ''}`}
+                  onClick={() => setContentType(CONTENT_TYPES.QUOTE)}
+                >
+                  <span className="add-content-type-icon">💬</span>
+                  <span className="add-content-type-label">Quote</span>
+                </button>
               </div>
             </div>
 
@@ -491,6 +512,22 @@ const AddBlogModal = ({ onClose }) => {
                   </>
                 )}
 
+                {contentType === CONTENT_TYPES.QUOTE && (
+                  <div className="modal-field-group">
+                    <label htmlFor="quote-content" className="modal-label">
+                      Quote Content <span className="add-blog-required">*</span>
+                    </label>
+                    <textarea
+                      id="quote-content"
+                      value={quoteValue}
+                      onChange={(e) => setQuoteValue(e.target.value)}
+                      placeholder="Enter your quote..."
+                      className="modal-input modal-textarea"
+                      rows="4"
+                    />
+                  </div>
+                )}
+
                 <div className="add-content-actions">
                   <button
                     type="button"
@@ -534,4 +571,3 @@ const AddBlogModal = ({ onClose }) => {
 };
 
 export default AddBlogModal;
-

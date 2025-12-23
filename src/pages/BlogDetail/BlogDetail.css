@@ -401,6 +401,29 @@
   display: block;
 }
 
+.blog-content-quote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Passion One';
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.blog-quote-mark {
+  font-size: 4rem;
+  color: var(--font-highlight-color);
+  margin-right: 0.5rem;
+}
+
+.blog-quote-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--font-primary-color);
+  line-height: 1.4;
+  max-width: 80%;
+}
+
 .blog-detail-error {
   display: flex;
   flex-direction: column;
@@ -504,4 +527,67 @@
   .blog-detail-stats-text {
     font-size: 0.7rem;
   }
+}
+
+.blog-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  gap: 3rem;
+}
+
+.blog-nav-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 171, 240, 0.1);
+  border: 1px solid rgba(0, 171, 240, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--font-primary-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  max-width: 45%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.blog-nav-button:hover {
+  background: rgba(0, 171, 240, 0.2);
+  border-color: var(--font-primary-color);
+  transform: translateY(-2px);
+}
+
+.blog-nav-prev {
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.blog-nav-next {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.blog-nav-arrow {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--font-highlight-color);
+  flex-shrink: 0;
+}
+
+.blog-nav-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  text-align: left;
+}
+
+.blog-nav-next .blog-nav-title {
+  text-align: right;
 }
