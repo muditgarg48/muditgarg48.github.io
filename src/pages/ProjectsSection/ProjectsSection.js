@@ -40,6 +40,26 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString('en-US', options);
 }
 
+function useGitHubData(github) {
+    const [lastUpdated, setLastUpdated] = useState("Fetching...");
+    const [lastUpdatedError, setLastUpdatedError] = useState(null);
+
+    useEffect(() => {
+        if (!github?.repo_owner || !github?.repo_name || !github?.repo_branch) return;
+
+        getBranchInfo(github.repo_owner, github.repo_name, github.repo_branch)
+            .then(data => {
+                setLastUpdated(formatDate(data.commit.commit.committer.date));
+            })
+            .catch(error => {
+                console.error('Error fetching branch info:', error);
+                setLastUpdatedError(error.message || error.toString());
+            });
+    }, [github]);
+
+    return { lastUpdated, lastUpdatedError };
+}
+
 const ProjectKPIs = memo(({kpis}) => {
     return (
         <div className="project-kpis">
@@ -92,14 +112,23 @@ const ErrorMessage = memo(({ error, className = "" }) => {
     );
 });
 
-const ComingSoonProjectHeadline = memo(({ github, deployment, other_btns, lastUpdated }) => {
+const PrivateRibbon = memo(() => {
+    return (
+        <div className="private-ribbon">
+            <span className="ribbon-icon">🔒</span>
+            <span className="ribbon-text">PRIVATE</span>
+        </div>
+    );
+});
+
+const ComingSoonProjectHeadline = memo(({ github, deployment, other_btns, lastUpdated, isPrivate }) => {
     const git_repo = require('../../assets/icons/repo.json');
     const redirect = require('../../assets/icons/redirect.json');
     
     return (
         <div className="project-headline">
             <div className="project-links">
-                {github && github.repo_link && (
+                {github?.repo_link && !isPrivate && (
                     <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss"/>
                 )}
                 {
@@ -112,7 +141,7 @@ const ComingSoonProjectHeadline = memo(({ github, deployment, other_btns, lastUp
                     return null;
                 })}
             </div>
-            <ActivityTag lastUpdated={lastUpdated}/>
+            {isPrivate ? null:<ActivityTag lastUpdated={lastUpdated}/>}
         </div>
     );
 });
@@ -186,6 +215,23 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
     const [commitsExpanded, setCommitsExpanded] = useState(false);
     const [commitsError, setCommitsError] = useState(null);
 
+    // Determine if the project is private (GitHub data inaccessible)
+    const isPrivate = useMemo(() => {
+        // Check if there's a GitHub repo configured but we're getting errors
+        if (github && github.repo_owner && github.repo_name && github.repo_branch) {
+            // Check for common private repo error patterns
+            if (lastUpdatedError) {
+                const errorStr = lastUpdatedError.toString().toLowerCase();
+                return errorStr.includes('404') ||
+                       errorStr.includes('not found') ||
+                       errorStr.includes('private') ||
+                       errorStr.includes('access') ||
+                       errorStr.includes('rate limit');
+            }
+        }
+        return false;
+    }, [github, lastUpdatedError]);
+
     useEffect(() => {
         if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
 
@@ -203,12 +249,10 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
     // Fetch commit history on demand (only when expanded)
     const fetchCommitHistory = useCallback(async () => {
         if (!github || !github.repo_owner || !github.repo_name || latestCommitHistory.length > 0) return;
-        
         setIsLoadingCommits(true);
         setCommitsError(null);
         try {
             const commits = await getCommitsList(github.repo_owner, github.repo_name, 7);
-            
             // Fetch commit details in batches to avoid overwhelming the API
             const detailedCommits = await Promise.all(
                 commits.map(async (commit) => {
@@ -222,7 +266,6 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
                     }
                 })
             );
-            
             setLatestCommitHistory(detailedCommits);
         } catch (error) {
             console.error('Error fetching commit history:', error);
@@ -240,11 +283,10 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
     }, [commitsExpanded, fetchCommitHistory, latestCommitHistory.length]);
 
     const commitsUrl = useMemo(() => {
-        return github && github.repo_owner && github.repo_name 
+        return github && github.repo_owner && github.repo_name
             ? `https://github.com/${github.repo_owner}/${github.repo_name}/commits/${github.repo_branch || 'main'}`
             : null;
     }, [github]);
-    
     const handleToggle = useCallback(() => {
         setCommitsExpanded(prev => !prev);
     }, []);
@@ -252,32 +294,34 @@ const ComingSoonProject = memo(({ name, desc, tech_stack, planned_tasks, github,
     return (
         <div className="coming-soon-project-component">
             <div className="coming-soon-project-details">
-                <ComingSoonProjectHeadline 
-                    github={github} 
-                    deployment={deployment} 
-                    other_btns={other_btns} 
+                <ComingSoonProjectHeadline
+                    github={github}
+                    deployment={deployment}
+                    other_btns={other_btns}
                     lastUpdated={lastUpdated}
+                    isPrivate={isPrivate}
                 />
                 <h3>{name}</h3>
                 <div className="project-last-updated">
-                    {lastUpdatedError ? (
-                        <ErrorMessage error={lastUpdatedError} />
-                    ) : (
-                        <>Last Updated: {lastUpdated}</>
-                    )}
+                    {isPrivate ? <PrivateRibbon /> : (
+                        lastUpdatedError ? <ErrorMessage error={lastUpdatedError} /> : <>Last Updated: {lastUpdated}</>
+                        )
+                    }
                 </div>
                 <p className="project-desc">{desc}</p>
                 <ComingSoonProjectTech tech_stack={tech_stack}/>
                 &nbsp;
                 <ComingSoonProjectPlannedTasks planned_tasks={planned_tasks}/>
-                <ComingSoonProjectCommitHistory
-                    commitsExpanded={commitsExpanded}
-                    isLoadingCommits={isLoadingCommits}
-                    commitsError={commitsError}
-                    latestCommitHistory={latestCommitHistory}
-                    commitsUrl={commitsUrl}
-                    onToggle={handleToggle}
-                />
+                {!isPrivate && (
+                    <ComingSoonProjectCommitHistory
+                        commitsExpanded={commitsExpanded}
+                        isLoadingCommits={isLoadingCommits}
+                        commitsError={commitsError}
+                        latestCommitHistory={latestCommitHistory}
+                        commitsUrl={commitsUrl}
+                        onToggle={handleToggle}
+                    />
+                )}
             </div>
         </div>
     );
@@ -363,23 +407,7 @@ const MajorProjectLinks = memo(({ github, deployment, other_btns }) => {
 });
 
 const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, github, deployment, other_btns }) => {
-
-    const [lastUpdated, setLastUpdated] = useState("Fetching...");
-    const [lastUpdatedError, setLastUpdatedError] = useState(null);
-
-    useEffect(()=> {
-        if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
-        
-        getBranchInfo(github.repo_owner, github.repo_name, github.repo_branch)
-            .then(data => {
-                setLastUpdated(formatDate(data.commit.commit.committer.date));
-                setLastUpdatedError(null);
-            })
-            .catch(error => {
-                console.error('Error fetching branch info:', error);
-                setLastUpdatedError(error.message || error.toString());
-            });
-    }, [github]);
+    const { lastUpdated, lastUpdatedError } = useGitHubData(github);
 
     return (
         <div className="major-project-component">
@@ -427,30 +455,14 @@ const MinorProjectLinks = memo(({ github, deployment, other_btns, lastUpdated })
 });
 
 const MinorProject = memo(({ name, desc, tech_stack, kpis, github, deployment, other_btns }) => {
-    
-    const [lastUpdated, setLastUpdated] = useState("Fetching...");
-    const [lastUpdatedError, setLastUpdatedError] = useState(null);
-
-    useEffect(()=> {
-        if (!github || !github.repo_owner || !github.repo_name || !github.repo_branch) return;
-        
-        getBranchInfo(github.repo_owner, github.repo_name, github.repo_branch)
-            .then(data => {
-                setLastUpdated(formatDate(data.commit.commit.committer.date));
-                setLastUpdatedError(null);
-            })
-            .catch(error => {
-                console.error('Error fetching branch info:', error);
-                setLastUpdatedError(error.message || error.toString());
-            });
-    }, [github]);
+    const { lastUpdated, lastUpdatedError } = useGitHubData(github);
 
     return (
         <div className="minor-project-component">
-            <MinorProjectLinks 
-                github={github} 
-                deployment={deployment} 
-                other_btns={other_btns} 
+            <MinorProjectLinks
+                github={github}
+                deployment={deployment}
+                other_btns={other_btns}
                 lastUpdated={lastUpdated}
             />
             <h3>{name}</h3>
@@ -499,14 +511,12 @@ const ProjectsSection = memo(({projects_data}) => {
                     const scrollLeft = tabList.scrollLeft;
                     const tabCenter = tabRect.left - tabListRect.left + tabRect.width / 2;
                     const scrollTarget = scrollLeft + tabCenter - tabListRect.width / 2;
-                    
                     tabList.scrollTo({
                         left: Math.max(0, scrollTarget),
                         behavior: 'smooth'
                     });
                 }
             }, 50);
-            
             return () => clearTimeout(timeoutId);
         }
     }, [selectedIndex]);
@@ -514,7 +524,7 @@ const ProjectsSection = memo(({projects_data}) => {
     return (
         <div id="projects-section">
             <SectionHeading section_name="PROJECTS"/>
-            {projects_data && <Tabs 
+            {projects_data && <Tabs
                 id="projects-tabs"
                 selectedIndex={selectedIndex}
                 onSelect={(index) => setSelectedIndex(index)}
@@ -531,7 +541,7 @@ const ProjectsSection = memo(({projects_data}) => {
                             <ComingSoonProject key={project.name || project.github?.repo_name} {...project} />
                         ))
                     }
-                    </div>            
+                    </div>
                 </TabPanel>
                 <TabPanel>
                     <div id="major-projects">
@@ -540,9 +550,9 @@ const ProjectsSection = memo(({projects_data}) => {
                             <MajorProject key={project.name || project.github?.repo_name} {...project} />
                         ))
                     }
-                    </div>   
+                    </div>
                 </TabPanel>
-                <TabPanel> 
+                <TabPanel>
                     <div id="minor-projects">
                     {
                         minorProjects.map((project) => (
