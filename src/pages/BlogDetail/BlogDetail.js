@@ -8,6 +8,9 @@ import EyeIcon from '../../assets/svg/EyeIcon';
 import ShareIcon from '../../assets/svg/ShareIcon';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import Toast from '../../components/Toast/Toast';
+import Modal from '../../components/Modal/Modal';
+import EditVerificationModal from '../../components/EditVerificationModal/EditVerificationModal';
+import AddBlogModal from '../../components/AddBlogModal/AddBlogModal';
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -21,6 +24,8 @@ const BlogDetail = () => {
   const [showToast, setShowToast] = useState(false);
   const [prevBlog, setPrevBlog] = useState(null);
   const [nextBlog, setNextBlog] = useState(null);
+  const [showEditVerificationModal, setShowEditVerificationModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const viewCountedRef = useRef(false);
 
   useEffect(() => {
@@ -183,6 +188,19 @@ const BlogDetail = () => {
     }
   };
 
+  const handleEditClick = () => {
+    setShowEditVerificationModal(true);
+  };
+
+  const handleEditVerificationSuccess = () => {
+    setShowEditVerificationModal(false);
+    setShowEditModal(true);
+  };
+
+  const handleEditModalClose = () => {
+    setShowEditModal(false);
+  };
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -304,6 +322,17 @@ const BlogDetail = () => {
                 )}
                 <div className="blog-stat-item">
                   <button
+                    className="blog-edit-button"
+                    onClick={handleEditClick}
+                    title="Edit blog"
+                  >
+                    <div className="blog-edit-icon">
+                      ✏️
+                    </div>
+                  </button>
+                </div>
+                <div className="blog-stat-item">
+                  <button
                     className="blog-share-button"
                     onClick={handleShare}
                     title="Share blog"
@@ -362,6 +391,31 @@ const BlogDetail = () => {
         message="Link copied to clipboard!"
         onClose={() => setShowToast(false)}
       />
+
+      {/* Edit Verification Modal */}
+      <Modal
+        isOpen={showEditVerificationModal}
+        onClose={() => setShowEditVerificationModal(false)}
+      >
+        <EditVerificationModal
+          onClose={() => setShowEditVerificationModal(false)}
+          onSuccess={handleEditVerificationSuccess}
+          authorId={author?.id}
+          authorName={getAuthorDisplayName(author)}
+        />
+      </Modal>
+
+      {/* Edit Blog Modal */}
+      <Modal
+        isOpen={showEditModal}
+        onClose={handleEditModalClose}
+      >
+        <AddBlogModal
+          onClose={handleEditModalClose}
+          editMode={true}
+          blogData={blog}
+        />
+      </Modal>
     </div>
   );
 };

@@ -1,11 +1,12 @@
-import { 
-  collection, 
-  query, 
-  orderBy, 
-  getDocs, 
-  getDoc, 
+import {
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  getDoc,
   doc,
   updateDoc,
+  deleteDoc,
   increment,
   setDoc,
   Timestamp
@@ -354,6 +355,83 @@ export const createBlog = async (blogData) => {
     return id;
   } catch (error) {
     console.error('Error creating blog:', error);
+    throw error;
+  }
+};
+
+export const updateBlog = async (blogId, blogData) => {
+  try {
+    const {
+      title,
+      subtitle,
+      timeToRead,
+      tags,
+      content
+    } = blogData;
+
+    if (!blogId) {
+      throw new Error('Blog ID is required');
+    }
+
+    if (!title || !title.trim()) {
+      throw new Error('Blog title is required');
+    }
+
+    if (!content || !Array.isArray(content) || content.length === 0) {
+      throw new Error('Blog content is required and must contain at least one content block');
+    }
+
+    // Update the blog document
+    const blogRef = doc(db, 'blogs', blogId);
+
+    const updateData = {
+      title: title.trim(),
+      subtitle: subtitle ? subtitle.trim() : '',
+      timeToRead: timeToRead ? timeToRead.trim() : '',
+      tags: Array.isArray(tags) ? tags.filter(tag => tag && tag.trim()) : [],
+      content: content, // Content array with proper structure (order preserved)
+      updatedAt: Timestamp.now()
+    };
+
+    await updateDoc(blogRef, updateData);
+
+    return blogId;
+  } catch (error) {
+    console.error('Error updating blog:', error);
+    throw error;
+  }
+};
+
+export const deleteBlog = async (blogId) => {
+  try {
+    if (!blogId) {
+      throw new Error('Blog ID is required');
+    }
+
+    const blogRef = doc(db, 'blogs', blogId);
+    const blogSnapshot = await getDoc(blogRef);
+
+    if (!blogSnapshot.exists()) {
+      throw new Error('Blog not found');
+    }
+
+    const blogData = blogSnapshot.data();
+
+    // Reference to deleted blogs collection
+    const deletedBlogRef = doc(db, 'blogs_deleted', blogId);
+
+    // Write the blog to blogs_deleted
+    await setDoc(deletedBlogRef, {
+      ...blogData,
+      deletedAt: Timestamp.now()
+    });
+
+    // Remove the blog from the active blogs collection
+    await deleteDoc(blogRef);
+
+    return blogId;
+  } catch (error) {
+    console.error('Error deleting blog:', error);
     throw error;
   }
 };

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { checkAuthorEmailExists, createBlog } from '../../services/blogUtils';
+import { checkAuthorEmailExists, createBlog, updateBlog, deleteBlog } from '../../services/blogUtils';
 import { processBlogContent } from '../../services/firebaseUtils';
 import ContentEditor from '../ContentEditor/ContentEditor';
+import DeleteConfirmationModal from '../DeleteConfirmationModal/DeleteConfirmationModal';
 import './AddBlogModal.css';
 
 const CONTENT_TYPES = {
@@ -12,7 +13,7 @@ const CONTENT_TYPES = {
   QUOTE: 'quote'
 };
 
-const AddBlogModal = ({ onClose }) => {
+const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [timeToRead, setTimeToRead] = useState('');
@@ -23,6 +24,7 @@ const AddBlogModal = ({ onClose }) => {
   const [authorId, setAuthorId] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   
   // Content editor state
   const [contentType, setContentType] = useState(null);
@@ -35,6 +37,7 @@ const AddBlogModal = ({ onClose }) => {
   const [linkPlaceholder, setLinkPlaceholder] = useState('');
   const [linkValue, setLinkValue] = useState('');
   const [quoteValue, setQuoteValue] = useState('');
+  const [editingContentIndex, setEditingContentIndex] = useState(null);
 
   useEffect(() => {
     // Get verified author email from sessionStorage
@@ -65,6 +68,40 @@ const AddBlogModal = ({ onClose }) => {
       setIsLoading(false);
     }
   }, []);
+
+  // Populate form with blog data in edit mode
+  useEffect(() => {
+    const populateEditData = async () => {
+      if (editMode && blogData) {
+        setTitle(blogData.title || '');
+        setSubtitle(blogData.subtitle || '');
+        setTimeToRead(blogData.timeToRead || '');
+        setTags(blogData.tags ? blogData.tags.join(', ') : '');
+        setContent(blogData.content || []);
+
+        // Populate author information from blogData if available
+        if (blogData.authorId) {
+          setAuthorId(blogData.authorId);
+          setAuthorEmail(blogData.authorId); // Assuming authorId is the email
+
+          // Fetch author details to get display name
+          try {
+            const { author } = await checkAuthorEmailExists(blogData.authorId);
+            if (author) {
+              setAuthorName(author.display_name || blogData.authorId);
+            } else {
+              setAuthorName(blogData.authorId);
+            }
+          } catch (err) {
+            console.error('Error fetching author info for edit mode:', err);
+            setAuthorName(blogData.authorId);
+          }
+        }
+      }
+    };
+
+    populateEditData();
+  }, [editMode, blogData]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -154,8 +191,16 @@ const AddBlogModal = ({ onClose }) => {
     const contentData = validateAndCreateContentData();
     if (!contentData) return;
 
-    const newContent = [...content, contentData];
-    setContent(newContent);
+    if (editingContentIndex !== null) {
+      // Update existing content
+      const newContent = [...content];
+      newContent[editingContentIndex] = contentData;
+      setContent(newContent);
+    } else {
+      // Add new content
+      const newContent = [...content, contentData];
+      setContent(newContent);
+    }
     resetContentForm();
   };
 
@@ -170,6 +215,58 @@ const AddBlogModal = ({ onClose }) => {
     setLinkPlaceholder('');
     setLinkValue('');
     setQuoteValue('');
+    setEditingContentIndex(null);
+  };
+
+  const handleEditContent = (index) => {
+    const contentItem = content[index];
+    setEditingContentIndex(index);
+    setContentType(contentItem.type);
+
+    switch (contentItem.type) {
+      case 'text':
+        setTextValue(contentItem.value);
+        break;
+      case 'image':
+        setImageFile(contentItem.file || null);
+        setImagePreview(contentItem.preview || null);
+        break;
+      case 'code':
+        setCodeTitle(contentItem.title || '');
+        setCodeLanguage(contentItem.language || 'javascript');
+        setCodeValue(contentItem.value);
+        break;
+      case 'link':
+        setLinkPlaceholder(contentItem.placeholder);
+        setLinkValue(contentItem.value);
+        break;
+      case 'quote':
+        setQuoteValue(contentItem.value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleDeleteBlog = async () => {
+    if (!editMode || !blogData) return;
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setShowDeleteConfirmation(false);
+    setIsPublishing(true);
+
+    try {
+      await deleteBlog(blogData.id);
+      alert('Blog deleted successfully!');
+      onClose();
+    } catch (error) {
+      console.error('Error deleting blog:', error);
+      alert(`Error deleting blog: ${error.message || 'An unexpected error occurred'}`);
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -193,46 +290,62 @@ const AddBlogModal = ({ onClose }) => {
     setIsPublishing(true);
 
     try {
-      // Generate blog ID: authorId_timestamp
-      // Sanitize authorId to ensure valid Firestore document ID
-      const sanitizedAuthorId = authorId.replace(/[^a-zA-Z0-9]/g, '_');
-      const timestamp = Date.now();
-      const blogId = `${sanitizedAuthorId}_${timestamp}`;
-
-      // Process content: upload images and transform to Firestore format
-      const validContent = await processBlogContent(content, authorId, blogId);
-
       // Prepare tags array
       const tagsArray = tags
         .split(',')
         .map(tag => tag.trim())
         .filter(tag => tag);
 
-      // Create blog document
-      await createBlog({
-        id: blogId,
-        authorId: authorId,
-        title: title.trim(),
-        subtitle: subtitle ? subtitle.trim() : '',
-        timeToRead: timeToRead ? timeToRead.trim() : '',
-        tags: tagsArray,
-        content: validContent
-      });
+      if (editMode && blogData) {
+        // Update existing blog
+        await updateBlog(blogData.id, {
+          title: title.trim(),
+          subtitle: subtitle ? subtitle.trim() : '',
+          timeToRead: timeToRead ? timeToRead.trim() : '',
+          tags: tagsArray,
+          content: content
+        });
 
-      // Success - close modal and reset form
-      alert('Blog published successfully!');
-      onClose();
-      
-      // Reset form
-      setTitle('');
-      setSubtitle('');
-      setTimeToRead('');
-      setTags('');
-      setContent([]);
-      resetContentForm();
+        // Success - close modal
+        alert('Blog updated successfully!');
+        onClose();
+      } else {
+        // Create new blog
+        // Generate blog ID: authorId_timestamp
+        // Sanitize authorId to ensure valid Firestore document ID
+        const sanitizedAuthorId = authorId.replace(/[^a-zA-Z0-9]/g, '_');
+        const timestamp = Date.now();
+        const blogId = `${sanitizedAuthorId}_${timestamp}`;
+
+        // Process content: upload images and transform to Firestore format
+        const validContent = await processBlogContent(content, authorId, blogId);
+
+        // Create blog document
+        await createBlog({
+          id: blogId,
+          authorId: authorId,
+          title: title.trim(),
+          subtitle: subtitle ? subtitle.trim() : '',
+          timeToRead: timeToRead ? timeToRead.trim() : '',
+          tags: tagsArray,
+          content: validContent
+        });
+
+        // Success - close modal and reset form
+        alert('Blog published successfully!');
+        onClose();
+
+        // Reset form
+        setTitle('');
+        setSubtitle('');
+        setTimeToRead('');
+        setTags('');
+        setContent([]);
+        resetContentForm();
+      }
     } catch (error) {
-      console.error('Error publishing blog:', error);
-      alert(`Error publishing blog: ${error.message || 'An unexpected error occurred'}`);
+      console.error('Error saving blog:', error);
+      alert(`Error saving blog: ${error.message || 'An unexpected error occurred'}`);
     } finally {
       setIsPublishing(false);
     }
@@ -247,9 +360,10 @@ const AddBlogModal = ({ onClose }) => {
   }
 
   return (
-    <div className="modal-content-base add-blog-modal">
+    <>
+      <div className="modal-content-base add-blog-modal">
       <div className="modal-header add-blog-header">
-        <h2 className="modal-title add-blog-title">Add New Blog</h2>
+        <h2 className="modal-title add-blog-title">{editMode ? 'Edit Your Blog' : 'Add New Blog'}</h2>
         <button 
           className="modal-close-button add-blog-close"
           onClick={onClose}
@@ -337,7 +451,7 @@ const AddBlogModal = ({ onClose }) => {
           <label className="modal-label add-blog-label">
             Content
           </label>
-          <ContentEditor content={content} onChange={setContent} />
+          <ContentEditor content={content} onChange={setContent} onEditContent={handleEditContent} />
           
           <div className="add-blog-content-form">
             <div className="add-content-type-selector">
@@ -541,7 +655,7 @@ const AddBlogModal = ({ onClose }) => {
                     onClick={handleAddContent}
                     className="modal-button-primary"
                   >
-                    Add Content
+                    {editingContentIndex !== null ? 'Update Content' : 'Add Content'}
                   </button>
                 </div>
               </>
@@ -550,23 +664,45 @@ const AddBlogModal = ({ onClose }) => {
         </div>
 
         <div className="add-blog-actions">
-          <button
-            type="button"
-            onClick={onClose}
-            className="modal-button-secondary add-blog-cancel-button"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="modal-button-primary add-blog-submit-button"
-            disabled={!title.trim() || isPublishing || content.length === 0}
-          >
-            {isPublishing ? 'Publishing...' : 'Publish Blog'}
-          </button>
+          {editMode && (
+            <button
+              type="button"
+              onClick={handleDeleteBlog}
+              className="modal-button-danger add-blog-delete-button"
+              disabled={isPublishing}
+            >
+              {isPublishing ? 'Deleting...' : 'Delete Blog'}
+            </button>
+          )}
+          <div className="add-blog-actions-right">
+            <button
+              type="button"
+              onClick={onClose}
+              className="modal-button-secondary add-blog-cancel-button"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="modal-button-primary add-blog-submit-button"
+              disabled={!title.trim() || isPublishing || content.length === 0}
+            >
+              {isPublishing ? (editMode ? 'Updating...' : 'Publishing...') : (editMode ? 'Update Blog' : 'Publish Blog')}
+            </button>
+          </div>
         </div>
       </form>
     </div>
+
+    {showDeleteConfirmation && (
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirmation}
+        onClose={() => setShowDeleteConfirmation(false)}
+        onConfirm={handleConfirmDelete}
+        blogTitle={blogData?.title || ''}
+      />
+    )}
+  </>
   );
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import './ContentEditor.css';
 
-const ContentEditor = ({ content = [], onChange }) => {
+const ContentEditor = ({ content = [], onChange, onEditContent }) => {
 
   const handleRemoveContent = (index) => {
     const newContent = content.filter((_, i) => i !== index);
@@ -66,6 +66,16 @@ const ContentEditor = ({ content = [], onChange }) => {
           </div>
         );
 
+      case 'quote':
+        return (
+          <div className="content-editor-preview-quote">
+            <span className="content-editor-preview-label">Quote:</span>
+            <span className="content-editor-preview-value">
+              "{item.value.length > 50 ? `${item.value.substring(0, 50)}...` : item.value}"
+            </span>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -103,6 +113,15 @@ const ContentEditor = ({ content = [], onChange }) => {
                 aria-label="Move down"
               >
                 ↓
+              </button>
+              <button
+                type="button"
+                className="content-editor-action-button content-editor-edit-button"
+                onClick={() => onEditContent(index)}
+                title="Edit"
+                aria-label="Edit"
+              >
+                ✏️
               </button>
               <button
                 type="button"

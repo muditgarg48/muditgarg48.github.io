@@ -154,6 +154,15 @@
   border-color: #ff6b6b;
 }
 
+.content-editor-edit-button {
+  color: #007bff;
+}
+
+.content-editor-edit-button:hover:not(:disabled) {
+  background: rgba(0, 123, 255, 0.1);
+  border-color: #007bff;
+}
+
 @media (max-width: 768px) {
   .content-editor-item {
     padding: 0.6rem;

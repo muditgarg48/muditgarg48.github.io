@@ -299,6 +299,46 @@
   color: var(--font-primary-color);
 }
 
+.blog-edit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-style);
+  flex-shrink: 0;
+}
+
+.blog-edit-button:hover {
+  transform: scale(1.1);
+}
+
+.blog-edit-button:active {
+  transform: scale(0.95);
+}
+
+.blog-edit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--font-highlight-color);
+  opacity: 0.8;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.blog-edit-button:hover .blog-edit-icon {
+  opacity: 1;
+  color: var(--font-primary-color);
+}
+
 .blog-detail-body {
   line-height: 1.8;
 }
@@ -519,7 +559,9 @@
   .blog-like-button,
   .blog-like-icon,
   .blog-share-button,
-  .blog-share-icon {
+  .blog-share-icon,
+  .blog-edit-button,
+  .blog-edit-icon {
     width: 14px;
     height: 14px;
   }
