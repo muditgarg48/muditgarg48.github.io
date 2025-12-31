@@ -253,16 +253,7 @@ const BlogDetail = () => {
             )}
           </div>
 
-          <div className="blog-detail-tags-stats-row">
-            {blog.tags?.length > 0 && (
-              <div className="blog-detail-tags">
-                {blog.tags.map((tag, index) => (
-                  <span key={index} className="blog-detail-tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
+          <div className="blog-detail-stats-row">
             <div className="blog-detail-meta-stats">
               <span className="blog-detail-date-pill">
                 {formatBlogDate(blog.createdAt, { year: 'numeric', month: 'long', day: 'numeric' }, true)}
@@ -359,6 +350,18 @@ const BlogDetail = () => {
           ) : (
             <p>No content available.</p>
           )}
+        </div>
+
+        <div className="blog-detail-tags-row">
+          {blog.tags?.length > 0 && (
+              <div className="blog-detail-tags">
+                {blog.tags.map((tag, index) => (
+                  <span key={index} className="blog-detail-tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
         </div>
       </article>
 
