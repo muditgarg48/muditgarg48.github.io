@@ -51,13 +51,13 @@ function App() {
           aboutMeData
         ] = await Promise.all(fetchPromises);
 
-        setFactsData(factsData);
-        setProjectsData(projectsData);
-        setCertificatesData(certificatesData);
-        setExperienceData(experienceData);
-        setEducationHistoryData(educationHistoryData);
-        setSkillsData(skillsData);
-        setAboutMeData(aboutMeData);
+        setFactsData(factsData.facts);
+        setProjectsData(projectsData.projects);
+        setCertificatesData(certificatesData.certificates);
+        setExperienceData(experienceData.experiences);
+        setEducationHistoryData(educationHistoryData.educations);
+        setSkillsData(skillsData.skills);
+        setAboutMeData(aboutMeData.about);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
