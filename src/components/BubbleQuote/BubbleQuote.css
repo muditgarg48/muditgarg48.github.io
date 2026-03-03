@@ -1,0 +1,98 @@
+.bubble-quote-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 1%;
+    padding: 1.5rem;
+    width: 98%;
+    background: transparent;
+    border-radius: 20px;
+    border: 2px solid var(--font-secondary-color);
+    position: relative;
+    box-sizing: border-box;
+}
+
+.bubble-quote-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.bubble-quote-text {
+    font-size: 1.1rem;
+    color: var(--font-primary-color);
+    font-style: italic;
+    line-height: 1.6;
+    text-align: justify;
+    margin-bottom: 2rem;
+}
+
+.bubble-quote-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px dashed var(--font-secondary-color);
+    padding-top: 1.5rem;
+    margin-top: auto;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+}
+
+.bubble-quote-author {
+    font-weight: bold;
+    color: var(--font-highlight-color);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.bubble-quote-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.bubble-quote-link {
+    font-size: 0.85rem;
+    font-family: inherit;
+    margin: 0;
+    padding: 7px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--font-secondary-color);
+    background-color: transparent;
+    border: 1px solid var(--font-secondary-color);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bubble-quote-link:hover {
+    color: var(--font-highlight-color);
+    border-color: var(--font-highlight-color);
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 800px) {
+    .bubble-quote-container {
+        padding: 4%;
+        margin: 2% 1%;
+    }
+
+    .bubble-quote-text {
+        font-size: 1rem;
+    }
+
+    .bubble-quote-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .bubble-quote-links {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

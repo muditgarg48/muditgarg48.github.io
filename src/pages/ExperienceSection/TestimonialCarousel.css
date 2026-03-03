@@ -1,0 +1,71 @@
+.experience-testimonials {
+    /* margin-top: 2rem; */
+    padding-top: 1rem;
+    /* border-top: 1px dashed var(--font-secondary-color, rgba(200, 200, 200, 0.3)); */
+    width: 100%;
+}
+
+.testimonials-heading {
+    color: var(--font-secondary-color, #ccc);
+    margin-bottom: 1rem;
+    font-family: 'Passion One', cursive;
+    /* Using the same bold heading font */
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.testimonial-carousel {
+    max-width: 95%;
+    margin: 0 auto;
+}
+
+.testimonial-carousel .carousel.carousel-slider .control-arrow {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.testimonial-carousel .carousel.carousel-slider .control-arrow:hover {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 1;
+}
+
+.testimonial-carousel .carousel .control-next.control-arrow {
+    right: -20px;
+}
+
+.testimonial-carousel .carousel .control-prev.control-arrow {
+    left: -20px;
+}
+
+.testimonial-slide {
+    padding: 0 30px 40px 30px;
+    /* Space for dots at the bottom */
+}
+
+.testimonial-carousel .carousel .control-dots {
+    bottom: 0;
+}
+
+.testimonial-carousel .carousel .control-dots .dot {
+    background: var(--font-highlight-color, #f39c12);
+    box-shadow: none;
+    width: 10px;
+    height: 10px;
+    opacity: 0.5;
+}
+
+.testimonial-carousel .carousel .control-dots .dot.selected,
+.testimonial-carousel .carousel .control-dots .dot:hover {
+    opacity: 1;
+}
+
+/* Make sure text doesn't clash with the dot controls */
+.testimonial-carousel .bubble-quote-container {
+    margin-bottom: 0;
+}

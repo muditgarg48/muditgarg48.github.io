@@ -1,49 +1,50 @@
 import React, { useState } from "react";
 import './ExperienceSection.css';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
+import TestimonialCarousel from './TestimonialCarousel';
 
-const ExperienceSection = ({experience_data}) => {
+const ExperienceSection = ({ experience_data }) => {
 
     const [expIndex, setExpIndex] = useState(0);
 
     return (
         <div id="experience-section">
-            <SectionHeading section_name="EXPERIENCES"/>
+            <SectionHeading section_name="EXPERIENCES" />
             <div id="experience-logos">
                 {
                     experience_data.map((experience, index) => eachExperienceLogo(experience, index, expIndex, setExpIndex))
                 }
                 {
-                    eachExperienceLogo({}, -1,expIndex, setExpIndex, true)
+                    eachExperienceLogo({}, -1, expIndex, setExpIndex, true)
                 }
             </div>
             <div id="experience_details">
-            {
-                expIndex !== -1?
-                eachExperience(experience_data[expIndex]):
-                finalExperience()
-            }
+                {
+                    expIndex !== -1 ?
+                        eachExperience(experience_data[expIndex]) :
+                        finalExperience()
+                }
             </div>
         </div>
     );
 }
 
-const eachExperienceLogo = (experience, index, expIndex, setExpIndex, isDefault=false) => {
+const eachExperienceLogo = (experience, index, expIndex, setExpIndex, isDefault = false) => {
     if (isDefault) {
-        experience["name"]  = "Keep Learning";
+        experience["name"] = "Keep Learning";
         experience["domain"] = "questionmark.com";
     }
-    const link = "https://cdn.brandfetch.io/"+experience.domain;
+    const link = "https://cdn.brandfetch.io/" + experience.domain;
     const highlightedExpCSS = {
         border: "3px solid var(--font-primary-color)"
     };
-    return(
+    return (
         <div className="experience-logo" onClick={() => setExpIndex(index)} key={index}>
-            <img 
-                src={link} 
-                alt={experience.name} 
-                key={index} 
-                style={index === expIndex? highlightedExpCSS: null}
+            <img
+                src={link}
+                alt={experience.name}
+                key={index}
+                style={index === expIndex ? highlightedExpCSS : null}
             ></img>
         </div>
     );
@@ -55,7 +56,7 @@ const eachExperience = (experience) => {
             <div className="experience-headline">
                 <h3>
                     {experience.role}
-                    &nbsp; 
+                    &nbsp;
                     <span className="experience-company">
                         @
                         &nbsp;
@@ -83,6 +84,9 @@ const eachExperience = (experience) => {
                     ))
                 }
             </div>
+            {experience.testimonials && experience.testimonials.length > 0 && (
+                <TestimonialCarousel testimonials={experience.testimonials} />
+            )}
         </>
     );
 }
