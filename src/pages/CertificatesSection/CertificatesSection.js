@@ -106,6 +106,7 @@ const Certificate = memo(({certificate}) => {
 
     // Intersection Observer for lazy loading
     useEffect(() => {
+        const currentRef = certificateRef.current;
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -121,13 +122,13 @@ const Certificate = memo(({certificate}) => {
             }
         );
 
-        if (certificateRef.current) {
-            observer.observe(certificateRef.current);
+        if (currentRef) {
+            observer.observe(currentRef);
         }
 
         return () => {
-            if (certificateRef.current) {
-                observer.unobserve(certificateRef.current);
+            if (currentRef) {
+                observer.unobserve(currentRef);
             }
         };
     }, []);

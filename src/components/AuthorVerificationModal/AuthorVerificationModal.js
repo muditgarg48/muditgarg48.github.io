@@ -28,7 +28,7 @@ const AuthorVerificationModal = ({ onClose }) => {
 
     try {
       // First, check if the email exists in the authors collection
-      const { exists, author } = await checkAuthorEmailExists(email);
+      const { exists } = await checkAuthorEmailExists(email);
       
       if (!exists) {
         setError('This email address is not registered as an author. Please contact the administrator.');
