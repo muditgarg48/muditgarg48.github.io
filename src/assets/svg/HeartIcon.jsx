@@ -17,4 +17,3 @@ const HeartIcon = ({ filled = false }) => (
 );
 
 export default HeartIcon;
-

@@ -140,4 +140,3 @@ const AuthorVerificationModal = ({ onClose }) => {
 };
 
 export default AuthorVerificationModal;
-

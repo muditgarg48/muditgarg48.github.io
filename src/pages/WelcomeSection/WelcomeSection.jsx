@@ -1,16 +1,13 @@
-import React from "react";
 import './WelcomeSection.css';
 import { TypeAnimation } from 'react-type-animation';
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
+import linkedin_icon from "../../assets/icons/linkedin.json";
+import gmail_icon from "../../assets/icons/gmail.json";
+import github_icon from "../../assets/icons/github.json";
+import resume_icon from "../../assets/icons/resume.json";
+import hello_sequence from "../../assets/data/differentHellos.json";
 
 const WelcomeSection = ({my_resume}) => {
-
-    const linkedin_icon = require('../../assets/icons/linkedin.json');
-    const gmail_icon = require('../../assets/icons/gmail.json');
-    const github_icon = require('../../assets/icons/github.json');
-    const resume_icon = require('../../assets/icons/resume.json');
-
-    const hello_sequence = require('../../assets/data/differentHellos.json');
 
     return (
         <div id="welcome-section">

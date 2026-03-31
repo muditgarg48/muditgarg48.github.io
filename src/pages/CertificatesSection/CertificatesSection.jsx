@@ -5,12 +5,13 @@ import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 
 import { Document, Page, pdfjs } from 'react-pdf';
 import ReactCardFlip from 'react-card-flip';
+import search_icon from "../../assets/icons/search.json";
+import clear_query from "../../assets/icons/fill_bin.json";
+import legacy from "../../assets/icons/legacy.json";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
 const CertificatesSection = ({certificates_data}) => {
-    
-    // const certificates_data = require('../../assets/data/certificates_data.json');
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredCertificates, setFilteredCertificates] = useState(certificates_data);
@@ -43,8 +44,6 @@ const CertificatesSection = ({certificates_data}) => {
         setSearchQuery(event.target.value.toLowerCase());
     };
 
-    const search_icon = require('../../assets/icons/search.json');
-    const clear_query = require('../../assets/icons/fill_bin.json');
 
     return (
         <div id="certificates-section">
@@ -75,9 +74,7 @@ const CertificatesSection = ({certificates_data}) => {
 }
 
 const Certificatev1 = memo(() => {
-    
-    const legacy = require('../../assets/icons/legacy.json');
-    
+
     return (
         <div id="v1-button">
             <div id="v1-button-content">

@@ -18,4 +18,3 @@ const EyeIcon = () => (
 );
 
 export default EyeIcon;
-

@@ -1,8 +1,8 @@
 import AnimatedIcon from '../AnimatedIcon/AnimatedIcon';
 import './BubbleQuote.css';
+import redirect from "../../assets/icons/redirect.json";
 
 const BubbleQuote = ({ quote, by, links = [], style = {} }) => {
-    const redirect = require('../../assets/icons/redirect.json');
 
     return (
         <div className="bubble-quote-container" style={style}>

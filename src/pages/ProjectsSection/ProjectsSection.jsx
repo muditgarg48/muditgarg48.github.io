@@ -4,6 +4,8 @@ import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import { getBranchInfo, getCommitsList, getCommitDetails } from "../../services/githubCache";
+import git_repo from "../../assets/icons/repo.json";
+import redirect from "../../assets/icons/redirect.json";
 
 const ActivityTag = memo(({lastUpdated}) => {
     const tag = useMemo(() => {
@@ -122,9 +124,8 @@ const PrivateRibbon = memo(() => {
 });
 
 const ComingSoonProjectHeadline = memo(({ github, deployment, other_btns, lastUpdated, isPrivate }) => {
-    const git_repo = require('../../assets/icons/repo.json');
-    const redirect = require('../../assets/icons/redirect.json');
-    
+
+
     return (
         <div className="project-headline">
             <div className="project-links">
@@ -387,9 +388,8 @@ const MajorProjectHeadline = memo(({ speciality, lastUpdated }) => {
 });
 
 const MajorProjectLinks = memo(({ github, deployment, other_btns }) => {
-    const git_repo = require('../../assets/icons/repo.json');
-    const redirect = require('../../assets/icons/redirect.json');
-    
+
+
     return (
         <div className="project-links">
             {github && github.repo_link && (
@@ -432,9 +432,8 @@ const MajorProject = memo(({ name, desc, speciality, image, tech_stack, kpis, gi
 });
 
 const MinorProjectLinks = memo(({ github, deployment, other_btns, lastUpdated }) => {
-    const git_repo = require('../../assets/icons/repo.json');
-    const redirect = require('../../assets/icons/redirect.json');
-    
+
+
     return (
         <div className="minor-project-links">
             <ActivityTag lastUpdated={lastUpdated}/>

@@ -8,4 +8,3 @@ const ChatIcon = () => (
 );
 
 export default ChatIcon;
-

@@ -5,9 +5,10 @@ import Marquee from "react-fast-marquee";
 import { Ribbon, RibbonContainer } from "react-ribbons";
 
 import ScrollFurther from "../../components/ScrollFurther/ScrollFurther";
-import SectionHeading from "../../components/SectionHeading/SectionHeading.js";
+import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
-import EducationSection from "../EducationSection/EducationSection.js";
+import EducationSection from "../EducationSection/EducationSection";
+import did_you_know_icon from "../../assets/icons/interesting.json";
 
 const AboutSection = ({facts, education_history, skills, about_me}) => {
 
@@ -148,7 +149,7 @@ const BasicInfoItem = ({title, content, footer=""}) => {
 }
 
 const DidYouKnowSection = ({facts}) => {
-    const did_you_know_icon = require('../../assets/icons/interesting.json');
+
     const [randomFactIndex, setRandomFactIndex] = useState(0);
 
     const generateRandomNumber = () => {

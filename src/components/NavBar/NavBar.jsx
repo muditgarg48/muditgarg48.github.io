@@ -9,17 +9,16 @@ import { Divide as Hamburger } from 'hamburger-react'
 import { motion } from 'framer-motion';
 import { useWindowSize } from "@uidotdev/usehooks";
 import WebsiteLogo from "../WebsiteLogo/WebsiteLogo";
+import home_icon from "../../assets/icons/home.json";
+import about_icon from "../../assets/icons/about.json";
+import experience_icon from "../../assets/icons/experience.json";
+import projects_icon from "../../assets/icons/projects.json";
+import certificates_icon from "../../assets/icons/certificates.json";
+import blog_icon from "../../assets/icons/blogwall.json";
 
 const NavBar =  () => {
 
     const size = useWindowSize();
-
-    const home_icon = require('../../assets/icons/home.json');
-    const about_icon = require('../../assets/icons/about.json');
-    const experience_icon = require('../../assets/icons/experience.json');
-    const projects_icon = require('../../assets/icons/projects.json');
-    const certificates_icon = require('../../assets/icons/certificates.json');
-    const blog_icon = require('../../assets/icons/blogwall.json');
 
     const NavBarItems = [
         <NavBarItem content="HOME" dest="welcome-section" icon={home_icon} key="HOME"></NavBarItem>,

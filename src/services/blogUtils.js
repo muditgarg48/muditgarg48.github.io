@@ -101,9 +101,9 @@ export const trackBlogView = async (blogId) => {
       throw new Error('Blog ID is required');
     }
 
-    const storageKey = process.env.REACT_APP_BLOG_VIEWED_IDS_KEY;
+    const storageKey = import.meta.env.VITE_BLOG_VIEWED_IDS_KEY;
     if (!storageKey) {
-      throw new Error('REACT_APP_BLOG_VIEWED_IDS_KEY environment variable is not set');
+      throw new Error('VITE_BLOG_VIEWED_IDS_KEY environment variable is not set');
     }
 
     const viewedIds = JSON.parse(sessionStorage.getItem(storageKey) || '[]');
@@ -157,7 +157,7 @@ export const decrementBlogLikes = async (blogId) => {
 
 export const isBlogLiked = (blogId) => {
   try {
-    const storageKey = process.env.REACT_APP_BLOG_LIKED_IDS_KEY;
+    const storageKey = import.meta.env.VITE_BLOG_LIKED_IDS_KEY;
     if (!storageKey) {
       return false;
     }
@@ -176,9 +176,9 @@ export const toggleBlogLike = async (blogId) => {
       throw new Error('Blog ID is required');
     }
 
-    const storageKey = process.env.REACT_APP_BLOG_LIKED_IDS_KEY;
+    const storageKey = import.meta.env.VITE_BLOG_LIKED_IDS_KEY;
     if (!storageKey) {
-      throw new Error('REACT_APP_BLOG_LIKED_IDS_KEY environment variable is not set');
+      throw new Error('VITE_BLOG_LIKED_IDS_KEY environment variable is not set');
     }
 
     const likedIds = JSON.parse(localStorage.getItem(storageKey) || '[]');

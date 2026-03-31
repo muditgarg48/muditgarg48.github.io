@@ -8,4 +8,3 @@ const InfoIcon = () => (
 );
 
 export default InfoIcon;
-

@@ -69,4 +69,3 @@ const BlogPublish = () => {
 };
 
 export default BlogPublish;
-

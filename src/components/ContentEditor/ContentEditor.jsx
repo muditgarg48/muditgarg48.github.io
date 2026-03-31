@@ -141,4 +141,3 @@ const ContentEditor = ({ content = [], onChange, onEditContent }) => {
 };
 
 export default ContentEditor;
-

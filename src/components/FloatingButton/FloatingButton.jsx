@@ -29,4 +29,3 @@ const FloatingButton = ({
 };
 
 export default memo(FloatingButton);
-

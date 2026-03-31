@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import './BotIntro.css';
 
 export const BotIntroContent = memo(() => (
@@ -28,4 +28,3 @@ export const BotIntroContent = memo(() => (
     </div>
   </div>
 ));
-

@@ -1,4 +1,3 @@
-import React from 'react';
 import './BlogPostCard.css';
 
 const BlogPostCard = ({ children, className = '', onClick }) => {
@@ -13,4 +12,3 @@ const BlogPostCard = ({ children, className = '', onClick }) => {
 };
 
 export default BlogPostCard;
-
