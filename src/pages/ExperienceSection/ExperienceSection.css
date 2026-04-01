@@ -45,17 +45,20 @@
 
 .list-item-top {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 15px;
     margin-bottom: 8px;
 }
 
 .item-title-group {
+    flex: 14;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 8px;
+}
+
+.experience-logo-container {
+    flex: 1;
 }
 
 .pill-line {
@@ -100,16 +103,10 @@
     text-decoration: underline;
 }
 
-.experience-logo-container {
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center;
-    /* Vertically aligned to start by default due to parent align-items: flex-start */
-}
-
 .experience-content-wrapper {
     flex-grow: 1;
-    min-width: 0; /* Prevents overflow in flex child */
+    min-width: 0;
+    /* Prevents overflow in flex child */
 }
 
 .experience-logo-img {
@@ -117,7 +114,8 @@
     width: 48px;
     border-radius: 50%;
     object-fit: contain;
-    background: white; /* Optional: provides contrast for dark logos on dark bg */
+    background: white;
+    /* Optional: provides contrast for dark logos on dark bg */
     border: 2px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.3s ease, border-color 0.3s ease;
 }

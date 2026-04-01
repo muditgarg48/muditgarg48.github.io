@@ -34,20 +34,20 @@ const ExperienceListItem = memo(({ experience }) => {
 
     return (
         <div className="experience-list-item">
-            {logoLink && (
-                <div className="experience-logo-container">
-                    <img
-                        src={logoLink}
-                        alt={`${name} logo`}
-                        className="experience-logo-img"
-                        loading="lazy"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                </div>
-            )}
 
             <div className="experience-content-wrapper">
                 <div className="list-item-top">
+                    {logoLink && (
+                        <div className="experience-logo-container">
+                            <img
+                                src={logoLink}
+                                alt={`${name} logo`}
+                                className="experience-logo-img"
+                                loading="lazy"
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                            />
+                        </div>
+                    )}
                     <div className="item-title-group">
                         <ExperiencePill start={start} end={end} />
                         <h3 className="item-role-title">
