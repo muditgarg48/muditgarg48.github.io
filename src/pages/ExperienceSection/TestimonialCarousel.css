@@ -1,71 +1,116 @@
-.experience-testimonials {
-    /* margin-top: 2rem; */
-    padding-top: 1rem;
-    /* border-top: 1px dashed var(--font-secondary-color, rgba(200, 200, 200, 0.3)); */
+.testimonial-section-wrapper {
     width: 100%;
+    margin-top: 1rem;
 }
 
-.testimonials-heading {
-    color: var(--font-secondary-color, #ccc);
-    margin-bottom: 1rem;
-    font-family: 'Passion One', cursive;
-    /* Using the same bold heading font */
-    font-size: 1.5rem;
-    letter-spacing: 1px;
+.embla-testimonials {
+    overflow: hidden;
+    width: 100%;
+    outline: none;
+    transition: height 0.2s ease-in-out;
 }
 
-.testimonial-carousel {
-    max-width: 95%;
-    margin: 0 auto;
+.embla__container.align-items-start {
+    display: flex;
+    align-items: flex-start;
 }
 
-.testimonial-carousel .carousel.carousel-slider .control-arrow {
-    background: rgba(0, 0, 0, 0.4);
+.embla__slide_testimonial {
+    flex: 0 0 100%;
+    min-width: 0;
+    padding-right: 1rem;
+}
+
+/* Controls Container matches Embla screenshot layout */
+.testimonial-controls {
+    display: flex;
+    justify-content: space-between; /* Arrows left, Dots right */
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0 1rem;
+}
+
+/* Arrows */
+.embla__arrows {
+    display: flex;
+    gap: 12px;
+}
+
+.embla__arrow {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--font-primary-color);
     border-radius: 50%;
-    height: 40px;
-    width: 40px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.testimonial-carousel .carousel.carousel-slider .control-arrow:hover {
-    background: rgba(0, 0, 0, 0.8);
+.embla__arrow:hover:not(:disabled) {
+    border-color: var(--font-highlight-color);
+    color: var(--font-highlight-color);
+}
+
+.embla__arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Dots */
+.embla__dots {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.embla__dot {
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+    outline: 0;
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Hollow ring by default */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.embla__dot:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.embla__dot.is-selected {
+    border-color: var(--font-highlight-color);
+    background-color: transparent;
+}
+
+/* Inner dot only visible on selected state */
+.embla__dot::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--font-highlight-color);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+.embla__dot.is-selected::after {
     opacity: 1;
+    transform: scale(1);
 }
 
-.testimonial-carousel .carousel .control-next.control-arrow {
-    right: -20px;
-}
-
-.testimonial-carousel .carousel .control-prev.control-arrow {
-    left: -20px;
-}
-
-.testimonial-slide {
-    padding: 0 30px 40px 30px;
-    /* Space for dots at the bottom */
-}
-
-.testimonial-carousel .carousel .control-dots {
-    bottom: 0;
-}
-
-.testimonial-carousel .carousel .control-dots .dot {
-    background: var(--font-highlight-color, #f39c12);
-    box-shadow: none;
-    width: 10px;
-    height: 10px;
-    opacity: 0.5;
-}
-
-.testimonial-carousel .carousel .control-dots .dot.selected,
-.testimonial-carousel .carousel .control-dots .dot:hover {
-    opacity: 1;
-}
-
-/* Make sure text doesn't clash with the dot controls */
-.testimonial-carousel .bubble-quote-container {
-    margin-bottom: 0;
+@media (max-width: 800px) {
+    .testimonial-controls {
+        padding: 0;
+        margin-top: 2rem;
+    }
 }

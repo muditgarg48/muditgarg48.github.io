@@ -3,35 +3,58 @@
     flex-direction: column;
     justify-content: space-evenly;
     margin: 1%;
-    padding: 1.5rem;
+    padding: 2.5rem;
     width: 98%;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.02);
     border-radius: 20px;
-    border: 2px solid var(--font-secondary-color);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
     box-sizing: border-box;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.bubble-quote-container:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bubble-quote-backdrop {
+    position: absolute;
+    top: -40px;
+    left: 20px;
+    font-size: 16rem;
+    font-family: 'Times New Roman', serif;
+    color: var(--font-highlight-color);
+    opacity: 0.3; /* Added 30% opacity as requested */
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
 }
 
 .bubble-quote-content {
     display: flex;
     flex-direction: column;
     width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 .bubble-quote-text {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     color: var(--font-primary-color);
     font-style: italic;
-    line-height: 1.6;
-    text-align: justify;
-    margin-bottom: 2rem;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Strong shadow so text is readable over 30% backdrop */
 }
 
 .bubble-quote-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px dashed var(--font-secondary-color);
+    border-top: 1px solid rgba(255, 255, 255, 0.08); /* Replaced dashed line with subtle solid line */
     padding-top: 1.5rem;
     margin-top: auto;
     flex-wrap: wrap;
@@ -40,10 +63,31 @@
 }
 
 .bubble-quote-author {
-    font-weight: bold;
-    color: var(--font-highlight-color);
+    font-weight: 700;
+    color: var(--font-primary-color);
     font-size: 1.1rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+}
+
+.bubble-quote-author .highlight {
+    color: var(--font-highlight-color);
+}
+
+.bubble-quote-author-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.bubble-quote-author-role {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-left: 1.5rem;
+    color: var(--font-secondary-color);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
 }
 
 .bubble-quote-links {
@@ -53,19 +97,20 @@
 }
 
 .bubble-quote-link {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-family: inherit;
+    font-weight: 600;
     margin: 0;
-    padding: 7px 14px;
+    padding: 6px 16px;
     border-radius: 20px;
     text-decoration: none;
     color: var(--font-secondary-color);
     background-color: transparent;
-    border: 1px solid var(--font-secondary-color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .bubble-quote-link:hover {
@@ -77,22 +122,24 @@
 
 @media (max-width: 800px) {
     .bubble-quote-container {
-        padding: 4%;
+        padding: 1.5rem;
         margin: 2% 1%;
     }
 
-    .bubble-quote-text {
-        font-size: 1rem;
+    .bubble-quote-backdrop {
+        font-size: 10rem;
+        left: 10px;
+        top: -10px;
     }
 
     .bubble-quote-footer {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 15px;
     }
 
     .bubble-quote-links {
         width: 100%;
-        justify-content: flex-end;
+        justify-content: flex-start;
     }
 }

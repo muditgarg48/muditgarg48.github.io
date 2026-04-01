@@ -1,40 +1,89 @@
 #experience-section {
+    min-height: 90vh;
     height: fit-content;
+    width: 89.5vw;
+    overflow-x: hidden;
     color: var(--font-primary-color);
-    padding: 20px;
+    padding: 5vw;
 }
 
-#experience-logos {
+.experience-list-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 10px;
+    animation: listEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes listEntry {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.experience-list-item {
+    padding: 30px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
     display: flex;
-    align-items: center;
-    overflow-x: auto;
+    gap: 20px;
+    align-items: flex-start;
 }
 
-.experience-logo {
-    padding: 20px;
-    transition: all 0.3s;
+.experience-list-item:hover {
+    border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
-.experience-logo:hover {
-    transform: translateY(-5%);
+.experience-list-item:last-child {
+    border-bottom: none;
 }
 
-.experience-logo img {
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-#experience-details {
-    color: var(--font-primary-color);
-    padding: 20px;
-}
-
-.experience-headline {
+.list-item-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.item-title-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.pill-line {
+    width: 100%;
+}
+
+.category-pill {
+    font-size: 0.65rem;
+    padding: 2.5px 10px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    display: inline-block;
+}
+
+.pill-period {
+    background: rgba(52, 152, 219, 0.08);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+.item-role-title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--font-primary-color);
+    letter-spacing: -0.02em;
 }
 
 .experience-company {
@@ -44,34 +93,84 @@
 .experience-company a {
     text-decoration: none;
     color: var(--font-highlight-color);
+    transition: color 0.2s ease;
 }
 
 .experience-company a:hover {
     text-decoration: underline;
 }
 
+.experience-logo-container {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    /* Vertically aligned to start by default due to parent align-items: flex-start */
+}
+
+.experience-content-wrapper {
+    flex-grow: 1;
+    min-width: 0; /* Prevents overflow in flex child */
+}
+
+.experience-logo-img {
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: white; /* Optional: provides contrast for dark logos on dark bg */
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.experience-list-item:hover .experience-logo-img {
+    transform: scale(1.05);
+    border-color: var(--font-highlight-color);
+}
+
+.list-item-content {
+    margin-top: 15px;
+}
+
 .experience-desc {
     list-style-type: "👉";
+    padding-left: 20px;
+    margin-bottom: 20px;
 }
 
 .experience-desc li {
-    padding: 5px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--font-primary-color);
+    opacity: 0.9;
+    margin-bottom: 8px;
+    padding-left: 8px;
 }
 
 .experience-tech {
     display: flex;
     flex-wrap: wrap;
-    margin: 1% 0;
+    gap: 8px;
+    margin-top: 10px;
 }
 
-@media (max-width: 800px) {
-    .experience-headline {
+.tech-pill {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--font-secondary-color);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 3px 12px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 600px) {
+    .list-item-top {
         flex-direction: column;
-        align-items: stretch;
+        align-items: flex-start;
+        gap: 15px;
     }
 
-    .experience-period {
-        display: flex;
-        justify-content: flex-end;
+    .item-role-title {
+        font-size: 1.25rem;
     }
 }

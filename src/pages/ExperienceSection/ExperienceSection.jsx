@@ -1,109 +1,103 @@
-import React, { useState } from "react";
+import React, { memo } from "react";
 import './ExperienceSection.css';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import TestimonialCarousel from './TestimonialCarousel';
 
-const ExperienceSection = ({ experience_data }) => {
+const ExperiencePill = memo(({ start, end }) => {
+    if (!start && !end) return null;
+    return (
+        <div className="pill-line">
+            <span className="category-pill pill-period">
+                {start} - {end}
+            </span>
+        </div>
+    );
+});
 
-    const [expIndex, setExpIndex] = useState(0);
+const ProjectTechStack = memo(({ tech_stack }) => {
+    if (!tech_stack || tech_stack.length === 0) return null;
+    return (
+        <div className="experience-tech">
+            {
+                tech_stack.map((tech, index) => (
+                    <span key={index} className="tech-pill">{tech}</span>
+                ))
+            }
+        </div>
+    );
+});
+
+const ExperienceListItem = memo(({ experience }) => {
+    const { role, name, domain, website, start, end, desc, tech, testimonials } = experience;
+
+    const logoLink = domain ? `https://cdn.brandfetch.io/${domain}` : null;
+
+    return (
+        <div className="experience-list-item">
+            {logoLink && (
+                <div className="experience-logo-container">
+                    <img
+                        src={logoLink}
+                        alt={`${name} logo`}
+                        className="experience-logo-img"
+                        loading="lazy"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                </div>
+            )}
+
+            <div className="experience-content-wrapper">
+                <div className="list-item-top">
+                    <div className="item-title-group">
+                        <ExperiencePill start={start} end={end} />
+                        <h3 className="item-role-title">
+                            {role}
+                            {name && (
+                                <span className="experience-company">
+                                    &nbsp;@&nbsp;
+                                    {website ? (
+                                        <a href={website} target="_blank" rel="noreferrer">{name}</a>
+                                    ) : (
+                                        name
+                                    )}
+                                </span>
+                            )}
+                        </h3>
+                    </div>
+                </div>
+
+                <div className="list-item-content">
+                    {desc && desc.length > 0 && (
+                        <ul className="experience-desc">
+                            {desc.map((line, index) => (
+                                <li key={index}>{line}</li>
+                            ))}
+                        </ul>
+                    )}
+
+                    <ProjectTechStack tech_stack={tech} />
+
+                    {testimonials && testimonials.length > 0 && (
+                        <TestimonialCarousel testimonials={testimonials} />
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+});
+
+const ExperienceSection = ({ experience_data }) => {
 
     return (
         <div id="experience-section">
             <SectionHeading section_name="EXPERIENCES" />
-            <div id="experience-logos">
-                {
-                    experience_data.map((experience, index) => eachExperienceLogo(experience, index, expIndex, setExpIndex))
-                }
-                {
-                    eachExperienceLogo({}, -1, expIndex, setExpIndex, true)
-                }
-            </div>
-            <div id="experience_details">
-                {
-                    expIndex !== -1 ?
-                        eachExperience(experience_data[expIndex]) :
-                        finalExperience()
-                }
+            <div className="experience-list-container">
+                {experience_data && experience_data.map((experience, index) => (
+                    <ExperienceListItem key={index} experience={experience} />
+                ))}
             </div>
         </div>
     );
-}
-
-const eachExperienceLogo = (experience, index, expIndex, setExpIndex, isDefault = false) => {
-    if (isDefault) {
-        experience["name"] = "Keep Learning";
-        experience["domain"] = "questionmark.com";
-    }
-    const link = "https://cdn.brandfetch.io/" + experience.domain;
-    const highlightedExpCSS = {
-        border: "3px solid var(--font-primary-color)"
-    };
-    return (
-        <div className="experience-logo" onClick={() => setExpIndex(index)} key={index}>
-            <img
-                src={link}
-                alt={experience.name}
-                key={index}
-                style={index === expIndex ? highlightedExpCSS : null}
-            ></img>
-        </div>
-    );
-}
-
-const eachExperience = (experience) => {
-    return (
-        <>
-            <div className="experience-headline">
-                <h3>
-                    {experience.role}
-                    &nbsp;
-                    <span className="experience-company">
-                        @
-                        &nbsp;
-                        <a href={experience.website} target="_blank" rel="noreferrer">
-                            {experience.name}
-                        </a>
-                    </span>
-                </h3>
-                <div className="experience-period">
-                    <span>{experience.start}</span> - <span>{experience.end}</span>
-                </div>
-            </div>
-            <ul className="experience-desc">
-                {
-                    experience.desc.map((line, index) => (
-                        <li key={index}>{line}</li>
-                    ))
-                }
-            </ul>
-            &nbsp;
-            <div className="experience-tech">
-                {
-                    experience.tech.map((tech, index) => (
-                        <div className="tech" key={index}>{tech}</div>
-                    ))
-                }
-            </div>
-            {experience.testimonials && experience.testimonials.length > 0 && (
-                <TestimonialCarousel testimonials={experience.testimonials} />
-            )}
-        </>
-    );
-}
-
-const finalExperience = () => {
-    return (
-        <div id="experience-details" key={-1}>
-            <h3>Keep Learning</h3>
-            &nbsp;
-            <ul className="experience-desc">
-                <li>Open to learning new technologies and frameworks.</li>
-                <li>Highly collaborative spirit with eagerness to help others.</li>
-                <li>Particular focus on tackling corner scenarios and responsive design.</li>
-                <li>Committed to making small issues matter even less.</li>
-            </ul>
-        </div>
-    );
-}
+};
 
 export default ExperienceSection;
