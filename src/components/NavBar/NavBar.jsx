@@ -8,164 +8,124 @@ import 'rotating-text/dist/index.css'
 import { Divide as Hamburger } from 'hamburger-react'
 import { motion } from 'framer-motion';
 import { useWindowSize } from "@uidotdev/usehooks";
+import useEmblaCarousel from 'embla-carousel-react';
 import WebsiteLogo from "../WebsiteLogo/WebsiteLogo";
 import home_icon from "../../assets/icons/home.json";
 import about_icon from "../../assets/icons/about.json";
 import experience_icon from "../../assets/icons/experience.json";
 import projects_icon from "../../assets/icons/projects.json";
 import certificates_icon from "../../assets/icons/certificates.json";
-import blog_icon from "../../assets/icons/blogwall.json";
+import redirect_icon from "../../assets/icons/redirect.json";
 
-const NavBar =  () => {
+const NavBar = () => {
 
     const size = useWindowSize();
 
     const NavBarItems = [
-        <NavBarItem content="HOME" dest="welcome-section" icon={home_icon} key="HOME"></NavBarItem>,
-        <NavBarItem content="ABOUT" dest="about-section" icon={about_icon} key="ABOUT"></NavBarItem>,
-        <NavBarItem content="EXPERIENCES" dest="experience-section" icon={experience_icon} key="EXPERIENCES"></NavBarItem>,
-        <NavBarItem content="PROJECTS" dest="projects-section" icon={projects_icon} key="PROJECTS"></NavBarItem>,
-        <NavBarItem content="CERTIFICATES" dest="certificates-section" icon={certificates_icon} key="CERTIFICATES"></NavBarItem>,
+        <NavBarItem content="HOME" dest="welcome-section" icon={home_icon} key="HOME" isMobile={size.width < 1200}></NavBarItem>,
+        <NavBarItem content="ABOUT" dest="about-section" icon={about_icon} key="ABOUT" isMobile={size.width < 1200}></NavBarItem>,
+        <NavBarItem content="EXPERIENCES" dest="experience-section" icon={experience_icon} key="EXPERIENCES" isMobile={size.width < 1200}></NavBarItem>,
+        <NavBarItem content="PROJECTS" dest="projects-section" icon={projects_icon} key="PROJECTS" isMobile={size.width < 1200}></NavBarItem>,
+        <NavBarItem content="CERTIFICATES" dest="certificates-section" icon={certificates_icon} key="CERTIFICATES" isMobile={size.width < 1200}></NavBarItem>,
     ];
 
-    const BlogItem = <BlogNavBarItem content="BLOG" dest="/blogs" icon={blog_icon} key="BLOG"></BlogNavBarItem>;
+    const BlogItem = <BlogNavBarItem content="BLOGS" dest="/blogs" icon={redirect_icon} key="BLOG"></BlogNavBarItem>;
 
-    if(size.width < 1000)
-        return(<SideNavBar regularItems={NavBarItems} blogItem={BlogItem}></SideNavBar>);
+    if (size.width < 1200)
+        return (<SideNavBar regularItems={NavBarItems} blogItem={BlogItem}></SideNavBar>);
     else
         return (<TopNavBar regularItems={NavBarItems} blogItem={BlogItem}></TopNavBar>);
 }
 
-const SideNavBar = ({regularItems, blogItem}) => {
-    
+const SideNavBar = ({ regularItems, blogItem }) => {
     const [sideBarIsOpen, setSideBarIsOpen] = useState(false);
 
-    if(!sideBarIsOpen) {
-        return (
-            <div id="navbar">
-                <div id="website_logo">
-                    <span className="highlight_text">M</span>udit<span className="highlight_text">.</span>
-                </div>
-                <div id="hamburger-icon">
-                    <Hamburger 
-                        color="#00abf0" 
-                        toggled={sideBarIsOpen} 
-                        toggle={setSideBarIsOpen}
-                        rounded
-                    />
-                </div>
+    return (
+        <div id="navbar">
+            <WebsiteLogo />
+            <div id="hamburger-icon">
+                <Hamburger
+                    color="#00abf0"
+                    toggled={sideBarIsOpen}
+                    toggle={setSideBarIsOpen}
+                    rounded
+                    size={22}
+                />
             </div>
-        );
-    } else {
-        return (
-            <FullScreenNavigation navscreenState={sideBarIsOpen} setNavscreenState={setSideBarIsOpen} regularItems={regularItems} blogItem={blogItem}>
-            </FullScreenNavigation>
-        );
-    }
+            <FullScreenNavigation
+                navscreenState={sideBarIsOpen}
+                setNavscreenState={setSideBarIsOpen}
+                regularItems={regularItems}
+                blogItem={blogItem}
+            />
+        </div>
+    );
 }
 
-const FullScreenNavigation = ({navscreenState, setNavscreenState, regularItems, blogItem}) => {
+const FullScreenNavigation = ({ navscreenState, setNavscreenState, regularItems, blogItem }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const carouselRef = useRef(null);
-    const itemsCount = React.Children.count(regularItems);
-    
+    const [scrollProgress, setScrollProgress] = useState(0);
+
+    const [emblaRef, emblaApi] = useEmblaCarousel({
+        loop: false,
+        align: 'center',
+        skipSnaps: false,
+    });
+
     const variants = {
-        open: { opacity: 1, x: 0 },
-        closed: { opacity: 0, x: "100%" },
+        open: {
+            opacity: 1,
+            scale: 1,
+            display: "flex",
+            transition: { duration: 0.3, ease: "easeOut" }
+        },
+        closed: {
+            opacity: 0,
+            scale: 0.8,
+            transitionEnd: { display: "none" },
+            transition: { duration: 0.2, ease: "easeIn" }
+        },
     }
 
-    const scrollToItem = (index) => {
-        const carousel = carouselRef.current;
-        if (!carousel) return;
-        
-        const items = carousel.children;
-        if (items[index]) {
-            const item = items[index];
-            // Use scrollIntoView for better scroll-snap compatibility
-            item.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'center'
-            });
+    // Scroll to the active section on open
+    useEffect(() => {
+        if (navscreenState && emblaApi) {
+            const timeoutId = setTimeout(() => {
+                const container = emblaApi.containerNode();
+                const slides = container.children;
+                let activeIndexFound = 0;
+
+                Array.from(slides).forEach((slide, index) => {
+                    if (slide.querySelector('.activeTab')) {
+                        activeIndexFound = index;
+                    }
+                });
+
+                emblaApi.scrollTo(activeIndexFound, true);
+                setActiveIndex(activeIndexFound);
+            }, 100);
+            return () => clearTimeout(timeoutId);
         }
-    };
+    }, [navscreenState, emblaApi]);
 
-    // Find active navbar item when menu opens
-    useEffect(() => {
-        if (!navscreenState) return; // Only when menu is open
-        
-        const carousel = carouselRef.current;
-        if (!carousel) return;
-        
-        // Small delay to ensure DOM is ready
-        const timeoutId = setTimeout(() => {
-            const items = carousel.children;
-            if (items.length === 0) return;
-            
-            // Find which item has the activeTab class
-            let activeItemIndex = 0;
-            Array.from(items).forEach((item, index) => {
-                if (item.classList.contains('activeTab')) {
-                    activeItemIndex = index;
-                }
-            });
-            
-            // Scroll to the active item
-            scrollToItem(activeItemIndex);
-        }, 100);
-        
-        return () => clearTimeout(timeoutId);
-    }, [navscreenState, itemsCount]);
+    const onScroll = React.useCallback((emblaApi) => {
+        const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
+        setScrollProgress(progress * 100);
+    }, []);
+
+    const onSelect = React.useCallback((emblaApi) => {
+        setActiveIndex(emblaApi.selectedScrollSnap());
+    }, []);
 
     useEffect(() => {
-        const carousel = carouselRef.current;
-        if (!carousel) return;
+        if (!emblaApi) return;
+        onScroll(emblaApi);
+        emblaApi.on('scroll', onScroll);
+        emblaApi.on('select', onSelect);
+        emblaApi.on('reInit', onScroll);
+    }, [emblaApi, onScroll, onSelect]);
 
-        const handleScroll = () => {
-            const items = carousel.children;
-            if (items.length === 0) return;
-            
-            const scrollLeft = carousel.scrollLeft;
-            const clientWidth = carousel.clientWidth;
-            const centerPoint = scrollLeft + clientWidth / 2;
-            
-            let closestIndex = 0;
-            let closestDistance = Infinity;
-            
-            Array.from(items).forEach((item, index) => {
-                const itemLeft = item.offsetLeft;
-                const itemWidth = item.offsetWidth;
-                const itemCenter = itemLeft + itemWidth / 2;
-                const distance = Math.abs(centerPoint - itemCenter);
-                
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestIndex = index;
-                }
-            });
-            
-            setActiveIndex(closestIndex);
-        };
-
-        carousel.addEventListener('scroll', handleScroll);
-        handleScroll(); // Initial call
-        
-        // Also handle resize
-        const resizeObserver = new ResizeObserver(handleScroll);
-        resizeObserver.observe(carousel);
-        
-        return () => {
-            carousel.removeEventListener('scroll', handleScroll);
-            resizeObserver.disconnect();
-        };
-    }, [itemsCount]);
-
-    const handleDotClick = (index) => {
-        scrollToItem(index);
-    };
-
-    const handleItemClick = (e, index) => {
-        scrollToItem(index);
+    const handleItemClick = (index) => {
         // Close menu after a short delay to allow navigation to start
         setTimeout(() => {
             setNavscreenState(false);
@@ -173,56 +133,68 @@ const FullScreenNavigation = ({navscreenState, setNavscreenState, regularItems, 
     };
 
     return (
-        <motion.div 
+        <motion.div
             id="full-screen-navscreen"
+            initial="closed"
             animate={navscreenState ? "open" : "closed"}
             variants={variants}
-            transition={{duration: 5, delay: 0.5, ease: "linear" }}
+            style={{ originX: 1, originY: 0 }}
         >
-            <div id="full-screen-navscreen-top">
-                <WebsiteLogo/>
-                <div id="hamburger-icon">
-                    <Hamburger 
-                        color="#00abf0" 
-                        toggled={navscreenState} 
-                        toggle={setNavscreenState}
-                        rounded
-                    />
-                </div>
-            </div>
             <div id="full-screen-navscreen-carousel-container">
-                <div 
-                    id="full-screen-navscreen-carousel" 
-                    ref={carouselRef}
-                >
-                    {React.Children.map(regularItems, (item, index) => 
-                        React.cloneElement(item, {
-                            onClick: (e) => handleItemClick(e, index)
-                        })
-                    )}
+                <div className="embla" ref={emblaRef}>
+                    <div className="embla__container">
+                        {React.Children.map(regularItems, (item, index) => (
+                            <div className={`embla__slide ${index === activeIndex ? 'is-selected' : ''}`} key={index}>
+                                {React.cloneElement(item, {
+                                    onClick: () => handleItemClick(index)
+                                })}
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div id="full-screen-navscreen-dots">
-                    {Array.from({ length: itemsCount }).map((_, index) => (
+
+                <div id="full-screen-navscreen-controls">
+                    <div className="carousel-nav-buttons">
                         <button
-                            key={index}
-                            className={`carousel-dot ${index === activeIndex ? 'active' : ''}`}
-                            onClick={() => handleDotClick(index)}
-                            aria-label={`Go to item ${index + 1}`}
+                            className="embla__prev"
+                            onClick={() => emblaApi?.scrollPrev()}
+                            aria-label="Previous slide"
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M15 18l-6-6 6-6" />
+                            </svg>
+                        </button>
+                        <button
+                            className="embla__next"
+                            onClick={() => emblaApi?.scrollNext()}
+                            aria-label="Next slide"
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div className="carousel-progress-wrapper">
+                        <div
+                            className="carousel-progress-bar"
+                            style={{ width: `${scrollProgress}%` }}
                         />
-                    ))}
+                    </div>
                 </div>
-            </div>
-            <div id="full-screen-navscreen-blog" onClick={() => setNavscreenState(false)}>
-                {blogItem}
+
+                <div id="full-screen-navscreen-blog" onClick={() => setNavscreenState(false)}>
+                    {blogItem}
+                </div>
             </div>
         </motion.div>
     );
 }
 
-const TopNavBar = ({regularItems, blogItem}) => {
+const TopNavBar = ({ regularItems, blogItem }) => {
     return (
         <div id="navbar">
-            <WebsiteLogo/>
+            <WebsiteLogo />
             <div id="navlist-full">
                 {regularItems}
             </div>
@@ -233,40 +205,44 @@ const TopNavBar = ({regularItems, blogItem}) => {
     );
 }
 
-const NavBarItem = ({content, dest, icon=null, onClick}) => {
+const NavBarItem = ({ content, dest, icon = null, onClick, isMobile = false }) => {
     return (
-        <Link 
-            to={dest} 
-            className="navlistItem" 
+        <Link
+            to={dest}
+            className="navlistItem"
             activeClass="activeTab"
-            spy={true} 
-            smooth={true} 
+            spy={true}
+            smooth={true}
             duration={500}
             onClick={onClick}
         >
-            <AnimatedIcon icon={icon}/>
-            <RotatingText
-                text={content}
-                stagger={0.1}
-                timing={0.5}
-                className="rotating-text"
-                styles={{ fontSize: '100px' }}
+            <AnimatedIcon icon={icon} />
+            {isMobile ? (
+                <span className="mobile-nav-text">{content}</span>
+            ) : (
+                <RotatingText
+                    text={content}
+                    stagger={0.1}
+                    timing={0.5}
+                    className="rotating-text"
+                    styles={{ fontSize: '100px' }}
                 />
+            )}
         </Link>
     );
 }
 
-const BlogNavBarItem = ({content, dest, icon=null}) => {
+const BlogNavBarItem = ({ content, dest, icon = null }) => {
     return (
         <RouterLink to={dest} className="blogNavItem">
-            <AnimatedIcon icon={icon}/>
+            <AnimatedIcon icon={icon} class_name="nocss" />
             <RotatingText
                 text={content}
                 stagger={0.1}
                 timing={0.5}
                 className="rotating-text"
                 styles={{ fontSize: '100px' }}
-                />
+            />
         </RouterLink>
     );
 }
