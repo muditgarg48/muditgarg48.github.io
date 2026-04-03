@@ -4,50 +4,47 @@
     width: 89.5vw;
     color: var(--font-primary-color);
     padding: 5vw;
-    padding-bottom: 0;
 }
 
 #about-section-content {
-    justify-content: space-evenly;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 #my-description {
-    padding: 0.5vw;
+    padding: 0.5vw 0;
 }
 
 .about_me {
-    text-align: justify;
-    padding: 0.5rem;
-    margin: 0.5rem;
+    text-align: left;
+    padding: 0.5rem 0;
+    margin: 0.5rem 0;
 }
 
 #myself-subsection {
     display: flex;
-    margin: 0.5rem;
-    justify-content: space-evenly;
+    flex-direction: column;
+    margin: 0 0 2rem 0;
+    gap: 2rem;
+}
+
+#myself-visual {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
 }
 
 #my-potrait {
-    margin: 1rem;
-    width: 30vw;
+    width: 400px;
+    height: 400px;
     object-fit: cover;
     border-bottom: 2px solid var(--primary-color);
     border-right: 2px solid var(--primary-color);
-    border-radius: 5rem;
+    border-radius: 3rem;
+    flex-shrink: 0;
 }
-
-@media (max-width: 800px) {
-    #myself-subsection {
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    #my-potrait {
-        width: 80vw;
-    }
-}
-
 
 #my-quote {
     display: flex;
@@ -65,62 +62,68 @@
     font-size: 2rem;
 }
 
+/* --- Basic Info: Desktop = 1-column table beside photo --- */
 #basic_info {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 1.5rem;
     color: var(--font-primary-color);
-    margin: 20px;
-    justify-content: space-evenly;
-    font-size: 80%;
+    flex: 1;
+    justify-content: center;
 }
 
 .basic_info_item {
-    border: 2px solid var(--font-secondary-color);
-    border-radius: 25px;
-    margin: 1%;
-    padding: 1rem;
-    /* min-width: 15%; */
-    /* max-width: min-content; */
-    transition: all 0.5s;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-}
-
-.basic_info_item:hover {
-    transform: translateY(-5%);
+    gap: 0.3rem;
+    align-items: flex-start;
 }
 
 .basic_info_title {
-    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--font-secondary-color);
 }
 
 .basic_info_content {
     color: var(--font-highlight-color);
-    font-weight: bolder;
-    font-size: larger;
-    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
 }
 
 .basic_info_footer {
     color: var(--font-secondary-color);
-    font-size: smaller;
-    align-self: flex-end;
+    font-size: 0.7rem;
+    opacity: 0.8;
 }
 
-@media (max-width: 1000px) {
-    .basic_info {
-        justify-content: space-evenly;
-    }
-}
-
+/* --- Tablet: stack photo on top, stats as 2x2 grid --- */
 @media (max-width: 800px) {
-    .basic_info {
-        display: flex;
+    #myself-visual {
         flex-direction: column;
+        align-items: center;
+        gap: 2rem;
     }
-    .basic_info_item {
+
+    #my-potrait {
+        width: 70vw;
+        height: auto;
+        aspect-ratio: 1 / 1;
         max-width: none;
+    }
+
+    #basic_info {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem 2rem;
+        width: 100%;
+        justify-items: center;
+        text-align: center;
+    }
+
+    .basic_info_item {
+        align-items: flex-start;
+        padding-left: 10vw;
     }
 }
 
@@ -191,15 +194,132 @@
     color: var(--font-primary-color);
 }
 
-.more_links {
+/* --- Modern Minimal Accordion Styles --- */
+#more-about-me-accordion {
+    margin: 2rem 0;
+}
+
+.accordion_header_row {
+    display: flex;
+    gap: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    justify-content: space-around;
+}
+
+.accordion_tab {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.2rem 0;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: opacity 0.3s ease;
+    opacity: 0.6;
+}
+
+.accordion_tab:hover {
+    opacity: 1;
+}
+
+.accordion_tab.active {
+    opacity: 1;
+}
+
+.accordion_tab h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--font-primary-color);
+    transition: color 0.3s ease;
+}
+
+.accordion_tab.active h3 {
+    color: var(--primary-color);
+}
+
+.accordion_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    opacity: 0.8;
+}
+
+.tab_indicator {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: center;
+}
+
+.accordion_tab.active .tab_indicator {
+    transform: scaleX(1);
+}
+
+.accordion_full_width_content {
+    padding: 2rem 0;
+    overflow: hidden;
+}
+
+@media (max-width: 800px) {
+    .accordion_header_row {
+        gap: 1.5rem;
+        justify-content: space-around;
+    }
+}
+
+/* --- Modern Bullet Item Styles --- */
+.modern_bullet_points {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.modern_bullet_item {
+    padding-left: 1rem;
+    border-left: 2px solid var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.modern_bullet_text {
+    color: var(--font-highlight-color);
+    line-height: 1.5;
+    text-align: left;
+}
+
+.modern_bullet_links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.modern_link_pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    background: rgba(0, 171, 240, 0.1);
+    border: 1px solid rgba(0, 171, 240, 0.2);
+    color: var(--primary-color);
     text-decoration: none;
-    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.currently {
-    list-style-type: "🚀  ";
-}
-
-.concluded {
-    list-style-type: "💯  ";
+.modern_link_pill:hover {
+    background: rgba(0, 171, 240, 0.2);
+    border-color: rgba(0, 171, 240, 0.4);
+    transform: translateY(-2px);
 }

@@ -1,16 +1,16 @@
 import React, { useState, memo, useMemo, useCallback } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 import './AboutSection.css';
 import { TypeAnimation } from "react-type-animation";
 import Marquee from "react-fast-marquee";
 import { Ribbon, RibbonContainer } from "react-ribbons";
 
-import ScrollFurther from "../../components/ScrollFurther/ScrollFurther";
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import EducationSection from "../EducationSection/EducationSection";
 import did_you_know_icon from "../../assets/icons/interesting.json";
 
-const AboutSection = ({facts, education_history, skills, about_me}) => {
+const AboutSection = ({ facts, education_history, skills, about_me }) => {
 
     const intro_para = about_me['intro_para'];
     const basic_info = about_me['basic_info'];
@@ -22,8 +22,8 @@ const AboutSection = ({facts, education_history, skills, about_me}) => {
 
     return (
         <div id="about-section">
-            <SectionHeading section_name="ABOUT"/>
             <div id="about-section-content">
+                <SectionHeading section_name="ABOUT" />
                 <div id="my-description">
                     <TypeAnimation
                         className="about_me"
@@ -36,22 +36,8 @@ const AboutSection = ({facts, education_history, skills, about_me}) => {
                         ]}
                         repeat={0}
                     />
-                    <div id="basic_info">
-                    {
-                        basic_info.map((item, index) => {
-                            return (
-                                <BasicInfoItem 
-                                    key={index}
-                                    title={item.title}
-                                    content={item.content}
-                                    footer={item.footer || null}
-                                />
-                            );
-                        })
-                    }
-                    </div>
-                    <MoreAboutMeSection 
-                        currently={currently} 
+                    <MoreAboutMeSection
+                        currently={currently}
                         recently_concluded={recently_concluded}
                     />
                     <TypeAnimation
@@ -66,14 +52,31 @@ const AboutSection = ({facts, education_history, skills, about_me}) => {
                     />
                 </div>
                 <div id="myself-subsection">
-                    <img id="my-potrait" src={my_portrait_link} alt="My Potrait"/>
                     <div id="my-quote">
                         <span id="quotation-mark" className="highlight">"</span>
+                        &nbsp;
                         <span id="quote">{my_quote}</span>
+                    </div>
+                    <div id="myself-visual">
+                        <img id="my-potrait" src={my_portrait_link} alt="My Portrait" />
+                        <div id="basic_info">
+                            {
+                                basic_info.map((item, index) => {
+                                    return (
+                                        <BasicInfoItem
+                                            key={index}
+                                            title={item.title}
+                                            content={item.content}
+                                            footer={item.footer || null}
+                                        />
+                                    );
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
                 &nbsp;
-                <div style={{display: "flex", justifyContent: "end"}}>
+                <div style={{ display: "flex", justifyContent: "end" }}>
                     <span>⚒️ - Professional</span>
                     &nbsp;
                     &nbsp;
@@ -81,64 +84,104 @@ const AboutSection = ({facts, education_history, skills, about_me}) => {
                     <span>⭐ - Proficient</span>
                 </div>
                 &nbsp;
-                <SkillSection skills={skills}/>
+                <SkillSection skills={skills} />
                 &nbsp;
-                <ScrollFurther next="experience-section" side="right" text="Skip to Experience section"/>
-                &nbsp;
-                <DidYouKnowSection facts={facts}/>
-                <EducationSection education_history={education_history}/>
+                <DidYouKnowSection facts={facts} />
+                <EducationSection education_history={education_history} />
                 &nbsp;
             </div>
         </div>
     );
 }
 
-const MoreAboutMeSection = ({currently, recently_concluded}) => {
-    
-    const BulletPoints = ({className, points}) => {
+const MoreAboutMeSection = ({ currently, recently_concluded }) => {
+    const [expanded, setExpanded] = useState(null);
+
+    const toggleSection = (section) => {
+        setExpanded(current => current === section ? null : section);
+    };
+
+    const BulletPoints = ({ points }) => {
         return (
-            <ul className={"bullet_points "+className}>
-            {
-                points.map((item, index) => {
-                    return (
-                    <div key={index}>
-                        <li>{item["text"]}</li>
-                        {
-                            item["links"].length > 0 &&
-                            item["links"].map((link, i) => {
-                                return (
-                                    <div key={i}>
-                                        <a className="more_links" href={link} rel="noopener noreferrer">
-                                            Link {i+1}
-                                        </a>
-                                        &nbsp;
-                                        &nbsp;
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                )})
-            }
-            </ul>
+            <div className="modern_bullet_points">
+                {
+                    points.map((item, index) => {
+                        return (
+                            <div key={index} className="modern_bullet_item">
+                                <div className="modern_bullet_text">{item["text"]}</div>
+                                {
+                                    item["links"].length > 0 && (
+                                        <div className="modern_bullet_links">
+                                            {item["links"].map((link, i) => (
+                                                <a key={i} className="modern_link_pill" href={link} target="_blank" rel="noopener noreferrer">
+                                                    ↗ Link {i + 1}
+                                                </a>
+                                            ))}
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        )
+                    })
+                }
+            </div>
         );
     }
 
+    const sections = [
+        { id: 'currently', title: 'Currently', data: currently },
+        { id: 'concluded', title: 'Recently concluded', data: recently_concluded }
+    ];
+
+    const ChevronIcon = ({ isOpen }) => (
+        <svg
+            width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
+        >
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    );
+
     return (
-        <div>
-            <div>
-                <h3>Currently</h3>
-                <BulletPoints className="currently" points={currently}/>
+        <div id="more-about-me-accordion">
+            <div className="accordion_header_row">
+                {sections.map(section => (
+                    <div
+                        key={section.id}
+                        className={`accordion_tab ${expanded === section.id ? 'active' : ''}`}
+                        onClick={() => toggleSection(section.id)}
+                    >
+                        <h3>{section.title}</h3>
+                        <div className="accordion_icon">
+                            <ChevronIcon isOpen={expanded === section.id} />
+                        </div>
+                        <div className="tab_indicator"></div>
+                    </div>
+                ))}
             </div>
-            <div>
-                <h3>Recently concluded</h3>
-                <BulletPoints className="concluded" points={recently_concluded}/>
+
+            <div className="accordion_content_row">
+                <AnimatePresence mode="wait">
+                    {expanded && (
+                        <motion.div
+                            key={expanded} /* forces re-animation if switching directly */
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="accordion_full_width_content"
+                        >
+                            <BulletPoints points={sections.find(s => s.id === expanded).data} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );
 }
 
-const BasicInfoItem = ({title, content, footer=""}) => {
+const BasicInfoItem = ({ title, content, footer = "" }) => {
     return (
         <div className="basic_info_item">
             <div className="basic_info_title">{title}</div>
@@ -148,7 +191,7 @@ const BasicInfoItem = ({title, content, footer=""}) => {
     )
 }
 
-const DidYouKnowSection = ({facts}) => {
+const DidYouKnowSection = ({ facts }) => {
 
     const [randomFactIndex, setRandomFactIndex] = useState(0);
 
@@ -156,24 +199,24 @@ const DidYouKnowSection = ({facts}) => {
         const randomNumber = Math.floor(Math.random() * facts.length);
         setRandomFactIndex(randomNumber)
     }
-    
+
     return (
         <div id="did-you-know-subsection">
             <div id="dyk-heading-section">
                 <h3 id="dyk-heading">
-                    <AnimatedIcon icon={did_you_know_icon} link=""/>
+                    <AnimatedIcon icon={did_you_know_icon} link="" />
                     DID YOU KNOW
                 </h3>
                 <div id="refresh-dyk" onClick={generateRandomNumber}>Refresh</div>
             </div>
             <div id="did-you-know">
-               {facts[randomFactIndex]}
+                {facts[randomFactIndex]}
             </div>
         </div>
     );
 }
 
-const SkillSection = memo(({skills}) => {
+const SkillSection = memo(({ skills }) => {
     const skillSubsections = useMemo(() => {
         return Object.keys(skills).map((key, index) => {
             return (
@@ -181,7 +224,7 @@ const SkillSection = memo(({skills}) => {
                     key={key}
                     skills={skills[key]}
                     section_name={key}
-                    dir={index%2===0?"right":"left"}/>
+                    dir={index % 2 === 0 ? "right" : "left"} />
             );
         });
     }, [skills]);
@@ -196,7 +239,7 @@ const SkillSection = memo(({skills}) => {
     );
 });
 
-const SkillSubSection = memo(({skills, section_name,dir}) => {
+const SkillSubSection = memo(({ skills, section_name, dir }) => {
     const skillElements = useMemo(() => {
         return skills.map((skill, index) => {
             if ("ribbon" in skill) {
@@ -211,12 +254,12 @@ const SkillSubSection = memo(({skills, section_name,dir}) => {
                         >
                             {skill.ribbon}
                         </Ribbon>
-                        <Skill icon={skill.icon} name={skill.name} key={skill.name}/>
+                        <Skill icon={skill.icon} name={skill.name} key={skill.name} />
                     </RibbonContainer>
                 );
             } else {
                 return (
-                    <Skill icon={skill.icon} name={skill.name} key={skill.name || index}/>
+                    <Skill icon={skill.icon} name={skill.name} key={skill.name || index} />
                 );
             }
         });
@@ -224,7 +267,7 @@ const SkillSubSection = memo(({skills, section_name,dir}) => {
 
     return (
         <div className="skill_subsection">
-            <div style={{display: "flex", justifyContent: "center"}}>{section_name}</div>
+            <div style={{ display: "flex", justifyContent: "center" }}>{section_name}</div>
             <Marquee pauseOnHover speed={70} direction={dir}>
                 {skillElements}
             </Marquee>
@@ -232,7 +275,7 @@ const SkillSubSection = memo(({skills, section_name,dir}) => {
     );
 });
 
-const Skill = memo(({icon=null, name=''}) => {
+const Skill = memo(({ icon = null, name = '' }) => {
 
     const [showName, setShowName] = useState(false);
 
