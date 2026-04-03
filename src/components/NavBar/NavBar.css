@@ -1,6 +1,7 @@
 #navbar {
     top: 0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: .5% 5%;
     position: fixed;
@@ -132,19 +133,22 @@
     display: flex;
     user-select: none;
     -webkit-user-select: none;
-    margin: 0 8%; 
+    margin: 0 8%;
 }
 
 #full-screen-navscreen-carousel-container .embla__slide {
-    flex: 0 0 70%; /* Increased width so only one is mainly visible */
+    flex: 0 0 70%;
+    /* Increased width so only one is mainly visible */
     min-width: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
     opacity: 0.3;
-    transform: scale(0.75); /* Reduced scale for more "air" and focus */
-    padding: 2rem 0; /* More vertical air */
+    transform: scale(0.75);
+    /* Reduced scale for more "air" and focus */
+    padding: 2rem 0;
+    /* More vertical air */
 }
 
 #full-screen-navscreen-carousel-container .embla__slide.is-selected {
@@ -154,8 +158,10 @@
 
 #full-screen-navscreen-carousel-container .embla__slide .navlistItem {
     flex-direction: column;
-    gap: 1.25rem; /* More space between icon and text */
-    padding: 1.5rem 1rem; /* Airier internal cushion */
+    gap: 1.25rem;
+    /* More space between icon and text */
+    padding: 1.5rem 1rem;
+    /* Airier internal cushion */
     width: 100%;
     height: 100%;
     justify-content: center;

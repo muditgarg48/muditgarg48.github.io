@@ -4,6 +4,7 @@
     font-weight: 1000;
     font-family: var(--logo-font-style);
     color: var(--font-highlight-color);
+    cursor: pointer;
 }
 
 .highlight_text {

@@ -10,7 +10,6 @@ import { motion } from 'framer-motion';
 import { useWindowSize } from "@uidotdev/usehooks";
 import useEmblaCarousel from 'embla-carousel-react';
 import WebsiteLogo from "../WebsiteLogo/WebsiteLogo";
-import home_icon from "../../assets/icons/home.json";
 import about_icon from "../../assets/icons/about.json";
 import experience_icon from "../../assets/icons/experience.json";
 import projects_icon from "../../assets/icons/projects.json";
@@ -22,7 +21,6 @@ const NavBar = () => {
     const size = useWindowSize();
 
     const NavBarItems = [
-        <NavBarItem content="HOME" dest="welcome-section" icon={home_icon} key="HOME" isMobile={size.width < 1200}></NavBarItem>,
         <NavBarItem content="ABOUT" dest="about-section" icon={about_icon} key="ABOUT" isMobile={size.width < 1200}></NavBarItem>,
         <NavBarItem content="EXPERIENCES" dest="experience-section" icon={experience_icon} key="EXPERIENCES" isMobile={size.width < 1200}></NavBarItem>,
         <NavBarItem content="PROJECTS" dest="projects-section" icon={projects_icon} key="PROJECTS" isMobile={size.width < 1200}></NavBarItem>,
@@ -42,7 +40,14 @@ const SideNavBar = ({ regularItems, blogItem }) => {
 
     return (
         <div id="navbar">
-            <WebsiteLogo />
+            <Link
+                to="welcome-section"
+                smooth={true}
+                duration={500}
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            >
+                <WebsiteLogo />
+            </Link>
             <div id="hamburger-icon">
                 <Hamburger
                     color="#00abf0"
@@ -194,7 +199,14 @@ const FullScreenNavigation = ({ navscreenState, setNavscreenState, regularItems,
 const TopNavBar = ({ regularItems, blogItem }) => {
     return (
         <div id="navbar">
-            <WebsiteLogo />
+            <Link
+                to="welcome-section"
+                smooth={true}
+                duration={500}
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            >
+                <WebsiteLogo />
+            </Link>
             <div id="navlist-full">
                 {regularItems}
             </div>
