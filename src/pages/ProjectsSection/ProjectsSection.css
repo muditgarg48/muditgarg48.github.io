@@ -169,24 +169,24 @@
 }
 
 /* Embla Carousel Base Styles */
-.embla {
+#projects-section .embla {
     width: 100%;
     overflow: hidden;
     position: relative;
     padding: 20px 0;
 }
 
-.embla__viewport {
+#projects-section .embla__viewport {
     overflow: hidden;
     width: 100%;
 }
 
-.embla__container {
+#projects-section .embla__container {
     display: flex;
     touch-action: pan-y pinch-zoom;
 }
 
-.embla__slide {
+#projects-section .embla__slide {
     flex: 0 0 70%;
     min-width: 0;
     position: relative;
@@ -196,14 +196,19 @@
 }
 
 @media (max-width: 800px) {
-    .embla__slide {
+    #projects-section .embla__slide {
         flex: 0 0 85%;
-        /* More focus on single slide for mobile */
+    }
+}
+
+@media (max-width: 700px) {
+    #projects-section .embla__slide {
+        flex: 0 0 100%;
     }
 }
 
 /* Slide Content */
-.embla__slide__inner {
+#projects-section .embla__slide__inner {
     position: relative;
     width: 100%;
     aspect-ratio: 1.6 / 1;
@@ -215,7 +220,7 @@
     transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.carousel-image-container {
+#projects-section .carousel-image-container {
     width: 100%;
     height: 100%;
     position: relative;
@@ -224,14 +229,14 @@
     pointer-events: auto;
 }
 
-.carousel-image-container img {
+#projects-section .carousel-image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.carousel-overlay {
+#projects-section .carousel-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -244,19 +249,19 @@
     /* Overlay and its children shouldn't intercept clicks until active */
 }
 
-.embla__slide.active .carousel-overlay {
+#projects-section .embla__slide.active .carousel-overlay {
     transform: translateY(0);
     pointer-events: auto;
 }
 
-.carousel-overlay h4 {
+#projects-section .carousel-overlay h4 {
     margin: 0;
     color: #fff;
     font-size: 1.1rem;
     font-weight: 600;
 }
 
-.view-label {
+#projects-section .view-label {
     font-size: 0.7rem;
     color: var(--font-highlight-color);
     text-transform: uppercase;
@@ -264,13 +269,13 @@
     letter-spacing: 0.5px;
 }
 
-.carousel-indicators {
+#projects-section .carousel-indicators {
     display: flex;
     gap: 8px;
     margin-top: 15px;
 }
 
-.indicator {
+#projects-section .indicator {
     width: 6px;
     height: 6px;
     border-radius: 3px;
@@ -279,7 +284,7 @@
     transition: all 0.3s ease;
 }
 
-.indicator.active {
+#projects-section .indicator.active {
     background: var(--font-highlight-color);
     width: 22px;
 }

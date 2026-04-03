@@ -1,4 +1,5 @@
 import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
+import { useWindowSize } from "@uidotdev/usehooks";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
@@ -314,6 +315,9 @@ const ProjectListItem = memo(({ project }) => {
 // --- Embla Carousel Implementation ---
 
 const EmblaCarousel = memo(({ projects }) => {
+    const { width } = useWindowSize();
+    const isMobile = width < 700;
+
     const [emblaRef, emblaApi] = useEmblaCarousel(
         {
             loop: true,
@@ -350,14 +354,24 @@ const EmblaCarousel = memo(({ projects }) => {
                 }
 
                 // Focus & Scale logic (Optimized for 70% base width)
-                const tweenScale = 1 - Math.abs(diffToTarget * 1.2);
-                const scale = Math.max(0.8, Math.min(1.15, tweenScale)); // Max 1.15 * 70% = 80.5% fill
-                const opacity = Math.max(0.4, Math.min(1, 1 - Math.abs(diffToTarget * 2)));
+                let scale = 1;
+                let opacity = 1;
+
+                if (isMobile) {
+                    // Mobile: No scaling to prevent peeking, just opacity for the "blackened" effect
+                    opacity = index === activeIndex ? 0.7 : 1;
+                } else {
+                    // Desktop: Scale and opacity tweening
+                    const tweenScale = 1 - Math.abs(diffToTarget * 1.2);
+                    scale = Math.max(0.8, Math.min(1.15, tweenScale));
+                    opacity = Math.max(0.7, Math.min(1, 0.7 + Math.abs(diffToTarget * 0.6)));
+                }
+
                 return { scale, opacity };
             });
         });
         setTweenValues(styles.flat());
-    }, []);
+    }, [activeIndex, isMobile]);
 
     const onSelect = useCallback((emblaApi) => {
         setActiveIndex(emblaApi.selectedScrollSnap());
@@ -398,7 +412,7 @@ const EmblaCarousel = memo(({ projects }) => {
                                 style={{
                                     ...(tweenValues.length && {
                                         transform: `scale(${tweenValues[index]?.scale || 0.8})`,
-                                        opacity: tweenValues[index]?.opacity || 0.5,
+                                        opacity: tweenValues[index]?.opacity || 1,
                                     })
                                 }}
                             >

@@ -118,44 +118,44 @@
     position: relative;
 }
 
-.embla {
+#full-screen-navscreen-carousel-container .embla {
     overflow: hidden;
     width: 100%;
     cursor: grab;
 }
 
-.embla:active {
+#full-screen-navscreen-carousel-container .embla:active {
     cursor: grabbing;
 }
 
-.embla__container {
+#full-screen-navscreen-carousel-container .embla__container {
     display: flex;
     user-select: none;
     -webkit-user-select: none;
-    margin: 0 15%;
+    margin: 0 8%; 
 }
 
-.embla__slide {
-    flex: 0 0 55%;
+#full-screen-navscreen-carousel-container .embla__slide {
+    flex: 0 0 70%; /* Increased width so only one is mainly visible */
     min-width: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
     opacity: 0.3;
-    transform: scale(0.85);
-    padding: 1.5rem 0;
+    transform: scale(0.75); /* Reduced scale for more "air" and focus */
+    padding: 2rem 0; /* More vertical air */
 }
 
-.embla__slide.is-selected {
+#full-screen-navscreen-carousel-container .embla__slide.is-selected {
     opacity: 1;
     transform: scale(1);
 }
 
-.embla__slide .navlistItem {
+#full-screen-navscreen-carousel-container .embla__slide .navlistItem {
     flex-direction: column;
-    gap: 1rem;
-    padding: 1.25rem 0.75rem;
+    gap: 1.25rem; /* More space between icon and text */
+    padding: 1.5rem 1rem; /* Airier internal cushion */
     width: 100%;
     height: 100%;
     justify-content: center;
@@ -165,7 +165,7 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.embla__slide.is-selected .navlistItem {
+#full-screen-navscreen-carousel-container .embla__slide.is-selected .navlistItem {
     background: rgba(0, 171, 240, 0.1);
     border-color: var(--primary-color);
     box-shadow: 0 0 30px rgba(0, 171, 240, 0.2);
@@ -194,8 +194,8 @@
     gap: 0.75rem;
 }
 
-.embla__prev,
-.embla__next {
+#full-screen-navscreen-carousel-container .embla__prev,
+#full-screen-navscreen-carousel-container .embla__next {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--primary-color);
@@ -210,8 +210,8 @@
     outline: none;
 }
 
-.embla__prev:hover,
-.embla__next:hover {
+#full-screen-navscreen-carousel-container .embla__prev:hover,
+#full-screen-navscreen-carousel-container .embla__next:hover {
     background: var(--primary-color);
     color: white;
     transform: scale(1.1);
