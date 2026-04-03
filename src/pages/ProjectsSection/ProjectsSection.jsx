@@ -1,4 +1,5 @@
 import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWindowSize } from "@uidotdev/usehooks";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
@@ -202,7 +203,7 @@ const CommitHistory = memo(({
     );
 });
 
-const ProjectListItem = memo(({ project }) => {
+const ProjectListItem = memo(({ project, isExpanded, onToggle }) => {
     const { name, desc, speciality, tech_stack, kpis, github, deployment, other_btns, image, planned_tasks } = project;
     const { lastUpdated, lastUpdatedError } = useGitHubData(github);
 
@@ -257,57 +258,74 @@ const ProjectListItem = memo(({ project }) => {
     }, [github]);
 
     return (
-        <div id={name} className={`project-list-item ${speciality === "COMING SOON" ? "list-item-building" : ""}`}>
-            <div className="list-item-top">
-                <div className="item-title-group">
-                    <ProjectPill speciality={speciality} />
-                    <h3 className="item-name">{name || github?.repo_name}</h3>
-                </div>
-                <div className="list-item-links">
-                    {github?.repo_link && !isPrivate && (
-                        <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss" icon_size={22} />
-                    )}
-                    {deployment && (
-                        <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={22} />
-                    )}
-                    {other_btns && other_btns.map((btn, index) => (
-                        <a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="list-other-btn">{btn.text}</a>
-                    ))}
-                </div>
-            </div>
-
-            <div className="list-item-meta">
-                {isPrivate ? <PrivateRibbon /> : (
-                    lastUpdatedError ? <ErrorMessage error={lastUpdatedError} /> : (
-                        <ActivityTag lastUpdated={lastUpdated} />
-                    )
-                )}
-            </div>
-
-            <div className="list-item-content">
-                <p className="item-desc">{desc}</p>
-                <div className="item-data-rows">
-                    <ProjectKPIs kpis={kpis} />
-                    <ProjectTechStack tech_stack={tech_stack} />
-                </div>
-                {planned_tasks && planned_tasks.length > 0 && (
-                    <div className="list-planned-tasks">
-                        <div className="planned-heading">Planned Tasks:</div>
-                        <ul>{planned_tasks.map((task, i) => <li key={i}>{task}</li>)}</ul>
+        <div id={name} className={`project-list-item ${speciality === "COMING SOON" ? "list-item-building" : ""} ${isExpanded ? 'active' : ''}`}>
+            <div className="list-item-top" onClick={onToggle} style={{ cursor: 'pointer' }}>
+                <div className="list-item-top-content">
+                    <div className="item-title-group">
+                        <ProjectPill speciality={speciality} />
+                        <h3 className="item-name">{name || github?.repo_name}</h3>
                     </div>
-                )}
+                    <div className="list-item-links">
+                        {github?.repo_link && !isPrivate && (
+                            <AnimatedIcon icon={git_repo} link={github.repo_link} class_name="nocss" icon_size={22} />
+                        )}
+                        {deployment && (
+                            <AnimatedIcon icon={redirect} link={deployment} class_name="nocss" icon_size={22} />
+                        )}
+                        {other_btns && other_btns.map((btn, index) => (
+                            <a href={btn.link} key={index} target="_blank" rel="noopener noreferrer" className="list-other-btn">{btn.text}</a>
+                        ))}
+                    </div>
+                </div>
+                <div className="list-item-meta">
+                    {isPrivate ? <PrivateRibbon /> : (
+                        lastUpdatedError ? <ErrorMessage error={lastUpdatedError} /> : (
+                            <ActivityTag lastUpdated={lastUpdated} />
+                        )
+                    )}
+                </div>
+                <div className="project-read-more">
+                    {isExpanded ? 'READ LESS' : 'READ MORE'}
+                </div>
             </div>
 
-            {!isPrivate && github?.repo_owner && (
-                <CommitHistory
-                    commitsExpanded={commitsExpanded}
-                    isLoadingCommits={isLoadingCommits}
-                    commitsError={commitsError}
-                    latestCommitHistory={latestCommitHistory}
-                    commitsUrl={commitsUrl}
-                    onToggle={() => setCommitsExpanded(!commitsExpanded)}
-                />
-            )}
+            <AnimatePresence initial={false}>
+                {isExpanded && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        style={{ overflow: 'hidden' }}
+                    >
+
+                        <div className="list-item-content">
+                            <p className="item-desc">{desc}</p>
+                            <div className="item-data-rows">
+                                <ProjectKPIs kpis={kpis} />
+                                <ProjectTechStack tech_stack={tech_stack} />
+                            </div>
+                            {planned_tasks && planned_tasks.length > 0 && (
+                                <div className="list-planned-tasks">
+                                    <div className="planned-heading">Planned Tasks:</div>
+                                    <ul>{planned_tasks.map((task, i) => <li key={i}>{task}</li>)}</ul>
+                                </div>
+                            )}
+                        </div>
+
+                        {!isPrivate && github?.repo_owner && (
+                            <CommitHistory
+                                commitsExpanded={commitsExpanded}
+                                isLoadingCommits={isLoadingCommits}
+                                commitsError={commitsError}
+                                latestCommitHistory={latestCommitHistory}
+                                commitsUrl={commitsUrl}
+                                onToggle={() => setCommitsExpanded(!commitsExpanded)}
+                            />
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 });
@@ -451,6 +469,11 @@ const ProjectsSection = memo(({ projects_data }) => {
     const [isSortOpen, setIsSortOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [projectDates, setProjectDates] = useState({});
+    const [expandedIndex, setExpandedIndex] = useState(0);
+
+    const toggleExpand = (index) => {
+        setExpandedIndex(current => current === index ? null : index);
+    };
 
     // Fetch all dates for sorting when "Last Updated" is selected or on load
     useEffect(() => {
@@ -596,7 +619,12 @@ const ProjectsSection = memo(({ projects_data }) => {
             <div className="projects-list-container" key={filter}>
                 {
                     filteredList.map((project, index) => (
-                        <ProjectListItem key={project.name || index} project={project} />
+                        <ProjectListItem
+                            key={project.name || index}
+                            project={project}
+                            isExpanded={expandedIndex === index}
+                            onToggle={() => toggleExpand(index)}
+                        />
                     ))
                 }
             </div>
