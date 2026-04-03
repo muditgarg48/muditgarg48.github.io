@@ -7,10 +7,9 @@ import { Ribbon, RibbonContainer } from "react-ribbons";
 
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
-import EducationSection from "../EducationSection/EducationSection";
 import did_you_know_icon from "../../assets/icons/interesting.json";
 
-const AboutSection = ({ facts, education_history, skills, about_me }) => {
+const AboutSection = ({ facts, skills, about_me }) => {
 
     const intro_para = about_me['intro_para'];
     const basic_info = about_me['basic_info'];
@@ -87,7 +86,6 @@ const AboutSection = ({ facts, education_history, skills, about_me }) => {
                 <SkillSection skills={skills} />
                 &nbsp;
                 <DidYouKnowSection facts={facts} />
-                <EducationSection education_history={education_history} />
                 &nbsp;
             </div>
         </div>

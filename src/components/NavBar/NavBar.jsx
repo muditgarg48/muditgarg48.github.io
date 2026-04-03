@@ -13,7 +13,7 @@ import redirect_icon from "../../assets/icons/redirect.json";
 
 const NAV_ITEMS = [
     { content: "ABOUT", dest: "about-section" },
-    { content: "EXPERIENCES", dest: "experience-section" },
+    { content: "JOURNEY", dest: "experience-section" },
     { content: "PROJECTS", dest: "projects-section" },
     { content: "CERTIFICATES", dest: "certificates-section" },
 ];

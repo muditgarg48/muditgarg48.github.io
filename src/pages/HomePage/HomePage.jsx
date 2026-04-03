@@ -30,11 +30,13 @@ const HomePage = ({
       <WelcomeSection my_resume={resumeUrl}/>
       <AboutSection 
         facts={factsData} 
-        education_history={educationHistoryData} 
         skills={skillsData} 
         about_me={aboutMeData}
       />
-      <ExperienceSection experience_data={experienceData}/>
+      <ExperienceSection 
+        experience_data={experienceData} 
+        education_history={educationHistoryData}
+      />
       <ProjectsSection projects_data={projectsData}/>
       <CertificatesSection certificates_data={certificatesData}/>
       <Footer/>
