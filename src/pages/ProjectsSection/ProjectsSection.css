@@ -187,7 +187,6 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
-    margin-bottom: 8px;
     transition: all 0.3s ease;
 }
 
@@ -331,7 +330,7 @@
     line-height: 1.6;
     color: var(--font-primary-color);
     opacity: 0.9;
-    margin-bottom: 18px;
+    margin: 0 auto;
     width: 100%;
 }
 

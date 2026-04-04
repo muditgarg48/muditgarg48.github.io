@@ -286,6 +286,7 @@ const ProjectListItem = memo(({ project, isExpanded, onToggle }) => {
                         )
                     )}
                 </div>
+                <p className="item-desc">{desc}</p>
                 <div className="project-read-more">
                     {isExpanded ? 'READ LESS' : 'READ MORE'}
                 </div>
@@ -302,7 +303,6 @@ const ProjectListItem = memo(({ project, isExpanded, onToggle }) => {
                     >
 
                         <div className="list-item-content">
-                            <p className="item-desc">{desc}</p>
                             <div className="item-data-rows">
                                 <ProjectKPIs kpis={kpis} />
                                 <ProjectTechStack tech_stack={tech_stack} />
@@ -549,7 +549,7 @@ const ProjectsSection = memo(({ projects_data }) => {
                 </div>
             )}
 
-            <FilterBar 
+            <FilterBar
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 sortBy={sortBy}
