@@ -2,6 +2,8 @@ import React, { memo, useState, useMemo } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './ExperienceSection.css';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
+import FilterBar from "../../components/FilterBar/FilterBar";
+import useFiltering from "../../hooks/useFiltering";
 import TestimonialCarousel from './TestimonialCarousel';
 
 const ItemEyebrow = memo(({ start, end, category, location }) => {
@@ -146,44 +148,31 @@ const parseDate = (dateStr) => {
 
 const ExperienceSection = ({ experience_data, education_history }) => {
     const [expandedIndex, setExpandedIndex] = useState(0);
-    const [filter, setFilter] = useState('All');
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [sortBy, setSortBy] = useState('Newest');
-    const [isSortOpen, setIsSortOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredData = useMemo(() => {
+    const unifiedData = useMemo(() => {
         const exps = (experience_data || []).map(e => ({ ...e, category: 'experience' }));
         const edus = (education_history || []).map(e => ({ ...e, category: 'education' }));
-        let list = [...exps, ...edus];
+        return [...exps, ...edus];
+    }, [experience_data, education_history]);
 
-        // Filter by Category
-        if (filter !== 'All') {
-            const categoryMap = { 'Experiences': 'experience', 'Education': 'education' };
-            list = list.filter(item => item.category === categoryMap[filter]);
+    const filteringConfig = useMemo(() => ({
+        searchFields: ['name', 'role', 'degree', 'major', 'desc'],
+        filterLogic: {
+            'Experiences': (item) => item.category === 'experience',
+            'Education': (item) => item.category === 'education'
+        },
+        sortLogic: {
+            'Newest': (a, b) => parseDate(b.end) - parseDate(a.end),
+            'Oldest': (a, b) => parseDate(a.end) - parseDate(b.end)
         }
+    }), []);
 
-        // Search
-        if (searchTerm) {
-            const lowSearch = searchTerm.toLowerCase();
-            list = list.filter(item => 
-                item.name.toLowerCase().includes(lowSearch) ||
-                (item.role && item.role.toLowerCase().includes(lowSearch)) ||
-                (item.degree && item.degree.toLowerCase().includes(lowSearch)) ||
-                (item.major && item.major.toLowerCase().includes(lowSearch)) ||
-                (item.desc && item.desc.some(d => d.toLowerCase().includes(lowSearch)))
-            );
-        }
-
-        // Sort
-        list.sort((a, b) => {
-            const dateA = parseDate(a.end);
-            const dateB = parseDate(b.end);
-            return sortBy === 'Newest' ? dateB - dateA : dateA - dateB;
-        });
-
-        return list;
-    }, [experience_data, education_history, filter, searchTerm, sortBy]);
+    const {
+        searchTerm, setSearchTerm,
+        sortBy, setSortBy,
+        filter, setFilter,
+        filteredData
+    } = useFiltering(unifiedData, filteringConfig);
 
     const toggleExpand = (index) => {
         setExpandedIndex(current => current === index ? null : index);
@@ -193,62 +182,17 @@ const ExperienceSection = ({ experience_data, education_history }) => {
         <div id="experience-section">
             <SectionHeading section_name="JOURNEY" />
 
-            <div className="filter-section">
-                <div className="search-wrapper">
-                    <div className="search-icon">🔍</div>
-                    <input
-                        type="text"
-                        placeholder="Search journey..."
-                        className="search-input"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-
-                <div className="sort-wrapper">
-                    <button
-                        className={`sort-btn ${isSortOpen ? 'active' : ''}`}
-                        onClick={() => { setIsSortOpen(!isSortOpen); setIsFilterOpen(false); }}
-                    >
-                        Sort By: {sortBy} <span className="chevron"></span>
-                    </button>
-                    {isSortOpen && (
-                        <div className="sort-dropdown">
-                            {['Newest', 'Oldest'].map(s => (
-                                <div
-                                    key={s}
-                                    className={`sort-option ${sortBy === s ? 'selected' : ''}`}
-                                    onClick={() => { setSortBy(s); setIsSortOpen(false); }}
-                                >
-                                    {s}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                <div className="filter-wrapper">
-                    <button
-                        className={`filter-btn ${isFilterOpen ? 'active' : ''}`}
-                        onClick={() => { setIsFilterOpen(!isFilterOpen); setIsSortOpen(false); }}
-                    >
-                        Filter By: {filter} <span className="chevron"></span>
-                    </button>
-                    {isFilterOpen && (
-                        <div className="filter-dropdown">
-                            {['All', 'Experiences', 'Education'].map(f => (
-                                <div
-                                    key={f}
-                                    className={`filter-option ${filter === f ? 'selected' : ''}`}
-                                    onClick={() => { setFilter(f); setIsFilterOpen(false); }}
-                                >
-                                    {f}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
+            <FilterBar 
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                sortOptions={['Newest', 'Oldest']}
+                filter={filter}
+                setFilter={setFilter}
+                filterOptions={['All', 'Experiences', 'Education']}
+                placeholder="Search journey..."
+            />
 
             <div className="experience-list-container" key={filter}>
                 {filteredData.map((item, index) => (

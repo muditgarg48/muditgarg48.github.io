@@ -4,6 +4,8 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
+import FilterBar from "../../components/FilterBar/FilterBar";
+import useFiltering from "../../hooks/useFiltering";
 import { getBranchInfo, getCommitsList, getCommitDetails } from "../../services/githubCache";
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
@@ -463,11 +465,6 @@ const EmblaCarousel = memo(({ projects }) => {
 // --- Main Section ---
 
 const ProjectsSection = memo(({ projects_data }) => {
-    const [filter, setFilter] = useState('All');
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [sortBy, setSortBy] = useState('Default');
-    const [isSortOpen, setIsSortOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
     const [projectDates, setProjectDates] = useState({});
     const [expandedIndex, setExpandedIndex] = useState(0);
 
@@ -495,57 +492,50 @@ const ProjectsSection = memo(({ projects_data }) => {
         fetchAllDates();
     }, [projects_data]);
 
+    const filteringConfig = useMemo(() => ({
+        searchFields: ['name', 'desc', 'tech_stack'],
+        filterLogic: {
+            'Featured': (p) => p.speciality !== "COMING SOON" && p.speciality !== "",
+            'Building': (p) => p.speciality === "COMING SOON",
+            'Others': (p) => p.speciality === ""
+        },
+        sortLogic: {
+            'Newest': (a, b) => {
+                const dateA = projectDates[a.name];
+                const dateB = projectDates[b.name];
+                if (dateA === undefined || dateA === null) return (dateB === undefined || dateB === null) ? 0 : -1;
+                if (dateB === undefined || dateB === null) return 1;
+                return dateB - dateA;
+            },
+            'Oldest': (a, b) => {
+                const dateA = projectDates[a.name];
+                const dateB = projectDates[b.name];
+                if (dateA === undefined || dateA === null) return (dateB === undefined || dateB === null) ? 0 : 1;
+                if (dateB === undefined || dateB === null) return -1;
+                return dateA - dateB;
+            },
+            'Category': (a, b) => {
+                const getCategoryRank = (p) => {
+                    if (p.speciality === "COMING SOON") return 0;
+                    if (p.speciality !== "") return 1;
+                    return 2;
+                };
+                return getCategoryRank(a) - getCategoryRank(b);
+            }
+        }
+    }), [projectDates]);
+
+    const {
+        searchTerm, setSearchTerm,
+        sortBy, setSortBy,
+        filter, setFilter,
+        filteredData: filteredList
+    } = useFiltering(projects_data, filteringConfig);
+
     const featuredProjects = useMemo(() => {
         if (!projects_data) return [];
         return projects_data.filter(project => project.speciality !== "COMING SOON" && project.speciality !== "");
     }, [projects_data]);
-
-    const filteredList = useMemo(() => {
-        if (!projects_data) return [];
-        let list = [...projects_data];
-
-        // 1. Filtering
-        if (filter === 'Featured') list = featuredProjects;
-        else if (filter === 'Building') list = projects_data.filter(p => p.speciality === "COMING SOON");
-        else if (filter === 'Others') list = projects_data.filter(p => p.speciality === "");
-
-        // 2. Searching
-        if (searchTerm) {
-            const lowSearch = searchTerm.toLowerCase();
-            list = list.filter(p =>
-                p.name.toLowerCase().includes(lowSearch) ||
-                p.desc.toLowerCase().includes(lowSearch) ||
-                p.tech_stack?.some(t => t.toLowerCase().includes(lowSearch))
-            );
-        }
-
-        // 3. Sorting
-        if (sortBy === 'Category') {
-            const getCategoryRank = (p) => {
-                if (p.speciality === "COMING SOON") return 0;
-                if (p.speciality !== "") return 1;
-                return 2;
-            };
-            list.sort((a, b) => getCategoryRank(a) - getCategoryRank(b));
-        } else if (sortBy === 'Last Updated') {
-            list.sort((a, b) => {
-                const dateA = projectDates[a.name];
-                const dateB = projectDates[b.name];
-
-                // Missing dates (null or undefined) go to the TOP
-                if (dateA === undefined || dateA === null) {
-                    if (dateB === undefined || dateB === null) return 0;
-                    return -1;
-                }
-                if (dateB === undefined || dateB === null) return 1;
-
-                // Descending (latest to oldest)
-                return dateB - dateA;
-            });
-        }
-
-        return list;
-    }, [projects_data, filter, featuredProjects, sortBy, projectDates, searchTerm]);
 
     return (
         <div id="projects-section">
@@ -559,62 +549,17 @@ const ProjectsSection = memo(({ projects_data }) => {
                 </div>
             )}
 
-            <div className="filter-section">
-                <div className="search-wrapper">
-                    <div className="search-icon">🔍</div>
-                    <input
-                        type="text"
-                        placeholder="Search projects..."
-                        className="search-input"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-
-                <div className="sort-wrapper">
-                    <button
-                        className={`sort-btn ${isSortOpen ? 'active' : ''}`}
-                        onClick={() => { setIsSortOpen(!isSortOpen); setIsFilterOpen(false); }}
-                    >
-                        Sort By: {sortBy} <span className="chevron"></span>
-                    </button>
-                    {isSortOpen && (
-                        <div className="sort-dropdown">
-                            {['Default', 'Category', 'Last Updated'].map(s => (
-                                <div
-                                    key={s}
-                                    className={`sort-option ${sortBy === s ? 'selected' : ''}`}
-                                    onClick={() => { setSortBy(s); setIsSortOpen(false); }}
-                                >
-                                    {s}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                <div className="filter-wrapper">
-                    <button
-                        className={`filter-btn ${isFilterOpen ? 'active' : ''}`}
-                        onClick={() => { setIsFilterOpen(!isFilterOpen); setIsSortOpen(false); }}
-                    >
-                        Filter By: {filter} <span className="chevron"></span>
-                    </button>
-                    {isFilterOpen && (
-                        <div className="filter-dropdown">
-                            {['All', 'Featured', 'Building', 'Others'].map(f => (
-                                <div
-                                    key={f}
-                                    className={`filter-option ${filter === f ? 'selected' : ''}`}
-                                    onClick={() => { setFilter(f); setIsFilterOpen(false); }}
-                                >
-                                    {f}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
+            <FilterBar 
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                sortOptions={['Newest', 'Oldest', 'Category']}
+                filter={filter}
+                setFilter={setFilter}
+                filterOptions={['All', 'Featured', 'Building', 'Others']}
+                placeholder="Search projects..."
+            />
 
             <div className="projects-list-container" key={filter}>
                 {
