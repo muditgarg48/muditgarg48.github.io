@@ -5,7 +5,6 @@ import FilterBar from "../../components/FilterBar/FilterBar";
 import useFiltering from "../../hooks/useFiltering";
 
 import { Document, Page, pdfjs } from 'react-pdf';
-import legacy from "../../assets/icons/legacy.json";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
@@ -79,31 +78,10 @@ const CertificatesSection = ({ certificates_data }) => {
                 )}
             </div>
             
-            {/* Legacy button hidden for final cleanup phase */}
-            {/* <Certificatev1 /> */}
+            {/* Legacy button removed for final cleanup phase */}
         </div>
     );
 };
-
-const Certificatev1 = memo(() => {
-
-    return (
-        <div id="v1-button">
-            <div id="v1-button-content">
-                <a href="https://muditgarg48.github.io/my_certificates_web/" target="_blank" rel="noreferrer">
-                    <AnimatedIcon icon={legacy}/>
-                    LEGACY VERSION
-                </a>
-                <div id="legacy-tech">
-                    POWERED BY
-                    &nbsp;
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg" alt="flutter"/>
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dart/dart-original.svg" alt="dart"/>
-                </div>
-            </div>
-        </div>
-    )
-});
 
 const CertificateCard = memo(({ certificate, isFlipped, onFlip }) => {
     const [pdfFile, setPdfFile] = useState(null);
