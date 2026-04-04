@@ -2,8 +2,6 @@ import React, { useState, memo, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './AboutSection.css';
 import { TypeAnimation } from "react-type-animation";
-import Marquee from "react-fast-marquee";
-import { Ribbon, RibbonContainer } from "react-ribbons";
 
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
@@ -75,18 +73,8 @@ const AboutSection = ({ facts, skills, about_me }) => {
                     </div>
                 </div>
                 &nbsp;
-                <div style={{ display: "flex", justifyContent: "end" }}>
-                    <span>⚒️ - Professional</span>
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <span>⭐ - Proficient</span>
-                </div>
-                &nbsp;
                 <SkillSection skills={skills} />
-                &nbsp;
                 <DidYouKnowSection facts={facts} />
-                &nbsp;
             </div>
         </div>
     );
@@ -190,13 +178,24 @@ const BasicInfoItem = ({ title, content, footer = "" }) => {
 }
 
 const DidYouKnowSection = ({ facts }) => {
-
     const [randomFactIndex, setRandomFactIndex] = useState(0);
 
     const generateRandomNumber = () => {
         const randomNumber = Math.floor(Math.random() * facts.length);
         setRandomFactIndex(randomNumber)
     }
+
+    const RefreshIcon = () => (
+        <svg
+            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            className="dyk-refresh-icon"
+        >
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+    )
 
     return (
         <div id="did-you-know-subsection">
@@ -205,87 +204,72 @@ const DidYouKnowSection = ({ facts }) => {
                     <AnimatedIcon icon={did_you_know_icon} link="" />
                     DID YOU KNOW
                 </h3>
-                <div id="refresh-dyk" onClick={generateRandomNumber}>Refresh</div>
+                <div id="refresh-dyk" onClick={generateRandomNumber} aria-label="Refresh Fact">
+                    <RefreshIcon />
+                </div>
             </div>
             <div id="did-you-know">
-                {facts[randomFactIndex]}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={randomFactIndex}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {facts[randomFactIndex]}
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     );
 }
 
 const SkillSection = memo(({ skills }) => {
-    const skillSubsections = useMemo(() => {
-        return Object.keys(skills).map((key, index) => {
-            return (
-                <SkillSubSection
-                    key={key}
-                    skills={skills[key]}
-                    section_name={key}
-                    dir={index % 2 === 0 ? "right" : "left"} />
-            );
-        });
-    }, [skills]);
+    const categories = Object.keys(skills);
+    const [activeCategory, setActiveCategory] = useState(categories[0] || '');
 
     return (
-        <div id="skills-subsection">
-            {/* <div class="subsection-heading">
-                My Skillset
-            </div> */}
-            {skillSubsections}
-        </div>
-    );
-});
+        <div id="skills-layout-container">
+            <div className="skills-vertical-tabs">
+                {categories.map((cat) => (
+                    <div
+                        key={cat}
+                        className={`skill-tab-item ${activeCategory === cat ? 'active' : ''}`}
+                        onClick={() => setActiveCategory(cat)}
+                    >
+                        <span>{cat}</span>
+                        {activeCategory === cat && (
+                            <motion.div layoutId="skill-tab-indicator" className="skill-tab-indicator" />
+                        )}
+                    </div>
+                ))}
+            </div>
 
-const SkillSubSection = memo(({ skills, section_name, dir }) => {
-    const skillElements = useMemo(() => {
-        return skills.map((skill, index) => {
-            if ("ribbon" in skill) {
-                return (
-                    <RibbonContainer key={skill.name || index}>
-                        <Ribbon
-                            side="right"
-                            type="edge"
-                            size="normal"
-                            backgroundColor="transparent"
-                            withStripes={false}
-                        >
-                            {skill.ribbon}
-                        </Ribbon>
-                        <Skill icon={skill.icon} name={skill.name} key={skill.name} />
-                    </RibbonContainer>
-                );
-            } else {
-                return (
-                    <Skill icon={skill.icon} name={skill.name} key={skill.name || index} />
-                );
-            }
-        });
-    }, [skills]);
-
-    return (
-        <div className="skill_subsection">
-            <div style={{ display: "flex", justifyContent: "center" }}>{section_name}</div>
-            <Marquee pauseOnHover speed={70} direction={dir}>
-                {skillElements}
-            </Marquee>
-        </div>
-    );
-});
-
-const Skill = memo(({ icon = null, name = '' }) => {
-
-    const [showName, setShowName] = useState(false);
-
-    const handleMouseEnter = useCallback(() => setShowName(true), []);
-    const handleMouseLeave = useCallback(() => setShowName(false), []);
-
-    return (
-        <div className="single_skill" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <img src={icon} alt={name}></img>
-            &nbsp;
-            {showName && <>{name}</>}
-            {!showName && <>&nbsp;</>}
+            <div className="skills-content-panel">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeCategory}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.2 }}
+                        className="skills-grid"
+                    >
+                        {activeCategory && skills[activeCategory] && skills[activeCategory].map((skill, index) => (
+                            <div key={skill.name || index} className="skill-minimal-pill">
+                                <div className="skill-icon-wrapper">
+                                    <img src={skill.icon} alt={skill.name} />
+                                </div>
+                                <span className="skill-pill-name">{skill.name}</span>
+                                {skill.ribbon === 'Professional' && (
+                                    <span className="pro-dot" title="Professional Experience"></span>
+                                )}
+                            </div>
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
         </div>
     );
 });
