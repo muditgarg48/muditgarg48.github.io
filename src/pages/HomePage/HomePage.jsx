@@ -18,7 +18,7 @@ const HomePage = ({
   educationHistoryData,
   skillsData,
   aboutMeData,
-  resumeUrl,
+  welcomeData,
   isChatbotMainModalOpen,
   setIsChatbotMainModalOpen,
   isChatbotMiniModalOpen,
@@ -27,7 +27,7 @@ const HomePage = ({
   return (
     <>
       <NavBar/>
-      <WelcomeSection my_resume={resumeUrl}/>
+      <WelcomeSection welcome_data={welcomeData}/>
       <AboutSection 
         facts={factsData} 
         skills={skillsData} 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import LoadingScreen from './components/LoadingScreen/LoadingScreen';
@@ -8,8 +8,6 @@ import BlogDetail from './pages/BlogDetail/BlogDetail';
 import BlogPublish from './pages/BlogPublish/BlogPublish';
 
 const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
-const DOCUMENT_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/documents/';
-const RESUME_ENDPOINT = 'My Resume.pdf';
 
 const DATA_FILES = {
   facts: 'facts_data.json',
@@ -18,7 +16,8 @@ const DATA_FILES = {
   experience: 'experience_data.json',
   education: 'education_history.json',
   skills: 'skills.json',
-  about: 'about_data.json'
+  about: 'about_data.json',
+  welcome: 'welcome_data.json'
 };
 
 function App() {
@@ -33,10 +32,11 @@ function App() {
   const [educationHistoryData, setEducationHistoryData] = useState([]);
   const [skillsData, setSkillsData] = useState([]);
   const [aboutMeData, setAboutMeData] = useState({});
+  const [welcomeData, setWelcomeData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchPromises = Object.values(DATA_FILES).map(file => 
+      const fetchPromises = Object.values(DATA_FILES).map(file =>
         fetch(`${DATA_ENDPOINT}${file}`).then(res => res.json())
       );
 
@@ -48,7 +48,8 @@ function App() {
           experienceData,
           educationHistoryData,
           skillsData,
-          aboutMeData
+          aboutMeData,
+          welcomeData
         ] = await Promise.all(fetchPromises);
 
         setFactsData(factsData.facts);
@@ -58,40 +59,39 @@ function App() {
         setEducationHistoryData(educationHistoryData.educations);
         setSkillsData(skillsData.skills);
         setAboutMeData(aboutMeData.about);
+        setWelcomeData(welcomeData.welcome);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
-
-  const resumeUrl = `${DOCUMENT_ENDPOINT}${RESUME_ENDPOINT}`;
 
   return (
     <div className="App">
       {/* <CustomCursor/> */}
       {loading ? (
-        <LoadingScreen/>
+        <LoadingScreen />
       ) : (
         <BrowserRouter basename="/">
           <Routes>
-            <Route 
-              path="/blogs/publish" 
-              element={<BlogPublish />} 
+            <Route
+              path="/blogs/publish"
+              element={<BlogPublish />}
             />
-            <Route 
-              path="/blogs/:id" 
-              element={<BlogDetail />} 
+            <Route
+              path="/blogs/:id"
+              element={<BlogDetail />}
             />
-            <Route 
-              path="/blogs" 
-              element={<BlogWall />} 
+            <Route
+              path="/blogs"
+              element={<BlogWall />}
             />
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={
                 <HomePage
                   factsData={factsData}
@@ -101,13 +101,13 @@ function App() {
                   educationHistoryData={educationHistoryData}
                   skillsData={skillsData}
                   aboutMeData={aboutMeData}
-                  resumeUrl={resumeUrl}
+                  welcomeData={welcomeData}
                   isChatbotMainModalOpen={isChatbotMainModalOpen}
                   setIsChatbotMainModalOpen={setIsChatbotMainModalOpen}
                   isChatbotMiniModalOpen={isChatbotMiniModalOpen}
                   setIsChatbotMiniModalOpen={setIsChatbotMiniModalOpen}
                 />
-              } 
+              }
             />
           </Routes>
         </BrowserRouter>
