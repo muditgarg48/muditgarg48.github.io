@@ -262,9 +262,6 @@ const SkillSection = memo(({ skills }) => {
                                     <img src={skill.icon} alt={skill.name} />
                                 </div>
                                 <span className="skill-pill-name">{skill.name}</span>
-                                {skill.ribbon === 'Professional' && (
-                                    <span className="pro-dot" title="Professional Experience"></span>
-                                )}
                             </div>
                         ))}
                     </motion.div>

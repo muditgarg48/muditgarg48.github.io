@@ -234,14 +234,6 @@
     font-weight: 500;
 }
 
-.pro-dot {
-    width: 6px;
-    height: 6px;
-    background: #f1c40f;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
-    margin-left: 4px;
-}
 
 @media (max-width: 800px) {
     #skills-layout-container {
