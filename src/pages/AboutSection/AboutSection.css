@@ -13,32 +13,20 @@
     flex-direction: column;
 }
 
-#my-description {
-    padding: 0.5vw 0;
-}
-
-.about_me {
-    text-align: left;
-    padding: 0.5rem 0;
-    margin: 0.5rem 0;
-}
-
-#myself-subsection {
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 2rem 0;
-    gap: 2rem;
-}
-
-#myself-visual {
+#about-top-layout {
     display: flex;
     gap: 3rem;
     align-items: center;
+    margin: 2rem 0;
+}
+
+#portrait-container {
+    flex: 0 0 350px;
 }
 
 #my-potrait {
-    width: 400px;
-    height: 400px;
+    width: 350px;
+    height: 350px;
     object-fit: cover;
     border-bottom: 2px solid var(--primary-color);
     border-right: 2px solid var(--primary-color);
@@ -46,11 +34,32 @@
     flex-shrink: 0;
 }
 
+#intro-text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.about_me {
+    text-align: left;
+    padding: 0.8rem 0;
+    line-height: 1.6;
+}
+
 #my-quote {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     font-family: 'Passion One';
+    margin: 0 0 2rem 0;
+    gap: 1.5rem;
+}
+
+#about-middle-layout {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
 }
 
 #quotation-mark {
@@ -68,8 +77,12 @@
     flex-direction: column;
     gap: 1.5rem;
     color: var(--font-primary-color);
+    flex: 0 0 250px;
+    justify-content: flex-start;
+}
+
+#more-about-me-container {
     flex: 1;
-    justify-content: center;
 }
 
 .basic_info_item {
@@ -100,10 +113,17 @@
 
 /* --- Tablet: stack photo on top, stats as 2x2 grid --- */
 @media (max-width: 800px) {
-    #myself-visual {
-        flex-direction: column;
+    #about-top-layout {
+        flex-direction: column-reverse;
         align-items: center;
         gap: 2rem;
+        margin: 1rem 0;
+    }
+
+    #portrait-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
     }
 
     #my-potrait {
@@ -113,17 +133,27 @@
         max-width: none;
     }
 
+    #about-middle-layout {
+        flex-direction: column-reverse;
+        gap: 2rem;
+    }
+
     #basic_info {
+        display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1.5rem 2rem;
         width: 100%;
-        justify-items: center;
-        text-align: center;
+        justify-items: flex-start;
+        text-align: left;
     }
 
     .basic_info_item {
         align-items: flex-start;
-        padding-left: 10vw;
+        padding-left: 5vw;
+    }
+
+    #more-about-me-container {
+        width: 100%;
     }
 }
 
@@ -131,7 +161,7 @@
 #skills-layout-container {
     display: flex;
     gap: 3rem;
-    margin: 0 0 3rem 0;
+    /* margin: 0 0 3rem 0; */
     align-items: flex-start;
     font-size: 80%;
 }
@@ -143,6 +173,25 @@
     max-width: 100%;
     position: relative;
     flex-shrink: 0;
+}
+
+.about-subheading {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--font-secondary-color);
+    margin: 3rem 0 1.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.about-subheading::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent);
 }
 
 .skill-tab-item {
@@ -177,6 +226,7 @@
 .skills-content-panel {
     flex-grow: 1;
     min-width: 0;
+    position: relative;
     /* allows flex children to shrink */
 }
 
@@ -282,38 +332,37 @@
 }
 
 #did-you-know-subsection {
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.02);
     display: flex;
     flex-direction: column;
+    margin-top: 1rem;
 }
 
 #dyk-heading-section {
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 
-#dyk-heading {
-    color: var(--font-secondary-color);
+#dyk-heading-section .about-subheading {
     flex: 1;
-    display: flex;
-    align-items: center;
+    margin-top: 2rem;
 }
+
 
 #did-you-know {
     flex: 4;
     padding: 10px 0;
     text-align: justify;
+    position: relative;
 }
 
 #refresh-dyk {
-    flex: 1;
     display: flex;
+    align-items: center;
     justify-content: flex-end;
     color: var(--font-secondary-color);
+    margin-top: 0.5rem;
+    /* Align relative to subheading line */
+    padding-left: 1rem;
 }
 
 #refresh-dyk:hover {
@@ -331,12 +380,12 @@
 
 /* --- Modern Minimal Accordion Styles --- */
 #more-about-me-accordion {
-    margin: 2rem 0;
+    margin: 0;
 }
 
 .accordion_header_row {
     display: flex;
-    gap: 3rem;
+    gap: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     justify-content: space-around;
@@ -374,14 +423,6 @@
     color: var(--primary-color);
 }
 
-.accordion_icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: inherit;
-    opacity: 0.8;
-}
-
 .tab_indicator {
     position: absolute;
     bottom: -1px;
@@ -401,6 +442,10 @@
 .accordion_full_width_content {
     padding: 2rem 0;
     overflow: hidden;
+}
+
+.accordion_content_row {
+    position: relative;
 }
 
 @media (max-width: 800px) {

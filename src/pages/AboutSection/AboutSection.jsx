@@ -1,11 +1,11 @@
 import React, { useState, memo, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './AboutSection.css';
-import { TypeAnimation } from "react-type-animation";
 
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import did_you_know_icon from "../../assets/icons/interesting.json";
+import skillset_icon from "../../assets/icons/skillset.json";
 
 const AboutSection = ({ facts, skills, about_me }) => {
 
@@ -21,55 +21,45 @@ const AboutSection = ({ facts, skills, about_me }) => {
         <div id="about-section">
             <div id="about-section-content">
                 <SectionHeading section_name="ABOUT" />
-                <div id="my-description">
-                    <TypeAnimation
-                        className="about_me"
-                        style={{ whiteSpace: 'pre-line', display: 'block' }}
-                        speed={100}
-                        cursor={false}
-                        sequence={[
-                            intro_para,
-                            500
-                        ]}
-                        repeat={0}
-                    />
-                    <MoreAboutMeSection
-                        currently={currently}
-                        recently_concluded={recently_concluded}
-                    />
-                    <TypeAnimation
-                        className="about_me"
-                        style={{ whiteSpace: 'pre-line', display: 'block' }}
-                        speed={100}
-                        sequence={[
-                            2500,
-                            outer_para,
-                        ]}
-                        repeat={0}
-                    />
-                </div>
-                <div id="myself-subsection">
-                    <div id="my-quote">
-                        <span id="quotation-mark" className="highlight">"</span>
-                        &nbsp;
-                        <span id="quote">{my_quote}</span>
-                    </div>
-                    <div id="myself-visual">
-                        <img id="my-potrait" src={my_portrait_link} alt="My Portrait" />
-                        <div id="basic_info">
-                            {
-                                basic_info.map((item, index) => {
-                                    return (
-                                        <BasicInfoItem
-                                            key={index}
-                                            title={item.title}
-                                            content={item.content}
-                                            footer={item.footer || null}
-                                        />
-                                    );
-                                })
-                            }
+                <div id="about-top-layout">
+                    <div id="intro-text-container">
+                        <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
+                            {intro_para}
                         </div>
+                        <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
+                            {outer_para}
+                        </div>
+                    </div>
+                    <div id="portrait-container">
+                        <img id="my-potrait" src={my_portrait_link} alt="My Portrait" />
+                    </div>
+                </div>
+
+                <div id="my-quote">
+                    <span id="quotation-mark" className="highlight">"</span>
+                    &nbsp;
+                    <span id="quote">{my_quote}</span>
+                </div>
+                <div id="about-middle-layout">
+                    <div id="more-about-me-container">
+                        <MoreAboutMeSection
+                            currently={currently}
+                            recently_concluded={recently_concluded}
+                        />
+                    </div>
+                    <div id="basic_info">
+                        {
+                            basic_info.map((item, index) => {
+                                return (
+                                    <BasicInfoItem
+                                        key={index}
+                                        title={item.title}
+                                        content={item.content}
+                                        footer={item.footer || null}
+                                    />
+                                );
+                            })
+                        }
                     </div>
                 </div>
                 &nbsp;
@@ -81,10 +71,10 @@ const AboutSection = ({ facts, skills, about_me }) => {
 }
 
 const MoreAboutMeSection = ({ currently, recently_concluded }) => {
-    const [expanded, setExpanded] = useState(null);
+    const [expanded, setExpanded] = useState('currently');
 
     const toggleSection = (section) => {
-        setExpanded(current => current === section ? null : section);
+        setExpanded(section);
     };
 
     const BulletPoints = ({ points }) => {
@@ -119,15 +109,6 @@ const MoreAboutMeSection = ({ currently, recently_concluded }) => {
         { id: 'concluded', title: 'Recently concluded', data: recently_concluded }
     ];
 
-    const ChevronIcon = ({ isOpen }) => (
-        <svg
-            width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
-        >
-            <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-    );
 
     return (
         <div id="more-about-me-accordion">
@@ -139,22 +120,19 @@ const MoreAboutMeSection = ({ currently, recently_concluded }) => {
                         onClick={() => toggleSection(section.id)}
                     >
                         <h3>{section.title}</h3>
-                        <div className="accordion_icon">
-                            <ChevronIcon isOpen={expanded === section.id} />
-                        </div>
                         <div className="tab_indicator"></div>
                     </div>
                 ))}
             </div>
 
             <div className="accordion_content_row">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                     {expanded && (
                         <motion.div
                             key={expanded} /* forces re-animation if switching directly */
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
+                            initial={{ x: 10, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: -10, opacity: 0 }}
                             transition={{ duration: 0.3, ease: "easeInOut" }}
                             className="accordion_full_width_content"
                         >
@@ -200,8 +178,8 @@ const DidYouKnowSection = ({ facts }) => {
     return (
         <div id="did-you-know-subsection">
             <div id="dyk-heading-section">
-                <h3 id="dyk-heading">
-                    <AnimatedIcon icon={did_you_know_icon} link="" />
+                <h3 className="about-subheading">
+                    <AnimatedIcon icon={did_you_know_icon} link="" icon_size={24} />
                     DID YOU KNOW
                 </h3>
                 <div id="refresh-dyk" onClick={generateRandomNumber} aria-label="Refresh Fact">
@@ -209,12 +187,12 @@ const DidYouKnowSection = ({ facts }) => {
                 </div>
             </div>
             <div id="did-you-know">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                     <motion.div
                         key={randomFactIndex}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
                         transition={{ duration: 0.3 }}
                     >
                         {facts[randomFactIndex]}
@@ -230,42 +208,48 @@ const SkillSection = memo(({ skills }) => {
     const [activeCategory, setActiveCategory] = useState(categories[0] || '');
 
     return (
-        <div id="skills-layout-container">
-            <div className="skills-vertical-tabs">
-                {categories.map((cat) => (
-                    <div
-                        key={cat}
-                        className={`skill-tab-item ${activeCategory === cat ? 'active' : ''}`}
-                        onClick={() => setActiveCategory(cat)}
-                    >
-                        <span>{cat}</span>
-                        {activeCategory === cat && (
-                            <motion.div layoutId="skill-tab-indicator" className="skill-tab-indicator" />
-                        )}
-                    </div>
-                ))}
-            </div>
+        <div id="skills-section-wrapper">
+            <h3 className="about-subheading">
+                <AnimatedIcon icon={skillset_icon} link="" icon_size={24} />
+                MY SKILLSET
+            </h3>
+            <div id="skills-layout-container">
+                <div className="skills-vertical-tabs">
+                    {categories.map((cat) => (
+                        <div
+                            key={cat}
+                            className={`skill-tab-item ${activeCategory === cat ? 'active' : ''}`}
+                            onClick={() => setActiveCategory(cat)}
+                        >
+                            <span>{cat}</span>
+                            {activeCategory === cat && (
+                                <motion.div layoutId="skill-tab-indicator" className="skill-tab-indicator" />
+                            )}
+                        </div>
+                    ))}
+                </div>
 
-            <div className="skills-content-panel">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={activeCategory}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.2 }}
-                        className="skills-grid"
-                    >
-                        {activeCategory && skills[activeCategory] && skills[activeCategory].map((skill, index) => (
-                            <div key={skill.name || index} className="skill-minimal-pill">
-                                <div className="skill-icon-wrapper">
-                                    <img src={skill.icon} alt={skill.name} />
+                <div className="skills-content-panel">
+                    <AnimatePresence mode="popLayout">
+                        <motion.div
+                            key={activeCategory}
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="skills-grid"
+                        >
+                            {activeCategory && skills[activeCategory] && skills[activeCategory].map((skill, index) => (
+                                <div key={skill.name || index} className="skill-minimal-pill">
+                                    <div className="skill-icon-wrapper">
+                                        <img src={skill.icon} alt={skill.name} />
+                                    </div>
+                                    <span className="skill-pill-name">{skill.name}</span>
                                 </div>
-                                <span className="skill-pill-name">{skill.name}</span>
-                            </div>
-                        ))}
-                    </motion.div>
-                </AnimatePresence>
+                            ))}
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
             </div>
         </div>
     );
