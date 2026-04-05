@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BlogWall.css';
 import { fetchAllBlogs, fetchAuthorById, getAuthorId, getAuthorDisplayName, formatBlogDate, isBlogLiked, shareBlog } from '../../services/blogUtils';
@@ -13,6 +13,8 @@ import Toast from '../../components/Toast/Toast';
 import Modal from '../../components/Modal/Modal';
 import AuthorVerificationModal from '../../components/AuthorVerificationModal/AuthorVerificationModal';
 import AddBlogModal from '../../components/AddBlogModal/AddBlogModal';
+import FilterBar from '../../components/FilterBar/FilterBar';
+import useFiltering from '../../hooks/useFiltering';
 
 const BlogWall = () => {
   const navigate = useNavigate();
@@ -72,6 +74,68 @@ const BlogWall = () => {
     setShowAuthorVerificationModal(true);
   };
 
+  // 1. Data Enrichment for filtering
+  const enrichedBlogs = useMemo(() => {
+    return blogs.map(blog => {
+      const author = authors[blog.id];
+      const authorDisplayName = getAuthorDisplayName(author) || 'Unknown Author';
+      // Format date specifically for search display/match
+      const formattedDate = formatBlogDate(blog.createdAt, { year: 'numeric', month: 'short', day: 'numeric' }, false);
+      
+      return {
+        ...blog,
+        authorDisplayName,
+        formattedDate,
+        rawDate: blog.createdAt?.toDate ? blog.createdAt.toDate().getTime() : 
+                 (blog.createdAt ? new Date(blog.createdAt).getTime() : 0)
+      };
+    });
+  }, [blogs, authors]);
+
+  // 2. Filter Configuration
+  const filterOptions = useMemo(() => {
+    const authorSet = new Set(['All']);
+    enrichedBlogs.forEach(blog => {
+      if (blog.authorDisplayName && blog.authorDisplayName !== 'Unknown Author') {
+        authorSet.add(blog.authorDisplayName);
+      }
+    });
+    return Array.from(authorSet);
+  }, [enrichedBlogs]);
+
+  const filteringConfig = useMemo(() => ({
+    searchFields: ['title', 'authorDisplayName', 'subtitle', 'timeToRead', 'tags', 'formattedDate'],
+    filterLogic: {
+      'All': () => true,
+      // Dynamic filters for each author
+      ...filterOptions.reduce((acc, author) => {
+        if (author !== 'All') {
+          acc[author] = (blog) => blog.authorDisplayName === author;
+        }
+        return acc;
+      }, {})
+    },
+    sortLogic: {
+      'Newest': (a, b) => b.rawDate - a.rawDate,
+      'Oldest': (a, b) => a.rawDate - b.rawDate,
+      'Popular': (a, b) => (b.views || 0) - (a.views || 0),
+      'Likes': (a, b) => (b.likes || 0) - (a.likes || 0),
+      'Time to Read': (a, b) => {
+        // Simple comparison of time strings (e.g. "5 min read")
+        const getMinutes = (str) => parseInt(str) || 0;
+        return getMinutes(a.timeToRead) - getMinutes(b.timeToRead);
+      }
+    }
+  }), [filterOptions]);
+
+  // 3. Hook Setup
+  const {
+    searchTerm, setSearchTerm,
+    sortBy, setSortBy,
+    filter, setFilter,
+    filteredData
+  } = useFiltering(enrichedBlogs, filteringConfig);
+
   const handleShare = async (e, blogId) => {
     e.stopPropagation(); // Prevent card click navigation
     
@@ -126,13 +190,25 @@ const BlogWall = () => {
         </button>
       </div>
 
-      {blogs.length === 0 ? (
+      <FilterBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOptions={['Newest', 'Oldest', 'Popular', 'Likes', 'Time to Read']}
+        filter={filter}
+        setFilter={setFilter}
+        filterOptions={filterOptions}
+        placeholder="Search blogs..."
+      />
+
+      {filteredData.length === 0 ? (
         <div className="blog-wall-empty">
-          <p>No blogs available yet.</p>
+          <p>{searchTerm || filter !== 'All' ? 'No blogs found matching your criteria.' : 'No blogs available yet.'}</p>
         </div>
       ) : (
         <div className="blog-wall-grid">
-          {blogs.map((blog) => (
+          {filteredData.map((blog) => (
             <BlogPostCard 
               key={blog.id} 
               onClick={() => navigate(`/blogs/${blog.id}`)}

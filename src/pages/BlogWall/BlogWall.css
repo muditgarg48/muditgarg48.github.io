@@ -169,6 +169,11 @@
   }
 }
 
+.blog-wall .filter-section {
+  margin-bottom: 3rem;
+  justify-content: center;
+}
+
 .blog-wall-grid {
   display: flex;
   flex-wrap: wrap;
