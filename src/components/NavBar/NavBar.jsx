@@ -5,7 +5,7 @@ import { Link } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import { RotatingText } from 'rotating-text';
 import 'rotating-text/dist/index.css';
-import { Divide as Hamburger } from 'hamburger-react';
+import { Twirl as Hamburger } from 'hamburger-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWindowSize } from "@uidotdev/usehooks";
 import WebsiteLogo from "../WebsiteLogo/WebsiteLogo";
