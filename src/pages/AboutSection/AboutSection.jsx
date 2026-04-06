@@ -8,6 +8,7 @@ import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import did_you_know_icon from "../../assets/icons/recruiter/interesting.json";
 import skillset_icon from "../../assets/icons/recruiter/skillset.json";
 import services_offered_icon from "../../assets/icons/freelance/services_offered.json";
+import credentials_icon from "../../assets/icons/freelance/credentials.json";
 
 const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
@@ -94,31 +95,46 @@ const RecruiterContent = ({ about_me, skills, facts }) => {
 
 // ==================== FREELANCE MODE ====================
 
-const FreelanceContent = ({ about_me }) => {
-    const {
-        intro_para,
-        outer_para,
-        portrait_link,
-        my_quote
-    } = about_me;
-
+const FreelanceContent = () => {
+    const [aboutData, setAboutData] = useState(null);
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`${DATA_ENDPOINT}freelance_services_data.json`)
-            .then(res => res.json())
-            .then(data => {
-                setServices(data.services || []);
-            })
-            .catch(err => {
-                console.error('Error fetching freelance services:', err);
-                setServices([]);
-            })
-            .finally(() => {
+        const fetchFreelanceData = async () => {
+            setLoading(true);
+            try {
+                const [aboutRes, servicesRes] = await Promise.all([
+                    fetch(`${DATA_ENDPOINT}freelance_about_data.json`),
+                    fetch(`${DATA_ENDPOINT}freelance_services_data.json`)
+                ]);
+                
+                const aboutJson = await aboutRes.json();
+                const servicesJson = await servicesRes.json();
+                
+                setAboutData(aboutJson.about);
+                setServices(servicesJson.services || []);
+            } catch (err) {
+                console.error('Error fetching freelance about/services data:', err);
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchFreelanceData();
     }, []);
+
+    if (loading || !aboutData) {
+        return <div className="loading-state">Loading About Data...</div>;
+    }
+
+    const {
+        intro_para,
+        outer_para,
+        portrait_link,
+        my_quote,
+        credentials
+    } = aboutData;
 
     return (
         <>
@@ -144,12 +160,55 @@ const FreelanceContent = ({ about_me }) => {
             </div>
 
             <div className="freelance-about-extras">
-                <div className="credential-badge">
-                    Masters in Computer Engineering — Trinity College Dublin
-                </div>
-                {!loading && services.length > 0 && <ServicesSection services={services} />}
+                <CredentialsSection credentials={credentials} />
+                {services.length > 0 && <ServicesSection services={services} />}
             </div>
         </>
+    );
+};
+
+const CredentialsSection = ({ credentials }) => {
+    if (!credentials || credentials.length === 0) return null;
+
+    const CredIcon = ({ type }) => {
+        const size = 32;
+        switch (type) {
+            case 'graduation':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10L12 5L2 10L12 15L22 10Z"/><path d="M6 12.5V16C6 16 8.5 19 12 19C15.5 19 18 16 18 16V12.5"/></svg>;
+            case 'industry':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="2" ry="2"/><path d="M9 21V9h6v12"/><path d="M12 5h.01"/><path d="M12 9h.01"/><path d="M12 13h.01"/><path d="M12 17h.01"/></svg>;
+            case 'performance':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>;
+            case 'robot':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>;
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className="credentials-wrapper">
+             <h3 className="about-subheading">
+                <AnimatedIcon icon={credentials_icon} link="" icon_size={24} />
+                EXPERT CREDENTIALS
+            </h3>
+            <div className="credentials-grid">
+                {credentials.map((cred) => (
+                    <div key={cred.id} className="credential-card">
+                        <div className="credential-header">
+                            <div className="credential-icon-box">
+                                <CredIcon type={cred.icon} />
+                            </div>
+                            <span className="credential-tag">{cred.tag}</span>
+                        </div>
+                        <div className="credential-body">
+                            <h4 className="credential-value">{cred.value}</h4>
+                            <p className="credential-institution">{cred.institution}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 };
 
