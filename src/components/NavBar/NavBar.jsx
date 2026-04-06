@@ -20,9 +20,9 @@ const RECRUITER_NAV_ITEMS = [
 ];
 
 const FREELANCE_NAV_ITEMS = [
+    { content: "WORKS", dest: "works-section" },
     { content: "ABOUT", dest: "about-section" },
-    { content: "WORKS", dest: "client-work-section" },
-    { content: "PROCESS", dest: "how-i-work-section" },
+    { content: "PROCESS", dest: "process-section" },
     { content: "TESTIMONIALS", dest: "testimonials-section" },
 ];
 
@@ -229,7 +229,7 @@ export function useScrollToTopOnModeSwitch() {
             // Sections that exist in recruiter mode
             const recruiterSections = ['experience-section', 'projects-section', 'certificates-section'];
             // Sections that exist in freelance mode
-            const freelanceSections = ['how-i-work-section', 'client-work-section', 'testimonials-section'];
+            const freelanceSections = ['works-section', 'process-section', 'testimonials-section', 'about-section'];
 
             const removedSections = mode === 'freelance' ? recruiterSections : freelanceSections;
 

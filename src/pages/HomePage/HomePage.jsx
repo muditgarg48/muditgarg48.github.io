@@ -12,14 +12,11 @@ import Footer from '../Footer/Footer';
 import FloatingButton from '../../components/FloatingButton/FloatingButton';
 import Modal from '../../components/Modal/Modal';
 import ChatWindowContainer from '../ChatbotSection/ChatWindowContainer';
+import WorksSection from '../WorksSection/WorksSection';
+import ProcessSection from '../ProcessSection/ProcessSection';
+import TestimonialsSection from '../TestimonialsSection/TestimonialsSection';
 import './HomePage.css';
 
-// Phase 2 placeholder component
-const PlaceholderSection = ({ id, label }) => (
-  <div id={id} className="placeholder-section">
-    <span className="placeholder-text">— {label}: Section coming in Phase 2 —</span>
-  </div>
-);
 
 const HomePage = ({
   factsData,
@@ -87,13 +84,6 @@ const HomePage = ({
         </motion.div>
       </AnimatePresence>
 
-      {/* AboutSection — common, no animation */}
-      <AboutSection 
-        facts={factsData} 
-        skills={skillsData} 
-        about_me={aboutMeData}
-      />
-
       {/* Mode-specific sections */}
       <AnimatePresence mode="wait" custom={direction}>
         {isFreelance ? (
@@ -106,9 +96,14 @@ const HomePage = ({
             exit="exit"
             transition={transition}
           >
-            <PlaceholderSection id="client-work-section" label="Works" />
-            <PlaceholderSection id="how-i-work-section" label="Process" />
-            <PlaceholderSection id="testimonials-section" label="Testimonials" />
+            <WorksSection />
+            <AboutSection 
+              facts={factsData} 
+              skills={skillsData} 
+              about_me={aboutMeData}
+            />
+            <ProcessSection />
+            <TestimonialsSection />
           </motion.div>
         ) : (
           <motion.div
@@ -120,6 +115,11 @@ const HomePage = ({
             exit="exit"
             transition={transition}
           >
+            <AboutSection 
+              facts={factsData} 
+              skills={skillsData} 
+              about_me={aboutMeData}
+            />
             <ExperienceSection 
               experience_data={experienceData} 
               education_history={educationHistoryData}

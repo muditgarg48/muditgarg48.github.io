@@ -1,0 +1,145 @@
+#process-section {
+    min-height: 90vh;
+    height: fit-content;
+    width: 89.5vw;
+    color: var(--font-primary-color);
+    padding: 5vw;
+}
+
+.process-content {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.process-timeline {
+    width: 100%;
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    position: relative;
+}
+
+.process-step-box {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    position: relative;
+}
+
+.step-visual {
+    flex: 0 0 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.step-icon-container {
+    width: 60px;
+    height: 60px;
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary-color) 25%, transparent);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.process-step-box:hover .step-icon-container {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1) rotate(5deg);
+}
+
+.step-connector {
+    position: absolute;
+    top: 60px;
+    bottom: -4rem;
+    width: 2px;
+    background: linear-gradient(180deg, var(--primary-color) 0%, transparent 100%);
+    opacity: 0.2;
+    z-index: 1;
+}
+
+.step-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: left;
+}
+
+.step-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.step-title {
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--font-highlight-color);
+    font-weight: 700;
+}
+
+.step-duration {
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    color: var(--font-secondary-color);
+    letter-spacing: 0.02em;
+}
+
+.step-description {
+    font-size: 1.05rem; /* Matches .about_me */
+    line-height: 1.7;
+    color: var(--font-primary-color);
+    opacity: 0.8;
+    margin: 0;
+}
+
+.step-number-bg {
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    font-size: 6rem;
+    font-weight: 900;
+    font-family: 'Passion One';
+    color: var(--font-primary-color);
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@media (max-width: 800px) {
+    .process-step-box {
+        gap: 1.5rem;
+    }
+    
+    .step-visual {
+        flex: 0 0 50px;
+    }
+    
+    .step-icon-container {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .step-title {
+        font-size: 1.25rem;
+    }
+    
+    .step-duration {
+        font-size: 0.75rem;
+    }
+}

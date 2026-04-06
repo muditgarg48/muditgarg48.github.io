@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './AboutSection.css';
 import { useSiteMode } from '../../context/SiteModeContext';
@@ -7,6 +7,9 @@ import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import did_you_know_icon from "../../assets/icons/recruiter/interesting.json";
 import skillset_icon from "../../assets/icons/recruiter/skillset.json";
+import services_offered_icon from "../../assets/icons/freelance/services_offered.json";
+
+const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
 const AboutSection = ({ facts, skills, about_me }) => {
     const { isFreelance } = useSiteMode();
@@ -99,6 +102,24 @@ const FreelanceContent = ({ about_me }) => {
         my_quote
     } = about_me;
 
+    const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(`${DATA_ENDPOINT}freelance_services_data.json`)
+            .then(res => res.json())
+            .then(data => {
+                setServices(data.services || []);
+            })
+            .catch(err => {
+                console.error('Error fetching freelance services:', err);
+                setServices([]);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
     return (
         <>
             <SectionHeading section_name="ABOUT ME" />
@@ -126,11 +147,89 @@ const FreelanceContent = ({ about_me }) => {
                 <div className="credential-badge">
                     Masters in Computer Engineering — Trinity College Dublin
                 </div>
-                <p className="services-sentence">
-                    I work across web, mobile, AI tools, automation and internal systems.
-                </p>
+                {!loading && services.length > 0 && <ServicesSection services={services} />}
             </div>
         </>
+    );
+};
+
+const ServicesSection = ({ services }) => {
+    const [activeService, setActiveService] = useState(services[0]?.id || '');
+
+    const currentService = services.find(s => s.id === activeService) || services[0];
+
+    const ServiceIcon = ({ type }) => {
+        const size = 24;
+        switch (type) {
+            case 'web':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>;
+            case 'mobile':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>;
+            case 'ai':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/><path d="M11 2h2"/></svg>;
+            case 'backend':
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>;
+            default:
+                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>;
+        }
+    };
+
+    return (
+        <div id="skills-section-wrapper" className="services-wrapper">
+             <h3 className="about-subheading">
+                <AnimatedIcon icon={services_offered_icon} link="" icon_size={24} />
+                SERVICES OFFERED
+            </h3>
+            <div id="skills-layout-container">
+                <div className="skills-vertical-tabs">
+                    {services.map((service) => (
+                        <div
+                            key={service.id}
+                            className={`skill-tab-item ${activeService === service.id ? 'active' : ''}`}
+                            onClick={() => setActiveService(service.id)}
+                        >
+                            <span>{service.title}</span>
+                            {activeService === service.id && (
+                                <motion.div layoutId="service-tab-indicator" className="skill-tab-indicator" />
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="skills-content-panel service-panel">
+                    <AnimatePresence mode="popLayout">
+                        <motion.div
+                            key={activeService}
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="service-detail"
+                        >
+                            <div className="service-header">
+                                <div className="service-icon-box">
+                                    <ServiceIcon type={currentService.icon} />
+                                </div>
+                                <div className="service-titles">
+                                    <h4>{currentService.subtitle}</h4>
+                                </div>
+                            </div>
+                            <p className="service-description">{currentService.description}</p>
+                            <div className="service-examples">
+                                <h5>What I can assist with:</h5>
+                                <div className="skills-grid">
+                                    {currentService.examples.map((example, i) => (
+                                        <div key={i} className="skill-minimal-pill service-pill">
+                                            <span className="skill-pill-name">{example}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
+            </div>
+        </div>
     );
 };
 
