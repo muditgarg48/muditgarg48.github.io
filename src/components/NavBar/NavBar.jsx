@@ -37,7 +37,7 @@ const ModeToggle = () => {
                 className="mode-toggle-indicator"
                 layout
                 transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                style={{ left: isFreelance ? '50%' : '0%' }}
+                style={{ left: isFreelance ? '50%' : '4px' }}
             />
             <span className={`mode-toggle-label ${!isFreelance ? 'active' : ''}`}>
                 Recruiter
