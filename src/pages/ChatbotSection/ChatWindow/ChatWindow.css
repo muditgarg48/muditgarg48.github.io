@@ -254,22 +254,18 @@
     max-height: 500px;
     overflow: hidden;
     opacity: 0;
-    transform: translateY(-20px) scaleY(0);
-    transform-origin: top;
+    transform: translateY(-30px);
+    will-change: transform, opacity;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     pointer-events: none;
-    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                pointer-events 0s 0.2s;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .info-overlay.open {
     opacity: 1;
-    transform: translateY(0) scaleY(1);
+    transform: translateY(0);
     pointer-events: auto;
-    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                pointer-events 0s 0s;
 }
 
 .info-overlay-content {
@@ -277,17 +273,10 @@
     overflow-y: auto;
     width: 100%;
     box-sizing: border-box;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .info-overlay.open .info-overlay-content {
     opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
-                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
 }
 
 .info-overlay-content .bot-intro-modal-header {
