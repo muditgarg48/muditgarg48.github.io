@@ -1,4 +1,7 @@
-import React from 'react';
+import { useRef, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSiteMode } from '../../context/SiteModeContext';
+import { useScrollToTopOnModeSwitch } from '../../components/NavBar/NavBar';
 import NavBar from '../../components/NavBar/NavBar';
 import WelcomeSection from '../WelcomeSection/WelcomeSection';
 import AboutSection from '../AboutSection/AboutSection';
@@ -9,6 +12,14 @@ import Footer from '../Footer/Footer';
 import FloatingButton from '../../components/FloatingButton/FloatingButton';
 import Modal from '../../components/Modal/Modal';
 import ChatWindowContainer from '../ChatbotSection/ChatWindowContainer';
+import './HomePage.css';
+
+// Phase 2 placeholder component
+const PlaceholderSection = ({ id, label }) => (
+  <div id={id} className="placeholder-section">
+    <span className="placeholder-text">— {label}: Section coming in Phase 2 —</span>
+  </div>
+);
 
 const HomePage = ({
   factsData,
@@ -24,21 +35,102 @@ const HomePage = ({
   isChatbotMiniModalOpen,
   setIsChatbotMiniModalOpen
 }) => {
+  const { isFreelance, mode } = useSiteMode();
+  const prevModeRef = useRef(mode);
+
+  // Activate scroll-to-top on mode switch
+  useScrollToTopOnModeSwitch();
+
+  // Determine slide direction: switching TO freelance = slide left, TO recruiter = slide right
+  const direction = useMemo(() => {
+    const dir = mode === 'freelance' ? 1 : -1;
+    prevModeRef.current = mode;
+    return dir;
+  }, [mode]);
+
+  const sectionVariants = {
+    enter: (dir) => ({
+      x: dir * 120,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir) => ({
+      x: dir * -120,
+      opacity: 0,
+    }),
+  };
+
+  const transition = {
+    duration: 0.5,
+    ease: "easeInOut",
+  };
+
   return (
     <>
       <NavBar/>
-      <WelcomeSection welcome_data={welcomeData}/>
+
+      {/* WelcomeSection — mode-specific, animated */}
+      <AnimatePresence mode="wait" custom={direction}>
+        <motion.div
+          key={`welcome-${mode}`}
+          custom={direction}
+          variants={sectionVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={transition}
+        >
+          <WelcomeSection welcome_data={welcomeData}/>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* AboutSection — common, no animation */}
       <AboutSection 
         facts={factsData} 
         skills={skillsData} 
         about_me={aboutMeData}
       />
-      <ExperienceSection 
-        experience_data={experienceData} 
-        education_history={educationHistoryData}
-      />
-      <ProjectsSection projects_data={projectsData}/>
-      <CertificatesSection certificates_data={certificatesData}/>
+
+      {/* Mode-specific sections */}
+      <AnimatePresence mode="wait" custom={direction}>
+        {isFreelance ? (
+          <motion.div
+            key="freelance-sections"
+            custom={direction}
+            variants={sectionVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={transition}
+          >
+            <PlaceholderSection id="client-work-section" label="Works" />
+            <PlaceholderSection id="how-i-work-section" label="Process" />
+            <PlaceholderSection id="testimonials-section" label="Testimonials" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="recruiter-sections"
+            custom={direction}
+            variants={sectionVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={transition}
+          >
+            <ExperienceSection 
+              experience_data={experienceData} 
+              education_history={educationHistoryData}
+            />
+            <ProjectsSection projects_data={projectsData}/>
+            <CertificatesSection certificates_data={certificatesData}/>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Chatbot — common, no animation */}
       <Footer/>
       <FloatingButton 
         onClick={() => setIsChatbotMainModalOpen(true)} 

@@ -9,8 +9,8 @@ import useFiltering from "../../hooks/useFiltering";
 import { getBranchInfo, getCommitsList, getCommitDetails } from "../../services/githubCache";
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
-import git_repo from "../../assets/icons/repo.json";
-import redirect from "../../assets/icons/redirect.json";
+import git_repo from "../../assets/icons/recruiter/repo.json";
+import redirect from "../../assets/icons/recruiter/redirect.json";
 
 const ActivityTag = memo(({ lastUpdated }) => {
     const tag = useMemo(() => {

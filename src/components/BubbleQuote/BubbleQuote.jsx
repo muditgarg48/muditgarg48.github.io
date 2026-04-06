@@ -1,6 +1,6 @@
 import AnimatedIcon from '../AnimatedIcon/AnimatedIcon';
 import './BubbleQuote.css';
-import redirect from "../../assets/icons/redirect.json";
+import redirect from "../../assets/icons/recruiter/redirect.json";
 
 const BubbleQuote = ({ quote, by, links = [], style = {} }) => {
 

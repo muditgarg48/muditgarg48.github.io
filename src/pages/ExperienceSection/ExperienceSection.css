@@ -130,7 +130,7 @@
 }
 
 .pill-category.education {
-    background: #0d1117;
+    background: var(--card-bg);
     color: #e5c07b; /* Gold/yellowish to contrast */
     border: 1px solid rgba(229, 192, 123, 0.2);
 }

@@ -1,0 +1,19 @@
+/* ===== Phase 2 Placeholder Sections ===== */
+.placeholder-section {
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 4rem 2rem;
+    box-sizing: border-box;
+}
+
+.placeholder-text {
+    color: var(--font-secondary-color);
+    font-size: 1rem;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+    text-align: center;
+}

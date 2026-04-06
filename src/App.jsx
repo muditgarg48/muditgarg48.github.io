@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import { SiteModeProvider } from './context/SiteModeContext';
 import LoadingScreen from './components/LoadingScreen/LoadingScreen';
 import HomePage from './pages/HomePage/HomePage';
 import BlogWall from './pages/BlogWall/BlogWall';
@@ -71,48 +72,50 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      {/* <CustomCursor/> */}
-      {loading ? (
-        <LoadingScreen />
-      ) : (
-        <BrowserRouter basename="/">
-          <Routes>
-            <Route
-              path="/blogs/publish"
-              element={<BlogPublish />}
-            />
-            <Route
-              path="/blogs/:id"
-              element={<BlogDetail />}
-            />
-            <Route
-              path="/blogs"
-              element={<BlogWall />}
-            />
-            <Route
-              path="/"
-              element={
-                <HomePage
-                  factsData={factsData}
-                  projectsData={projectsData}
-                  certificatesData={certificatesData}
-                  experienceData={experienceData}
-                  educationHistoryData={educationHistoryData}
-                  skillsData={skillsData}
-                  aboutMeData={aboutMeData}
-                  welcomeData={welcomeData}
-                  isChatbotMainModalOpen={isChatbotMainModalOpen}
-                  setIsChatbotMainModalOpen={setIsChatbotMainModalOpen}
-                  isChatbotMiniModalOpen={isChatbotMiniModalOpen}
-                  setIsChatbotMiniModalOpen={setIsChatbotMiniModalOpen}
-                />
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      )}
-    </div>
+    <SiteModeProvider>
+      <div className="App">
+        {/* <CustomCursor/> */}
+        {loading ? (
+          <LoadingScreen />
+        ) : (
+          <BrowserRouter basename="/">
+            <Routes>
+              <Route
+                path="/blogs/publish"
+                element={<BlogPublish />}
+              />
+              <Route
+                path="/blogs/:id"
+                element={<BlogDetail />}
+              />
+              <Route
+                path="/blogs"
+                element={<BlogWall />}
+              />
+              <Route
+                path="/"
+                element={
+                  <HomePage
+                    factsData={factsData}
+                    projectsData={projectsData}
+                    certificatesData={certificatesData}
+                    experienceData={experienceData}
+                    educationHistoryData={educationHistoryData}
+                    skillsData={skillsData}
+                    aboutMeData={aboutMeData}
+                    welcomeData={welcomeData}
+                    isChatbotMainModalOpen={isChatbotMainModalOpen}
+                    setIsChatbotMainModalOpen={setIsChatbotMainModalOpen}
+                    isChatbotMiniModalOpen={isChatbotMiniModalOpen}
+                    setIsChatbotMiniModalOpen={setIsChatbotMiniModalOpen}
+                  />
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        )}
+      </div>
+    </SiteModeProvider>
   );
 }
 

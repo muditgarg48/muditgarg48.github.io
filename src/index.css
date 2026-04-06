@@ -18,6 +18,9 @@
   --primary-color: #00abf0;
   --secondary-color: #00acf0b4;
   --bg-color: #081b29;
+  --text-color: #ededed;
+  --card-bg: #112240;
+  --nav-bg: #081b29ee;
 
   --font-primary-color: var(--primary-color);
   --font-secondary-color: var(--secondary-color);
@@ -25,12 +28,17 @@
   --font-style: "Montserrat", sans-serif;
   --logo-font-style: "Pacifico";
   --special-font-style: "Carpenter";
+
+  transition: background-color 0.6s ease, color 0.6s ease;
 }
 
 body {
   margin: 0;
   font-family: var(--font-style);
   background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.6s ease, color 0.6s ease;
+  overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {

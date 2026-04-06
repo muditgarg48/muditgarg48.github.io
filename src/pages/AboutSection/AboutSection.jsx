@@ -1,74 +1,138 @@
-import React, { useState, memo, useMemo, useCallback } from "react";
+import { useState, memo } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './AboutSection.css';
+import { useSiteMode } from '../../context/SiteModeContext';
 
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
-import did_you_know_icon from "../../assets/icons/interesting.json";
-import skillset_icon from "../../assets/icons/skillset.json";
+import did_you_know_icon from "../../assets/icons/recruiter/interesting.json";
+import skillset_icon from "../../assets/icons/recruiter/skillset.json";
 
 const AboutSection = ({ facts, skills, about_me }) => {
-
-    const intro_para = about_me['intro_para'];
-    const basic_info = about_me['basic_info'];
-    const currently = about_me['currently'];
-    const recently_concluded = about_me['recently_concluded'];
-    const outer_para = about_me['outer_para'];
-    const my_portrait_link = about_me['portrait_link'];
-    const my_quote = about_me['my_quote'];
+    const { isFreelance } = useSiteMode();
 
     return (
         <div id="about-section">
             <div id="about-section-content">
-                <SectionHeading section_name="ABOUT" />
-                <div id="about-top-layout">
-                    <div id="intro-text-container">
-                        <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
-                            {intro_para}
-                        </div>
-                        <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
-                            {outer_para}
-                        </div>
-                    </div>
-                    <div id="portrait-container">
-                        <img id="my-potrait" src={my_portrait_link} alt="My Portrait" />
-                    </div>
-                </div>
-
-                <div id="my-quote">
-                    <span id="quotation-mark" className="highlight">"</span>
-                    &nbsp;
-                    <span id="quote">{my_quote}</span>
-                </div>
-                <div id="about-middle-layout">
-                    <div id="more-about-me-container">
-                        <MoreAboutMeSection
-                            currently={currently}
-                            recently_concluded={recently_concluded}
-                        />
-                    </div>
-                    <div id="basic_info">
-                        {
-                            basic_info.map((item, index) => {
-                                return (
-                                    <BasicInfoItem
-                                        key={index}
-                                        title={item.title}
-                                        content={item.content}
-                                        footer={item.footer || null}
-                                    />
-                                );
-                            })
-                        }
-                    </div>
-                </div>
-                &nbsp;
-                <SkillSection skills={skills} />
-                <DidYouKnowSection facts={facts} />
+                {isFreelance ? (
+                    <FreelanceContent about_me={about_me} />
+                ) : (
+                    <RecruiterContent 
+                        about_me={about_me} 
+                        skills={skills} 
+                        facts={facts} 
+                    />
+                )}
             </div>
         </div>
     );
-}
+};
+
+// ==================== RECRUITER MODE ====================
+
+const RecruiterContent = ({ about_me, skills, facts }) => {
+    const {
+        intro_para,
+        basic_info,
+        currently,
+        recently_concluded,
+        outer_para,
+        portrait_link,
+        my_quote
+    } = about_me;
+
+    return (
+        <>
+            <SectionHeading section_name="ABOUT" />
+            <div id="about-top-layout">
+                <div id="intro-text-container">
+                    <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
+                        {intro_para}
+                    </div>
+                    <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
+                        {outer_para}
+                    </div>
+                </div>
+                <div id="portrait-container">
+                    <img id="my-potrait" src={portrait_link} alt="My Portrait" />
+                </div>
+            </div>
+
+            <div id="my-quote">
+                <span id="quotation-mark" className="highlight">"</span>
+                &nbsp;
+                <span id="quote">{my_quote}</span>
+            </div>
+
+            <div id="about-middle-layout">
+                <div id="more-about-me-container">
+                    <MoreAboutMeSection
+                        currently={currently}
+                        recently_concluded={recently_concluded}
+                    />
+                </div>
+                <div id="basic_info">
+                    {basic_info.map((item, index) => (
+                        <BasicInfoItem
+                            key={index}
+                            title={item.title}
+                            content={item.content}
+                            footer={item.footer || null}
+                        />
+                    ))}
+                </div>
+            </div>
+            &nbsp;
+            <SkillSection skills={skills} />
+            <DidYouKnowSection facts={facts} />
+        </>
+    );
+};
+
+// ==================== FREELANCE MODE ====================
+
+const FreelanceContent = ({ about_me }) => {
+    const {
+        intro_para,
+        outer_para,
+        portrait_link,
+        my_quote
+    } = about_me;
+
+    return (
+        <>
+            <SectionHeading section_name="ABOUT ME" />
+            <div id="about-top-layout">
+                <div id="intro-text-container">
+                    <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
+                        {intro_para}
+                    </div>
+                    <div className="about_me" style={{ whiteSpace: 'pre-line' }}>
+                        {outer_para}
+                    </div>
+                </div>
+                <div id="portrait-container">
+                    <img id="my-potrait" src={portrait_link} alt="My Portrait" />
+                </div>
+            </div>
+
+            <div id="my-quote">
+                <span id="quotation-mark" className="highlight">"</span>
+                &nbsp;
+                <span id="quote">{my_quote}</span>
+            </div>
+
+            <div className="freelance-about-extras">
+                <div className="credential-badge">
+                    Masters in Computer Engineering — Trinity College Dublin
+                </div>
+                <p className="services-sentence">
+                    I work across web, mobile, AI tools, automation and internal systems.
+                </p>
+            </div>
+        </>
+    );
+};
 
 const MoreAboutMeSection = ({ currently, recently_concluded }) => {
     const [expanded, setExpanded] = useState('currently');

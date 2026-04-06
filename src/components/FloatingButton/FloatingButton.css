@@ -10,7 +10,7 @@
   font-weight: 600;
   cursor: pointer;
   z-index: 1000;
-  box-shadow: 0 8px 32px rgba(0, 171, 240, 0.4);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--primary-color) 40%, transparent);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -40,13 +40,13 @@
 
 .floating-button:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(0, 171, 240, 0.6), 0 0 20px rgba(0, 171, 240, 0.3);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--primary-color) 60%, transparent), 0 0 20px color-mix(in srgb, var(--primary-color) 30%, transparent);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
 .floating-button:active {
   transform: translateY(-2px) scale(0.98);
-  box-shadow: 0 6px 20px rgba(0, 171, 240, 0.5);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--primary-color) 50%, transparent);
 }
 
 .fab-icon {
@@ -80,7 +80,7 @@
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(0, 171, 240, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary-color) 30%, transparent) 0%, transparent 70%);
   border-radius: 50px;
   opacity: 0;
   animation: pulse-glow 3s ease-in-out infinite;

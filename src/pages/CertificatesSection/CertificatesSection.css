@@ -178,7 +178,7 @@
 }
 
 .action-btn.verify:hover {
-    background: rgba(0, 171, 240, 0.1);
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
 }
 
 .action-btn.open {

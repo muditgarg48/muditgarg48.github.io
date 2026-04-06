@@ -1,10 +1,18 @@
+import { useState, useEffect } from 'react';
 import './WelcomeSection.css';
 import { TypeAnimation } from 'react-type-animation';
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
-import linkedin_icon from "../../assets/icons/linkedin.json";
-import gmail_icon from "../../assets/icons/gmail.json";
-import github_icon from "../../assets/icons/github.json";
+import linkedin_icon_recruiter from "../../assets/icons/recruiter/linkedin.json";
+import gmail_icon_recruiter from "../../assets/icons/recruiter/gmail.json";
+import github_icon_recruiter from "../../assets/icons/recruiter/github.json";
+
+import linkedin_icon_freelance from "../../assets/icons/freelance/linkedin.json";
+import gmail_icon_freelance from "../../assets/icons/freelance/gmail.json";
+import github_icon_freelance from "../../assets/icons/freelance/github.json";
 import hello_sequence from "../../assets/data/differentHellos.json";
+import { useSiteMode } from '../../context/SiteModeContext';
+
+const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
 const RedirectIcon = ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +21,45 @@ const RedirectIcon = ({ size = 20 }) => (
 );
 
 const WelcomeSection = ({welcome_data}) => {
-    const { brief, summary, ctaText, ctaLink } = welcome_data;
+    const { isFreelance } = useSiteMode();
+    const [freelanceData, setFreelanceData] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (isFreelance) {
+            setLoading(true);
+            fetch(`${DATA_ENDPOINT}freelance_welcome_data.json`)
+                .then(res => res.json())
+                .then(data => {
+                    setFreelanceData(data.welcome);
+                })
+                .catch(err => {
+                    console.error('Error fetching freelance welcome data:', err);
+                    // Fallback to recruiter data
+                    setFreelanceData(null);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+    }, [isFreelance]);
+
+    const activeData = isFreelance && freelanceData ? freelanceData : welcome_data;
+    const { brief, summary, ctaText, ctaLink } = activeData || {};
+
+    const linkedin_icon = isFreelance ? linkedin_icon_freelance : linkedin_icon_recruiter;
+    const github_icon = isFreelance ? github_icon_freelance : github_icon_recruiter;
+    const gmail_icon = isFreelance ? gmail_icon_freelance : gmail_icon_recruiter;
+
+    if (loading) {
+        return (
+            <div id="welcome-section">
+                <div className="welcome-content">
+                    <div style={{ color: 'var(--font-secondary-color)', fontSize: '1rem' }}>Loading...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div id="welcome-section">

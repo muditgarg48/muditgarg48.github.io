@@ -11,6 +11,7 @@
     max-width: 900px;
     width: 100%;
     padding: 0 5vw;
+    box-sizing: border-box;
     font-size: 1rem;
     text-wrap: pretty;
     display: flex;
@@ -19,7 +20,7 @@
 }
 
 .hello {
-    color: yellow;
+    color: var(--hello-color);
     font-family: "Playwrite AR", cursive;
 }
 
@@ -66,9 +67,10 @@
     border-radius: 50px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 171, 240, 0.4);
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--primary-color) 40%, transparent);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.6s ease;
 }
 
 #resume_btn::before {
@@ -88,7 +90,7 @@
 
 #resume_btn:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(0, 171, 240, 0.6), 0 0 20px rgba(0, 171, 240, 0.3);
+    box-shadow: 0 12px 40px color-mix(in srgb, var(--primary-color) 60%, transparent), 0 0 20px color-mix(in srgb, var(--primary-color) 30%, transparent);
     background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--font-secondary-color) 100%);
 }
 
