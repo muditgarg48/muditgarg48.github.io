@@ -1,23 +1,33 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import axios from 'axios';
 import ChatWindow from './ChatWindow/ChatWindow';
+import { useSiteMode } from '../../context/SiteModeContext';
 
 const DEPLOYMENT_URL = "https://self-rag-system.onrender.com";
 const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes
 const MIN_MESSAGES_FOR_SCROLL = 5;
 const THINKING_MESSAGE = "Thinking ...";
 
-const INIT_MESSAGE = {
+const getInitMessage = (isFreelance) => ({
   person: "bot",
-  message: "Hi there! I'm A.L.F.R.E.D. I know everything about Mudit. Ask away!",
+  message: isFreelance 
+    ? "Hi! I'm A.L.F.R.E.D., Mudit's freelance assistant. Ask me anything and I'll try to help you with information as much as I can." 
+    : "Hi! I'm A.L.F.R.E.D., Mudit's portfolio assistant. Ask me anything about his professional background, skills, and projects!",
   sources: [],
-};
+});
 
 const ChatWindowContainer = ({ onClose, onMinimize, onPopup }) => {
+  const { isFreelance } = useSiteMode();
+  
   const [query, setQuery] = useState("");
   const [botStatus, setBotStatus] = useState("waiting");
-  const [chatHistory, setChatHistory] = useState([INIT_MESSAGE]);
+  const [chatHistory, setChatHistory] = useState([getInitMessage(isFreelance)]);
   const [chatActive, setChatActive] = useState(false);
+
+  // Re-initialize chat message when site mode changes
+  useEffect(() => {
+    setChatHistory([getInitMessage(isFreelance)]);
+  }, [isFreelance]);
 
   const botEndRef = useRef(null);
 
@@ -66,8 +76,8 @@ const ChatWindowContainer = ({ onClose, onMinimize, onPopup }) => {
   }, [checkServerStatus, pingServer]);
 
   const resetChat = useCallback(() => {
-    setChatHistory([INIT_MESSAGE]);
-  }, []);
+    setChatHistory([getInitMessage(isFreelance)]);
+  }, [isFreelance]);
 
   const replaceThinkingMessage = useCallback((newMessage) => {
     setChatHistory(prevHistory => {
@@ -99,6 +109,7 @@ const ChatWindowContainer = ({ onClose, onMinimize, onPopup }) => {
     try {
       const formData = new FormData();
       formData.append('user_query', userQuery);
+      formData.append('site_mode', isFreelance ? 'freelance' : 'recruiter');
       const response = await axios.post(`${DEPLOYMENT_URL}/query`, formData);
       
       replaceThinkingMessage({
