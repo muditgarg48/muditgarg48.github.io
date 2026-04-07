@@ -1,38 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import './WorksSection.css';
 
-const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
-
-const WorksSection = () => {
-    const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetch(`${DATA_ENDPOINT}freelance_projects_data.json`)
-            .then(res => res.json())
-            .then(data => {
-                setProjects(data.projects || []);
-            })
-            .catch(err => {
-                console.error('Error fetching freelance projects:', err);
-                setProjects([]);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
-
-    if (loading) {
-        return (
-             <div id="works-section">
-                <div className="works-content">
-                    <SectionHeading section_name="WORKS" />
-                    <div className="loading-state">Loading projects...</div>
-                </div>
-            </div>
-        );
+const WorksSection = ({ projects }) => {
+    if (!projects || projects.length === 0) {
+        return null;
     }
 
     return (

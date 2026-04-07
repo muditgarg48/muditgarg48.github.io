@@ -27,6 +27,13 @@ const HomePage = ({
   skillsData,
   aboutMeData,
   welcomeData,
+  // Freelance
+  freelanceProjectsData,
+  freelanceProcessData,
+  freelanceAboutData,
+  freelanceServicesData,
+  freelanceWelcomeData,
+  freelanceTestimonialsData,
   isChatbotMainModalOpen,
   setIsChatbotMainModalOpen,
   isChatbotMiniModalOpen,
@@ -80,7 +87,11 @@ const HomePage = ({
           exit="exit"
           transition={transition}
         >
-          <WelcomeSection welcome_data={welcomeData}/>
+          <WelcomeSection 
+            welcome_data={welcomeData} 
+            freelance_welcome_data={freelanceWelcomeData}
+            forcedMode={mode}
+          />
         </motion.div>
       </AnimatePresence>
 
@@ -96,14 +107,17 @@ const HomePage = ({
             exit="exit"
             transition={transition}
           >
-            <WorksSection />
+            <WorksSection projects={freelanceProjectsData} />
             <AboutSection 
               facts={factsData} 
               skills={skillsData} 
               about_me={aboutMeData}
+              freelance_about_me={freelanceAboutData}
+              freelance_services={freelanceServicesData}
+              forcedMode="freelance"
             />
-            <ProcessSection />
-            <TestimonialsSection />
+            <ProcessSection steps={freelanceProcessData} />
+            <TestimonialsSection testimonials={freelanceTestimonialsData} />
           </motion.div>
         ) : (
           <motion.div
@@ -119,6 +133,7 @@ const HomePage = ({
               facts={factsData} 
               skills={skillsData} 
               about_me={aboutMeData}
+              forcedMode="recruiter"
             />
             <ExperienceSection 
               experience_data={experienceData} 

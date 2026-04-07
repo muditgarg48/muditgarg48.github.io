@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import './TestimonialsSection.css';
 
-const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
-
-const TestimonialsSection = () => {
-    const [testimonials, setTestimonials] = useState([]);
-    const [loading, setLoading] = useState(true);
-
+const TestimonialsSection = ({ testimonials }) => {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 6000, stopOnInteraction: false })]);
 
     const scrollPrev = React.useCallback(() => {
@@ -21,32 +15,7 @@ const TestimonialsSection = () => {
         if (emblaApi) emblaApi.scrollNext();
     }, [emblaApi]);
 
-    useEffect(() => {
-        fetch(`${DATA_ENDPOINT}freelance_testimonials_data.json`)
-            .then(res => res.json())
-            .then(data => {
-                const activeTestimonials = (data.testimonials || []).filter(t => 
-                    t.quote && t.quote.trim() !== ""
-                );
-                setTestimonials(activeTestimonials);
-            })
-            .catch(err => {
-                console.error('Error fetching freelance testimonials:', err);
-                setTestimonials([]);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
-
-    if (loading) return (
-        <div id="testimonials-section">
-            <div className="testimonials-content">
-                <SectionHeading section_name="TESTIMONIALS" />
-                <div className="loading-state">Loading feedback...</div>
-            </div>
-        </div>
-    );
+    if (!testimonials || testimonials.length === 0) return null;
 
     return (
         <div id="testimonials-section">

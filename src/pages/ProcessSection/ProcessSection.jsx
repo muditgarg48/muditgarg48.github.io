@@ -1,29 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import './ProcessSection.css';
 
-const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
-
-const ProcessSection = () => {
-    const [steps, setSteps] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetch(`${DATA_ENDPOINT}freelance_process_data.json`)
-            .then(res => res.json())
-            .then(data => {
-                setSteps(data.process || []);
-            })
-            .catch(err => {
-                console.error('Error fetching freelance process:', err);
-                setSteps([]);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
-
+const ProcessSection = ({ steps }) => {
     const ProgressIcon = ({ type }) => {
         const size = 28;
         switch (type) {
@@ -37,7 +16,7 @@ const ProcessSection = () => {
         }
     };
 
-    if (loading) return null;
+    if (!steps || steps.length === 0) return null;
 
     return (
         <div id="process-section">

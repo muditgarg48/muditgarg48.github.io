@@ -12,14 +12,15 @@ import credentials_icon from "../../assets/icons/freelance/credentials.json";
 
 const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
-const AboutSection = ({ facts, skills, about_me }) => {
-    const { isFreelance } = useSiteMode();
+const AboutSection = ({ facts, skills, about_me, freelance_about_me, freelance_services, forcedMode }) => {
+    const { isFreelance: contextIsFreelance } = useSiteMode();
+    const isFreelance = forcedMode ? (forcedMode === 'freelance') : contextIsFreelance;
 
     return (
         <div id="about-section">
             <div id="about-section-content">
                 {isFreelance ? (
-                    <FreelanceContent about_me={about_me} />
+                    <FreelanceContent about_me={freelance_about_me} services={freelance_services} />
                 ) : (
                     <RecruiterContent 
                         about_me={about_me} 
@@ -95,37 +96,9 @@ const RecruiterContent = ({ about_me, skills, facts }) => {
 
 // ==================== FREELANCE MODE ====================
 
-const FreelanceContent = () => {
-    const [aboutData, setAboutData] = useState(null);
-    const [services, setServices] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchFreelanceData = async () => {
-            setLoading(true);
-            try {
-                const [aboutRes, servicesRes] = await Promise.all([
-                    fetch(`${DATA_ENDPOINT}freelance_about_data.json`),
-                    fetch(`${DATA_ENDPOINT}freelance_services_data.json`)
-                ]);
-                
-                const aboutJson = await aboutRes.json();
-                const servicesJson = await servicesRes.json();
-                
-                setAboutData(aboutJson.about);
-                setServices(servicesJson.services || []);
-            } catch (err) {
-                console.error('Error fetching freelance about/services data:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchFreelanceData();
-    }, []);
-
-    if (loading || !aboutData) {
-        return <div className="loading-state">Loading About Data...</div>;
+const FreelanceContent = ({ about_me, services }) => {
+    if (!about_me) {
+        return null;
     }
 
     const {
@@ -134,7 +107,7 @@ const FreelanceContent = () => {
         portrait_link,
         my_quote,
         credentials
-    } = aboutData;
+    } = about_me;
 
     return (
         <>
@@ -161,7 +134,7 @@ const FreelanceContent = () => {
 
             <div className="freelance-about-extras">
                 <CredentialsSection credentials={credentials} />
-                {services.length > 0 && <ServicesSection services={services} />}
+                {services && services.length > 0 && <ServicesSection services={services} />}
             </div>
         </>
     );

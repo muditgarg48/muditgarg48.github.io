@@ -18,7 +18,14 @@ const DATA_FILES = {
   education: 'education_history.json',
   skills: 'skills.json',
   about: 'about_data.json',
-  welcome: 'welcome_data.json'
+  welcome: 'welcome_data.json',
+  // Freelance
+  freelanceProjects: 'freelance_projects_data.json',
+  freelanceProcess: 'freelance_process_data.json',
+  freelanceAbout: 'freelance_about_data.json',
+  freelanceServices: 'freelance_services_data.json',
+  freelanceWelcome: 'freelance_welcome_data.json',
+  freelanceTestimonials: 'freelance_testimonials_data.json'
 };
 
 function App() {
@@ -35,32 +42,46 @@ function App() {
   const [aboutMeData, setAboutMeData] = useState({});
   const [welcomeData, setWelcomeData] = useState({});
 
+  // Freelance states
+  const [freelanceProjectsData, setFreelanceProjectsData] = useState([]);
+  const [freelanceProcessData, setFreelanceProcessData] = useState([]);
+  const [freelanceAboutData, setFreelanceAboutData] = useState({});
+  const [freelanceServicesData, setFreelanceServicesData] = useState([]);
+  const [freelanceWelcomeData, setFreelanceWelcomeData] = useState([]);
+  const [freelanceTestimonialsData, setFreelanceTestimonialsData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
+      const keys = Object.keys(DATA_FILES);
       const fetchPromises = Object.values(DATA_FILES).map(file =>
         fetch(`${DATA_ENDPOINT}${file}`).then(res => res.json())
       );
 
       try {
-        const [
-          factsData,
-          projectsData,
-          certificatesData,
-          experienceData,
-          educationHistoryData,
-          skillsData,
-          aboutMeData,
-          welcomeData
-        ] = await Promise.all(fetchPromises);
+        const results = await Promise.all(fetchPromises);
+        const data = {};
+        keys.forEach((key, index) => {
+          data[key] = results[index];
+        });
 
-        setFactsData(factsData.facts);
-        setProjectsData(projectsData.projects);
-        setCertificatesData(certificatesData.certificates);
-        setExperienceData(experienceData.experiences);
-        setEducationHistoryData(educationHistoryData.educations);
-        setSkillsData(skillsData.skills);
-        setAboutMeData(aboutMeData.about);
-        setWelcomeData(welcomeData.welcome);
+        // Map recruiter data
+        setFactsData(data.facts.facts);
+        setProjectsData(data.projects.projects);
+        setCertificatesData(data.certificates.certificates);
+        setExperienceData(data.experience.experiences);
+        setEducationHistoryData(data.education.educations);
+        setSkillsData(data.skills.skills);
+        setAboutMeData(data.about.about);
+        setWelcomeData(data.welcome.welcome);
+
+        // Map freelance data
+        setFreelanceProjectsData(data.freelanceProjects.projects || []);
+        setFreelanceProcessData(data.freelanceProcess.process || []);
+        setFreelanceAboutData(data.freelanceAbout.about || {});
+        setFreelanceServicesData(data.freelanceServices.services || []);
+        setFreelanceWelcomeData(data.freelanceWelcome.welcome || {});
+        setFreelanceTestimonialsData(data.freelanceTestimonials.testimonials || []);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -104,6 +125,13 @@ function App() {
                     skillsData={skillsData}
                     aboutMeData={aboutMeData}
                     welcomeData={welcomeData}
+                    // Freelance data
+                    freelanceProjectsData={freelanceProjectsData}
+                    freelanceProcessData={freelanceProcessData}
+                    freelanceAboutData={freelanceAboutData}
+                    freelanceServicesData={freelanceServicesData}
+                    freelanceWelcomeData={freelanceWelcomeData}
+                    freelanceTestimonialsData={freelanceTestimonialsData}
                     isChatbotMainModalOpen={isChatbotMainModalOpen}
                     setIsChatbotMainModalOpen={setIsChatbotMainModalOpen}
                     isChatbotMiniModalOpen={isChatbotMiniModalOpen}
