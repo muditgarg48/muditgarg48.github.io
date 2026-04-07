@@ -8,7 +8,7 @@
     position: fixed;
     width: 95%;
     z-index: 100;
-    transition: all 1s;
+    transition: background-color 1s, border-color 1s, backdrop-filter 1s;
 }
 
 .desktop-logo-link {
