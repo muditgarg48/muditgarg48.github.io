@@ -48,6 +48,21 @@ export function SiteModeProvider({ children }) {
 
   useEffect(() => {
     applyPalette(mode);
+
+    // Update Favicon and Apple Touch Icon
+    const favicon = document.getElementById('favicon');
+    const appleTouchIcon = document.getElementById('apple-touch-icon');
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+
+    if (mode === 'freelance') {
+      if (favicon) favicon.href = '/favicon-freelance.ico';
+      if (appleTouchIcon) appleTouchIcon.href = '/logo192-freelance.png';
+      if (themeColor) themeColor.setAttribute('content', '#2d5a3d');
+    } else {
+      if (favicon) favicon.href = '/favicon-recruiter.ico';
+      if (appleTouchIcon) appleTouchIcon.href = '/logo192-recruiter.png';
+      if (themeColor) themeColor.setAttribute('content', '#00abf0');
+    }
   }, [mode, applyPalette]);
 
   const toggleMode = useCallback(() => {
