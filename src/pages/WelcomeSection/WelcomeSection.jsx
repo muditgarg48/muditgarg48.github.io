@@ -17,7 +17,7 @@ const RedirectIcon = ({ size = 20 }) => (
     </svg>
 );
 
-const WelcomeSection = ({welcome_data, freelance_welcome_data, forcedMode}) => {
+const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) => {
     const { isFreelance: contextIsFreelance } = useSiteMode();
     const isFreelance = forcedMode ? (forcedMode === 'freelance') : contextIsFreelance;
 
@@ -48,15 +48,15 @@ const WelcomeSection = ({welcome_data, freelance_welcome_data, forcedMode}) => {
                 &nbsp;
                 <div id="contact">
                     <div id="contact_icons">
-                        <AnimatedIcon icon={linkedin_icon} link="https://linkedin.com/in/muditgarg48"/>
-                        <AnimatedIcon icon={github_icon} link="https://github.com/muditgarg48"/>
-                        <AnimatedIcon icon={gmail_icon} link="mailto:gargmu@tcd.ie"/>
-                        <a href={ctaLink} id="resume_btn" target="_blank" rel="noreferrer">
-                            <RedirectIcon size={20} />
-                            &nbsp;
-                            {ctaText}
-                        </a>
+                        <AnimatedIcon icon={linkedin_icon} link="https://linkedin.com/in/muditgarg48" />
+                        <AnimatedIcon icon={github_icon} link="https://github.com/muditgarg48" />
+                        <AnimatedIcon icon={gmail_icon} link="mailto:gargmu@tcd.ie" />
                     </div>
+                    <a href={ctaLink} id="resume_btn" target="_blank" rel="noreferrer">
+                        <RedirectIcon size={20} />
+                        &nbsp;
+                        {ctaText}
+                    </a>
                 </div>
             </div>
         </div>

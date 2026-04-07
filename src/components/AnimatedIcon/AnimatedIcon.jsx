@@ -2,7 +2,7 @@ import { Player } from "@lordicon/react";
 import React, {useRef} from "react";
 import './AnimatedIcon.css';
 
-const AnimatedIcon = ({class_name="contact_icon", icon, link='', icon_size=30, onClick=null}) => {
+const AnimatedIcon = ({class_name="contact_icon", icon, link='', icon_size=45, onClick=null}) => {
     
     const playerRef = useRef(null);
 
