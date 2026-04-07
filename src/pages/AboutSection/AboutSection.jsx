@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './AboutSection.css';
 import { useSiteMode } from '../../context/SiteModeContext';
@@ -15,6 +15,9 @@ import AIIcon from "../../assets/svg/AIIcon";
 import BackendIcon from "../../assets/svg/BackendIcon";
 import RefreshIcon from "../../assets/svg/RefreshIcon";
 import InfoIcon from "../../assets/svg/InfoIcon";
+import LightbulbIcon from "../../assets/svg/LightbulbIcon";
+import LayersIcon from "../../assets/svg/LayersIcon";
+
 import did_you_know_icon from "../../assets/icons/recruiter/interesting.json";
 import skillset_icon from "../../assets/icons/recruiter/skillset.json";
 import services_offered_icon from "../../assets/icons/freelance/services_offered.json";
@@ -192,6 +195,20 @@ const ServicesSection = ({ services }) => {
     const [activeService, setActiveService] = useState(services[0]?.id || '');
 
     const currentService = services.find(s => s.id === activeService) || services[0];
+    const tabsRef = useRef(null);
+
+    useEffect(() => {
+        if (window.innerWidth <= 800) {
+            const activeTab = tabsRef.current?.querySelector('.skill-tab-item.active');
+            if (activeTab) {
+                activeTab.scrollIntoView({
+                    behavior: 'smooth',
+                    inline: 'center',
+                    block: 'nearest'
+                });
+            }
+        }
+    }, [activeService]);
 
     const ServiceIcon = ({ type }) => {
         const size = 24;
@@ -200,6 +217,8 @@ const ServicesSection = ({ services }) => {
             case 'mobile': return <MobileIcon size={size} />;
             case 'ai': return <AIIcon size={size} />;
             case 'backend': return <BackendIcon size={size} />;
+            case 'lightbulb': return <LightbulbIcon size={size} />;
+            case 'layers': return <LayersIcon size={size} />;
             default: return <InfoIcon size={size} />;
         }
     };
@@ -211,7 +230,7 @@ const ServicesSection = ({ services }) => {
                 SERVICES OFFERED
             </h3>
             <div id="skills-layout-container">
-                <div className="skills-vertical-tabs">
+                <div className="skills-vertical-tabs" ref={tabsRef}>
                     {services.map((service) => (
                         <div
                             key={service.id}
@@ -391,6 +410,20 @@ const DidYouKnowSection = ({ facts }) => {
 const SkillSection = memo(({ skills }) => {
     const categories = Object.keys(skills);
     const [activeCategory, setActiveCategory] = useState(categories[0] || '');
+    const tabsRef = useRef(null);
+
+    useEffect(() => {
+        if (window.innerWidth <= 800) {
+            const activeTab = tabsRef.current?.querySelector('.skill-tab-item.active');
+            if (activeTab) {
+                activeTab.scrollIntoView({
+                    behavior: 'smooth',
+                    inline: 'center',
+                    block: 'nearest'
+                });
+            }
+        }
+    }, [activeCategory]);
 
     return (
         <div id="skills-section-wrapper">
@@ -399,7 +432,7 @@ const SkillSection = memo(({ skills }) => {
                 MY SKILLSET
             </h3>
             <div id="skills-layout-container">
-                <div className="skills-vertical-tabs">
+                <div className="skills-vertical-tabs" ref={tabsRef}>
                     {categories.map((cat) => (
                         <div
                             key={cat}
