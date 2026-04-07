@@ -101,7 +101,8 @@
 }
 
 .step-description {
-    font-size: 1.05rem; /* Matches .about_me */
+    font-size: 1.05rem;
+    /* Matches .about_me */
     line-height: 1.7;
     color: var(--font-primary-color);
     opacity: 0.8;
@@ -110,13 +111,13 @@
 
 .step-number-bg {
     position: absolute;
-    left: -20px;
-    top: -20px;
-    font-size: 6rem;
+    right: 20px;
+    bottom: 0px;
+    font-size: 8rem;
     font-weight: 900;
     font-family: 'Passion One';
     color: var(--font-primary-color);
-    opacity: 0.03;
+    opacity: 0.1;
     pointer-events: none;
     z-index: 0;
 }
@@ -125,20 +126,20 @@
     .process-step-box {
         gap: 1.5rem;
     }
-    
+
     .step-visual {
         flex: 0 0 50px;
     }
-    
+
     .step-icon-container {
         width: 50px;
         height: 50px;
     }
-    
+
     .step-title {
         font-size: 1.25rem;
     }
-    
+
     .step-duration {
         font-size: 0.75rem;
     }

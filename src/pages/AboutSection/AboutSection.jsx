@@ -1,16 +1,24 @@
-import { useState, memo, useEffect } from "react";
+import { useState, memo } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './AboutSection.css';
 import { useSiteMode } from '../../context/SiteModeContext';
 
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
+import GraduationIcon from "../../assets/svg/GraduationIcon";
+import IndustryIcon from "../../assets/svg/IndustryIcon";
+import PerformanceIcon from "../../assets/svg/PerformanceIcon";
+import RobotIcon from "../../assets/svg/RobotIcon";
+import WebIcon from "../../assets/svg/WebIcon";
+import MobileIcon from "../../assets/svg/MobileIcon";
+import AIIcon from "../../assets/svg/AIIcon";
+import BackendIcon from "../../assets/svg/BackendIcon";
+import RefreshIcon from "../../assets/svg/RefreshIcon";
+import InfoIcon from "../../assets/svg/InfoIcon";
 import did_you_know_icon from "../../assets/icons/recruiter/interesting.json";
 import skillset_icon from "../../assets/icons/recruiter/skillset.json";
 import services_offered_icon from "../../assets/icons/freelance/services_offered.json";
 import credentials_icon from "../../assets/icons/freelance/credentials.json";
-
-const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
 const AboutSection = ({ facts, skills, about_me, freelance_about_me, freelance_services, forcedMode }) => {
     const { isFreelance: contextIsFreelance } = useSiteMode();
@@ -146,16 +154,11 @@ const CredentialsSection = ({ credentials }) => {
     const CredIcon = ({ type }) => {
         const size = 32;
         switch (type) {
-            case 'graduation':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10L12 5L2 10L12 15L22 10Z"/><path d="M6 12.5V16C6 16 8.5 19 12 19C15.5 19 18 16 18 16V12.5"/></svg>;
-            case 'industry':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="2" ry="2"/><path d="M9 21V9h6v12"/><path d="M12 5h.01"/><path d="M12 9h.01"/><path d="M12 13h.01"/><path d="M12 17h.01"/></svg>;
-            case 'performance':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>;
-            case 'robot':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>;
-            default:
-                return null;
+            case 'graduation': return <GraduationIcon size={size} />;
+            case 'industry': return <IndustryIcon size={size} />;
+            case 'performance': return <PerformanceIcon size={size} />;
+            case 'robot': return <RobotIcon size={size} />;
+            default: return null;
         }
     };
 
@@ -193,16 +196,11 @@ const ServicesSection = ({ services }) => {
     const ServiceIcon = ({ type }) => {
         const size = 24;
         switch (type) {
-            case 'web':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>;
-            case 'mobile':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>;
-            case 'ai':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/><path d="M11 2h2"/></svg>;
-            case 'backend':
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>;
-            default:
-                return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>;
+            case 'web': return <WebIcon size={size} />;
+            case 'mobile': return <MobileIcon size={size} />;
+            case 'ai': return <AIIcon size={size} />;
+            case 'backend': return <BackendIcon size={size} />;
+            default: return <InfoIcon size={size} />;
         }
     };
 
@@ -358,16 +356,8 @@ const DidYouKnowSection = ({ facts }) => {
         setRandomFactIndex(randomNumber)
     }
 
-    const RefreshIcon = () => (
-        <svg
-            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            className="dyk-refresh-icon"
-        >
-            <polyline points="23 4 23 10 17 10"></polyline>
-            <polyline points="1 20 1 14 7 14"></polyline>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-        </svg>
+    const RefreshIconComp = () => (
+        <RefreshIcon className="dyk-refresh-icon" />
     )
 
     return (
@@ -378,7 +368,7 @@ const DidYouKnowSection = ({ facts }) => {
                     DID YOU KNOW
                 </h3>
                 <div id="refresh-dyk" onClick={generateRandomNumber} aria-label="Refresh Fact">
-                    <RefreshIcon />
+                    <RefreshIconComp />
                 </div>
             </div>
             <div id="did-you-know">

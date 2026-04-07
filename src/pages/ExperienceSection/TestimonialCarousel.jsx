@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import AutoHeight from 'embla-carousel-auto-height';
 import BubbleQuote from '../../components/BubbleQuote/BubbleQuote';
+import ChevronLeftIcon from "../../assets/svg/ChevronLeftIcon";
+import ChevronRightIcon from "../../assets/svg/ChevronRightIcon";
 import './TestimonialCarousel.css';
 
 const TestimonialCarousel = ({ testimonials }) => {
@@ -97,7 +99,7 @@ const TestimonialCarousel = ({ testimonials }) => {
                         disabled={prevBtnDisabled} 
                         aria-label="Previous slide"
                     >
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <ChevronLeftIcon />
                     </button>
                     <button 
                         className="embla__arrow" 
@@ -105,7 +107,7 @@ const TestimonialCarousel = ({ testimonials }) => {
                         disabled={nextBtnDisabled} 
                         aria-label="Next slide"
                     >
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <ChevronRightIcon />
                     </button>
                 </div>
                 

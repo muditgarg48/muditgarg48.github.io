@@ -1,10 +1,11 @@
-import React, { memo, useState, useMemo } from "react";
+import { memo, useState, useMemo } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import './ExperienceSection.css';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import FilterBar from "../../components/FilterBar/FilterBar";
 import useFiltering from "../../hooks/useFiltering";
 import TestimonialCarousel from './TestimonialCarousel';
+import ChevronIcon from "../../assets/svg/ChevronIcon";
 
 const ItemEyebrow = memo(({ start, end, category, location }) => {
     return (
@@ -51,16 +52,6 @@ const ExperienceListItem = memo(({ item, isExpanded, onToggle }) => {
 
     const logoLink = logo || (domain ? `https://cdn.brandfetch.io/${domain}` : null);
 
-    const ChevronIcon = ({ isOpen }) => (
-        <svg 
-            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
-        >
-            <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-    );
-
     return (
         <div className={`experience-list-item ${category}-item ${isExpanded ? 'active' : ''}`}>
 
@@ -95,7 +86,7 @@ const ExperienceListItem = memo(({ item, isExpanded, onToggle }) => {
                         </div>
                     </div>
                     <div className="experience-chevron">
-                        <ChevronIcon isOpen={isExpanded} />
+                        <ChevronIcon style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }} />
                     </div>
                 </div>
 

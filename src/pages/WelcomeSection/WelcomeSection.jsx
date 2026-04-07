@@ -10,12 +10,7 @@ import gmail_icon_freelance from "../../assets/icons/freelance/gmail.json";
 import github_icon_freelance from "../../assets/icons/freelance/github.json";
 import hello_sequence from "../../assets/data/differentHellos.json";
 import { useSiteMode } from '../../context/SiteModeContext';
-
-const RedirectIcon = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14 3V5H17.59L7.76 14.83L9.17 16.24L19 6.41V10H21V3M19 19H5V5H12V3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V12H19V19Z" fill="currentColor" />
-    </svg>
-);
+import ExternalLinkIcon from "../../assets/svg/ExternalLinkIcon";
 
 const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) => {
     const { isFreelance: contextIsFreelance } = useSiteMode();
@@ -53,7 +48,7 @@ const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) =>
                         <AnimatedIcon icon={gmail_icon} link="mailto:gargmu@tcd.ie" />
                     </div>
                     <a href={ctaLink} id="resume_btn" target="_blank" rel="noreferrer">
-                        <RedirectIcon size={20} />
+                        <ExternalLinkIcon size={20} />
                         &nbsp;
                         {ctaText}
                     </a>
