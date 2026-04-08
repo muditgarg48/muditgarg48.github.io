@@ -5,6 +5,7 @@ import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import QuoteIcon from "../../assets/svg/QuoteIcon";
 import ArrowLeftIcon from "../../assets/svg/ArrowLeftIcon";
 import ArrowRightIcon from "../../assets/svg/ArrowRightIcon";
+import ImageLoader from "../../components/LoadingLogo/ImageLoader";
 import './TestimonialsSection.css';
 
 const TestimonialsSection = ({ testimonials }) => {
@@ -33,7 +34,7 @@ const TestimonialsSection = ({ testimonials }) => {
                                     <div className="testimonial-visual-column">
                                         <div className="visual-graphic-circle">
                                             {testimonial.avatar ? (
-                                                <img src={testimonial.avatar} alt={testimonial.name} className="visual-avatar" />
+                                                <ImageLoader src={testimonial.avatar} alt={testimonial.name} imgClassName="visual-avatar" />
                                             ) : (
                                                 <div className="visual-placeholder-graphic">
                                                     <span>{testimonial.name?.[0]}</span>

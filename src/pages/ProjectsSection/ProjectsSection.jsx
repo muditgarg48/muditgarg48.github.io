@@ -11,6 +11,8 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import git_repo from "../../assets/icons/recruiter/repo.json";
 import redirect from "../../assets/icons/recruiter/redirect.json";
+import LoadingLogo from "../../components/LoadingLogo/LoadingLogo";
+import ImageLoader from "../../components/LoadingLogo/ImageLoader";
 
 const ActivityTag = memo(({ lastUpdated }) => {
     const tag = useMemo(() => {
@@ -186,7 +188,11 @@ const CommitHistory = memo(({
             </div>
             {commitsExpanded && (
                 <div className="commit-list">
-                    {isLoadingCommits && <div className="commit-loading">Loading commits...</div>}
+                    {isLoadingCommits && (
+                        <div className="commit-loading">
+                            <LoadingLogo isMajor={false} />
+                        </div>
+                    )}
                     {commitsError && <ErrorMessage error={commitsError} className="commit-error" />}
                     {!isLoadingCommits && !commitsError && latestCommitHistory.length === 0 && (
                         <div className="no-commits">No commits found</div>
@@ -437,7 +443,7 @@ const EmblaCarousel = memo(({ projects }) => {
                                 }}
                             >
                                 <div className="carousel-image-container">
-                                    <img src={project.image} alt={project.name} loading="lazy" />
+                                    <ImageLoader src={project.image} alt={project.name} imgClassName="carousel-img" loading="lazy" />
                                     <div className="carousel-overlay">
                                         <h4>{project.name}</h4>
                                         <span className="view-label">View Details</span>

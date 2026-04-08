@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import ExternalLinkIcon from "../../assets/svg/ExternalLinkIcon";
+import ImageLoader from "../../components/LoadingLogo/ImageLoader";
 import './WorksSection.css';
 
 const WorksSection = ({ projects }) => {
@@ -25,7 +26,7 @@ const WorksSection = ({ projects }) => {
                         >
                             <div className="work-image-container">
                                 {project.image ? (
-                                    <img src={project.image} alt={project.name} className="work-image" />
+                                    <ImageLoader src={project.image} alt={project.name} imgClassName="work-image" />
                                 ) : (
                                     <div className="work-image-placeholder">
                                         <span>{project.name.charAt(0)}</span>

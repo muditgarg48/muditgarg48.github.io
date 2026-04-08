@@ -339,6 +339,7 @@
     color: var(--font-highlight-color);
     font-size: 120%;
     min-height: 0;
+    width: 100%;
 }
 
 #chat-history {
@@ -346,6 +347,8 @@
     padding: 20px;
     overflow-y: auto;
     min-height: 0;
+    width: 100%;
+    align-self: flex-start;
 }
 
 .avatar {
@@ -423,6 +426,8 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .message-input-container {

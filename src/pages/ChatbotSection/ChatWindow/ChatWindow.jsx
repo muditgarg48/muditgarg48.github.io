@@ -4,6 +4,7 @@ import { BotIntroContent } from '../BotIntro/BotIntro';
 import { TypeAnimation } from 'react-type-animation';
 import InfoIcon from '../../../assets/svg/InfoIcon';
 import SendIcon from '../../../assets/svg/SendIcon';
+import LoadingLogo from '../../../components/LoadingLogo/LoadingLogo';
 
 const AVATAR_URLS = {
   bot: "https://img.icons8.com/?size=100&id=w9eNLzjc4dDx&format=png&color=000000",
@@ -15,6 +16,13 @@ const STATUS_TEXT = {
   offline: 'Offline',
   waiting: 'Waiting'
 };
+
+const ALFRED_WAKEUP_MESSAGES = [
+  "ALFRED is waking up...",
+  "Connecting to server...",
+  "Powering up AI modules...",
+  "Initializing context..."
+];
 
 const TYPING_SPEED = 100;
 const THINKING_MESSAGE = 'Thinking ...';
@@ -221,6 +229,8 @@ const ChatWindow = ({
             typingMessages={typingMessages}
             setTypingMessages={setTypingMessages}
           />
+        ) : botStatus === 'waiting' ? (
+          <LoadingLogo isMajor={true} textArray={ALFRED_WAKEUP_MESSAGES} />
         ) : (
           <ChatInactive/>
         )}

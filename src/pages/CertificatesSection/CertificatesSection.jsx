@@ -3,6 +3,7 @@ import './CertificatesSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import FilterBar from "../../components/FilterBar/FilterBar";
 import useFiltering from "../../hooks/useFiltering";
+import LoadingLogo from "../../components/LoadingLogo/LoadingLogo";
 
 import { Document, Page, pdfjs } from 'react-pdf';
 
@@ -146,7 +147,7 @@ const CertificateCard = memo(({ certificate, isFlipped, onFlip }) => {
 
                     <div className="certificate-preview">
                         {pdfFile && isVisible ? (
-                            <Document file={pdfFile} loading={<div className="preview-loader">Loading Certificate...</div>}>
+                            <Document file={pdfFile} loading={<LoadingLogo isMajor={false} />}>
                                 <Page pageNumber={1} renderAnnotationLayer={false} renderTextLayer={false} width={320} />
                             </Document>
                         ) : (

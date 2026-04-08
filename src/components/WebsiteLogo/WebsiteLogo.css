@@ -1,20 +1,19 @@
-#website_logo {
+.website_logo {
     font-size: 2.5rem;
     font-weight: 1000;
     font-family: var(--logo-font-style);
     color: var(--font-highlight-color);
-    cursor: pointer;
     transition: font-size 0.3s ease;
 }
 
 @media (max-width: 1000px) {
-    #website_logo {
+    .website_logo {
         font-size: 1.8rem;
     }
 }
 
 @media (max-width: 480px) {
-    #website_logo {
+    .website_logo {
         font-size: 1.5rem;
     }
 }
