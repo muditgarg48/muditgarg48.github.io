@@ -1,6 +1,6 @@
 {
-  "name": "v3-next",
-  "version": "3.0.0",
+  "name": "v2-next",
+  "version": "2.0.0",
   "homepage": "https://muditgarg48.github.io",
   "private": true,
   "dependencies": {

@@ -1,5 +1,12 @@
 import BlogDetail from "../../../sections/BlogDetail/BlogDetail";
-import { fetchBlogById } from "../../../services/blogUtils";
+import { fetchBlogById, fetchAllBlogs } from "../../../services/blogUtils";
+
+export async function generateStaticParams() {
+  const blogs = await fetchAllBlogs();
+  return blogs.map((blog) => ({
+    id: blog.id,
+  }));
+}
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
