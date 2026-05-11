@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Only use static export for GitHub Pages builds
+  output: process.env.GITHUB_ACTIONS ? 'export' : undefined,
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true,
   },
   transpilePackages: ["@lordicon/react"],
 };

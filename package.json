@@ -29,7 +29,7 @@
   "scripts": {
     "dev": "next dev -p 5173",
     "build": "next build",
-    "predeploy": "npm run build",
+    "predeploy": "set GITHUB_ACTIONS=true&& npm run build",
     "deploy": "gh-pages -d out",
     "postbuild": "copy out\\index.html out\\404.html",
     "start": "next start",
