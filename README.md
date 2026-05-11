@@ -1,6 +1,6 @@
 # My Portfolio Website [🔗](https://muditgarg48.github.io)
 
-A clean, responsive React Single Page Application (SPA) which showcases my education, work, experience and achieved certifications.
+A clean, responsive Next.js SSG (Static Site Generation) application which showcases my education, work, experience and achieved certifications.
 
 ## Motivation
 
@@ -26,10 +26,12 @@ A clean, responsive React Single Page Application (SPA) which showcases my educa
 
 ## Tech Stack
 
-Hosted via Jenkyll and GitHub Pages
+Hosted via GitHub Pages
 
-- React
-- JavaScript (JSX)
+- React 19
+- Next.js (Static Site Generation)
+- JavaScript (ES6+)
+- [ Firebase](https://firebase.google.com/)
 - [A.L.F.R.E.D. Tech Stack](https://github.com/muditgarg48/self-rag-system)
 - Packages from [npm](https://www.npmjs.com/)
 - Icons from [lordicon](https://lordicon.com/)
@@ -60,3 +62,6 @@ The HTML-CSS-JS based version 1 codebase of my portfolio website
 
 ##### v2_pure_html_css
 The unsuccessful attempt from 2021 to 2023 of making a second version of the website, still utilising pure HTML-CSS-JS
+
+##### v2_legacy_vite
+The initial attempt from 2024 of making a second version of the website, utilising React + Vite

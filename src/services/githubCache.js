@@ -129,11 +129,15 @@ export const fetchWithCache = async (endpoint, ttl = DEFAULT_TTL) => {
         const rateLimitReset = response.headers.get('X-RateLimit-Reset');
         
         if (rateLimitRemaining === '0') {
-          throw new Error(`GitHub API rate limit exceeded. Resets at ${new Date(rateLimitReset * 1000).toLocaleString()}`);
+          const error = new Error(`GitHub API rate limit exceeded. Resets at ${new Date(rateLimitReset * 1000).toLocaleString()}`);
+          error.status = 403;
+          throw error;
         }
       }
       
-      throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      const error = new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      error.status = response.status;
+      throw error;
     }
     
     const data = await response.json();
@@ -143,7 +147,10 @@ export const fetchWithCache = async (endpoint, ttl = DEFAULT_TTL) => {
     
     return data;
   } catch (error) {
-    console.error('GitHub API fetch error:', error);
+    // Silently handle 404s (usually private repos) to avoid console noise
+    if (error.status !== 404 && error.status !== 403) {
+      console.error('GitHub API fetch error:', error);
+    }
     throw error;
   }
 };

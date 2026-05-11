@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const PALETTES = {
@@ -31,7 +33,7 @@ const SiteModeContext = createContext(undefined);
 
 export function SiteModeProvider({ children }) {
   const defaultMode =
-    import.meta.env.VITE_DEFAULT_MODE === 'freelance' ? 'freelance' : 'recruiter';
+    process.env.NEXT_PUBLIC_DEFAULT_MODE === 'freelance' ? 'freelance' : 'recruiter';
 
   const [mode, setMode] = useState(defaultMode);
 
@@ -47,6 +49,15 @@ export function SiteModeProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    // Cleanup old service workers from previous Vite version
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (const registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+
     applyPalette(mode);
 
     // Update Favicon and Apple Touch Icon
@@ -55,12 +66,12 @@ export function SiteModeProvider({ children }) {
     const themeColor = document.querySelector('meta[name="theme-color"]');
 
     if (mode === 'freelance') {
-      if (favicon) favicon.href = '/favicon-freelance.ico';
-      if (appleTouchIcon) appleTouchIcon.href = '/logo192-freelance.png';
+      if (favicon) favicon.href = `/favicon-freelance.ico?v=${Date.now()}`;
+      if (appleTouchIcon) appleTouchIcon.href = `/logo192-freelance.png?v=${Date.now()}`;
       if (themeColor) themeColor.setAttribute('content', '#2d5a3d');
     } else {
-      if (favicon) favicon.href = '/favicon-recruiter.ico';
-      if (appleTouchIcon) appleTouchIcon.href = '/logo192-recruiter.png';
+      if (favicon) favicon.href = `/favicon-recruiter.ico?v=${Date.now()}`;
+      if (appleTouchIcon) appleTouchIcon.href = `/logo192-recruiter.png?v=${Date.now()}`;
       if (themeColor) themeColor.setAttribute('content', '#00abf0');
     }
   }, [mode, applyPalette]);

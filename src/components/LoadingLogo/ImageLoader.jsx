@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import LoadingLogo from './LoadingLogo';
 import './LoadingLogo.css';
 
@@ -9,6 +9,21 @@ import './LoadingLogo.css';
 const ImageLoader = ({ src, alt, className, imgClassName, style, ...props }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
+    const imgRef = useRef(null);
+
+    // Handle cached images and fallback
+    useEffect(() => {
+        if (imgRef.current && imgRef.current.complete) {
+            setIsLoaded(true);
+        }
+
+        // Safety fallback: Hide loader after 3 seconds no matter what
+        const timer = setTimeout(() => {
+            setIsLoaded(true);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, []); // Run only on mount
 
     return (
         <div className={`image-loader-container ${className || ''}`} style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%', objectFit: 'cover', ...style }}>
@@ -26,6 +41,7 @@ const ImageLoader = ({ src, alt, className, imgClassName, style, ...props }) => 
                 </div>
             )}
             <img
+                ref={imgRef}
                 src={src}
                 alt={alt}
                 className={`${imgClassName || ''} ${isLoaded ? 'loaded' : 'loading'}`}

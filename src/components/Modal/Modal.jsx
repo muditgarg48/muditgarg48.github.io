@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState, useRef, useCallback, memo } from 'react';
 import './Modal.css';
 

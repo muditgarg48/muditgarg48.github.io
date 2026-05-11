@@ -19,11 +19,11 @@ const FloatingButton = ({
       onClick={onClick} 
       title={buttonTitle}
     >
-      <div className="fab-icon">
+      <div className="fab-icon" suppressHydrationWarning>
         <ChatIcon />
       </div>
       {text && <span className="fab-text">{text}</span>}
-      <div className="fab-glow"></div>
+      <div className="fab-glow" suppressHydrationWarning></div>
     </button>
   );
 };

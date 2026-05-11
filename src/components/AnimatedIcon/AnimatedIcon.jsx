@@ -1,3 +1,5 @@
+"use client";
+
 import { Player } from "@lordicon/react";
 import React, {useRef} from "react";
 import './AnimatedIcon.css';

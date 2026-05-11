@@ -1,8 +1,10 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import './NavBar.css';
-import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
-import { Link } from "react-scroll";
-import { Link as RouterLink } from "react-router-dom";
+import AnimatedIcon from "../AnimatedIcon/AnimatedIcon";
+import { Link as ScrollLink } from "react-scroll";
+import Link from "next/link";
 import { RotatingText } from 'rotating-text';
 import 'rotating-text/dist/index.css';
 import { Twirl as Hamburger } from 'hamburger-react';
@@ -67,14 +69,14 @@ const DesktopNavBar = () => {
 
     return (
         <div id="navbar">
-            <Link
+            <ScrollLink
                 to="welcome-section"
                 className="desktop-logo-link"
                 smooth={true}
                 duration={500}
             >
                 <WebsiteLogo />
-            </Link>
+            </ScrollLink>
             <div id="navlist-full">
                 {navItems.map(item => (
                     <DesktopNavItem
@@ -98,7 +100,7 @@ const DesktopNavBar = () => {
 
 const DesktopNavItem = ({ content, dest }) => {
     return (
-        <Link
+        <ScrollLink
             to={dest}
             className="navlistItem"
             activeClass="activeTab"
@@ -113,13 +115,13 @@ const DesktopNavItem = ({ content, dest }) => {
                 className="rotating-text"
                 styles={{ fontSize: '100px', whiteSpace: 'pre' }}
             />
-        </Link>
+        </ScrollLink>
     );
 }
 
 const DesktopBlogItem = () => {
     return (
-        <RouterLink to="/blogs" className="blogNavItem">
+        <Link href="/blogs" className="blogNavItem">
             <RotatingText
                 text="BLOGS"
                 stagger={0.1}
@@ -128,7 +130,7 @@ const DesktopBlogItem = () => {
                 styles={{ fontSize: '100px', whiteSpace: 'pre' }}
             />
             <AnimatedIcon icon={redirect_icon} class_name="nocss" icon_size={16} />
-        </RouterLink>
+        </Link>
     );
 }
 
@@ -140,7 +142,7 @@ const MobileNavBar = () => {
 
     return (
         <div id="navbar">
-            <Link
+            <ScrollLink
                 to="welcome-section"
                 smooth={true}
                 duration={500}
@@ -148,7 +150,7 @@ const MobileNavBar = () => {
                 onClick={() => setIsOpen(false)}
             >
                 <WebsiteLogo />
-            </Link>
+            </ScrollLink>
             <div id="hamburger-icon">
                 <Hamburger
                     color={primaryColor}
@@ -187,7 +189,7 @@ const FullScreenNav = ({ setIsOpen }) => {
         >
             <nav className="fullscreen-nav-list">
                 {navItems.map(item => (
-                    <Link
+                    <ScrollLink
                         key={item.content}
                         to={item.dest}
                         className="fullscreen-nav-item"
@@ -198,17 +200,17 @@ const FullScreenNav = ({ setIsOpen }) => {
                         onClick={handleItemClick}
                     >
                         {item.content}
-                    </Link>
+                    </ScrollLink>
                 ))}
                 {!isFreelance && (
-                    <RouterLink
-                        to="/blogs"
+                    <Link
+                        href="/blogs"
                         className="fullscreen-nav-item fullscreen-nav-blog-item"
                         onClick={handleItemClick}
                     >
                         BLOGS
                         <AnimatedIcon icon={redirect_icon} class_name="nocss" icon_size={18} />
-                    </RouterLink>
+                    </Link>
                 )}
                 <div className="fullscreen-nav-toggle-container">
                     <ModeToggle />
