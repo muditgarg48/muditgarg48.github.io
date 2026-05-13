@@ -12,7 +12,7 @@
     "embla-carousel-auto-height": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
-    "firebase": "^12.13.0",
+    "firebase": "^11.3.0",
     "framer-motion": "^12.38.0",
     "hamburger-react": "^2.5.2",
     "lottie-web": "^5.13.0",
@@ -29,8 +29,8 @@
   "scripts": {
     "dev": "next dev -p 5173",
     "build": "next build",
-    "predeploy": "set GITHUB_ACTIONS=true&& npm run build && copy out\\index.html out\\404.html",
-    "deploy": "gh-pages -d out",
+    "predeploy": "set GITHUB_ACTIONS=true&& npm run build",
+    "deploy": "copy out\\index.html out\\404.html && gh-pages -d out",
     "start": "next start",
     "lint": "eslint"
   },

@@ -10,7 +10,7 @@ import {
   increment,
   setDoc,
   Timestamp
-} from 'firebase/firestore';
+} from 'firebase/firestore/lite';
 import { db } from './firebase';
 
 export const fetchAllBlogs = async () => {
