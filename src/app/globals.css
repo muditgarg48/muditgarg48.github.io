@@ -166,3 +166,33 @@ body {
     max-width: none;
   }
 }
+
+/* Failsafe Loading Screen Styles */
+.loading-container-failsafe {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #081b29;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  margin: 0;
+  padding: 0;
+}
+
+.pulse-logo-failsafe {
+  font-family: var(--font-pacifico), cursive;
+  font-size: 3.5rem;
+  color: #00abf0;
+  font-weight: bold;
+  animation: pulse-failsafe 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-failsafe {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.6; }
+}

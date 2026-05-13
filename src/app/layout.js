@@ -50,8 +50,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${pacifico.variable} ${robotoMono.variable} ${passionOne.variable} ${archivo.variable} ${carpenter.variable} ${playwriteAR.variable}`}>
       <head>
-        <link id="favicon" rel="icon" href="/favicon-recruiter.ico" />
-        <link id="apple-touch-icon" rel="apple-touch-icon" href="/logo192-recruiter.png" />
+        <link id="favicon" rel="icon" href="favicon-recruiter.ico" />
+        <link id="apple-touch-icon" rel="apple-touch-icon" href="logo192-recruiter.png" />
         <meta name="theme-color" content="#00abf0" />
       </head>
       <body>
