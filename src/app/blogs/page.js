@@ -1,7 +1,7 @@
 import BlogWall from "../../sections/BlogWall/BlogWall";
 
 export const metadata = {
-  title: "Blog Wall | Mudit Garg",
+  title: "BlogWall",
   description: "Insights, interpretations, and journeys by Mudit Garg, absolutely no AI",
 };
 

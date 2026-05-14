@@ -166,7 +166,7 @@ const CredentialsSection = ({ credentials }) => {
     };
 
     return (
-        <div className="credentials-wrapper">
+        <section className="credentials-wrapper" aria-label="Professional Credentials and Education">
              <h3 className="about-subheading">
                 <AnimatedIcon icon={credentials_icon} link="" icon_size={24} />
                 EXPERT CREDENTIALS
@@ -187,7 +187,7 @@ const CredentialsSection = ({ credentials }) => {
                     </div>
                 ))}
             </div>
-        </div>
+        </section>
     );
 };
 
@@ -224,7 +224,7 @@ const ServicesSection = ({ services }) => {
     };
 
     return (
-        <div id="skills-section-wrapper" className="services-wrapper">
+        <section id="skills-section-wrapper" className="services-wrapper" aria-label="Freelance Services Offered">
              <h3 className="about-subheading">
                 <AnimatedIcon icon={services_offered_icon} link="" icon_size={24} />
                 SERVICES OFFERED
@@ -235,7 +235,9 @@ const ServicesSection = ({ services }) => {
                         <div
                             key={service.id}
                             className={`skill-tab-item ${activeService === service.id ? 'active' : ''}`}
-                            onClick={() => setActiveService(service.id)}
+                            onClick={() => setActiveCategory ? setActiveCategory(service.id) : setActiveService(service.id)}
+                            role="button"
+                            tabIndex={0}
                         >
                             <span>{service.title}</span>
                             {activeService === service.id && (
@@ -278,7 +280,7 @@ const ServicesSection = ({ services }) => {
                     </AnimatePresence>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

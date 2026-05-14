@@ -1,7 +1,7 @@
 import BlogPublish from "../../../sections/BlogPublish/BlogPublish";
 
 export const metadata = {
-  title: "Verifying Author... | Mudit Garg",
+  title: "Verifying Author...",
   robots: "noindex, nofollow",
 };
 

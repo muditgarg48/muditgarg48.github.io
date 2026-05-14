@@ -26,7 +26,7 @@ const ProcessSection = ({ steps }) => {
     if (!steps || steps.length === 0) return null;
 
     return (
-        <div id="process-section">
+        <section id="process-section" aria-label="Freelance Project Methodology">
             <div className="process-content">
                 <SectionHeading section_name="PROCESS" />
                 
@@ -60,7 +60,7 @@ const ProcessSection = ({ steps }) => {
                     ))}
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

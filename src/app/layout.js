@@ -70,6 +70,23 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#00abf0" />
       </head>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Mudit Garg",
+              "url": "https://muditgarg48.github.io",
+              "jobTitle": "Software Engineer",
+              "sameAs": [
+                "https://github.com/muditgarg48",
+                "https://linkedin.com/in/muditgarg48"
+              ],
+              "description": "Software Engineer specializing in building high-performance scalable applications and full-stack web solutions."
+            })
+          }}
+        />
         <SiteModeProvider>
           {children}
         </SiteModeProvider>

@@ -22,14 +22,14 @@ const TestimonialsSection = ({ testimonials }) => {
     if (!testimonials || testimonials.length === 0) return null;
 
     return (
-        <div id="testimonials-section">
+        <section id="testimonials-section" aria-label="Client Testimonials and Reviews">
             <div className="testimonials-content">
                 <SectionHeading section_name="TESTIMONIALS" />
                 
                 <div className="testimonials-carousel-wrapper" ref={emblaRef}>
                     <div className="testimonials-carousel-container">
                         {testimonials.map((testimonial, index) => (
-                            <div className="testimonial-slide" key={index}>
+                            <div className="testimonial-slide" key={index} itemScope itemType="https://schema.org/Review">
                                 <div className="testimonial-modern-layout">
                                     <div className="testimonial-visual-column">
                                         <div className="visual-graphic-circle">
@@ -48,10 +48,10 @@ const TestimonialsSection = ({ testimonials }) => {
                                             <QuoteIcon size={60} />
                                         </div>
                                         
-                                        <p className="testimonial-quote-modern">"{testimonial.quote}"</p>
+                                        <p className="testimonial-quote-modern" itemProp="reviewBody">"{testimonial.quote}"</p>
                                         
-                                        <div className="testimonial-branding">
-                                            <h3 className="branding-business">{testimonial.name}</h3>
+                                        <div className="testimonial-branding" itemProp="author" itemScope itemType="https://schema.org/Person">
+                                            <h3 className="branding-business" itemProp="name">{testimonial.name}</h3>
                                             <div className="branding-meta">
                                                 <span className="meta-name">{testimonial.business}</span>
                                                 {testimonial.designation && (
@@ -64,10 +64,10 @@ const TestimonialsSection = ({ testimonials }) => {
                                         </div>
 
                                         <div className="testimonial-controls">
-                                            <button className="control-btn prev" onClick={scrollPrev}>
+                                            <button className="control-btn prev" onClick={scrollPrev} aria-label="Previous testimonial">
                                                 <ArrowLeftIcon />
                                             </button>
-                                            <button className="control-btn next" onClick={scrollNext}>
+                                            <button className="control-btn next" onClick={scrollNext} aria-label="Next testimonial">
                                                 <ArrowRightIcon />
                                             </button>
                                         </div>
@@ -78,7 +78,7 @@ const TestimonialsSection = ({ testimonials }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

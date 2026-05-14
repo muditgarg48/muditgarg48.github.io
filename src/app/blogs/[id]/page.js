@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
 
   if (!blog) {
     return {
-      title: "Blog Not Found | Mudit Garg",
+      title: "Not Found | BlogWall",
     };
   }
 
@@ -35,6 +35,32 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function BlogDetailPage() {
-  return <BlogDetail />;
+export default async function BlogDetailPage({ params }) {
+  const { id } = await params;
+  const blog = await fetchBlogById(id);
+
+  return (
+    <>
+      {blog && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": blog.title,
+              "description": blog.subtitle,
+              "author": {
+                "@type": "Person",
+                "name": "Mudit Garg"
+              },
+              "datePublished": blog.createdAt?.toDate ? blog.createdAt.toDate().toISOString() : blog.createdAt,
+              "url": `https://muditgarg48.github.io/blogs/${id}`
+            })
+          }}
+        />
+      )}
+      <BlogDetail />
+    </>
+  );
 }
