@@ -39,8 +39,23 @@ const carpenter = localFont({
 });
 
 export const metadata = {
-  title: "Mudit Garg",
-  description: "Mudit Garg's Portfolio Website",
+  metadataBase: new URL("https://muditgarg48.github.io"),
+  title: {
+    default: "Mudit Garg | Software Engineer",
+    template: "%s | Mudit Garg"
+  },
+  description: "Portfolio of Mudit Garg, a Software Engineer specializing in building high-performance scalable applications.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Mudit Garg | Portfolio",
+    description: "Software Engineer Portfolio",
+    url: "https://muditgarg48.github.io",
+    siteName: "Mudit Garg",
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 import { SiteModeProvider } from "../context/SiteModeContext";

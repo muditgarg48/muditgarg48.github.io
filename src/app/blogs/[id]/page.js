@@ -19,13 +19,18 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${blog.title} | Mudit Garg's Blog`,
+    title: blog.title,
     description: blog.subtitle || `Read ${blog.title} on Mudit Garg's portfolio.`,
+    alternates: {
+      canonical: `/blogs/${id}`,
+    },
     openGraph: {
       title: blog.title,
       description: blog.subtitle,
+      url: `https://muditgarg48.github.io/blogs/${id}`,
       type: 'article',
       publishedTime: blog.createdAt?.toDate ? blog.createdAt.toDate().toISOString() : blog.createdAt,
+      authors: ["Mudit Garg"],
     },
   };
 }
