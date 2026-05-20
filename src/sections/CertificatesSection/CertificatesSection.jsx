@@ -114,7 +114,7 @@ const CertificateCard = memo(({ certificate, isFlipped, onFlip }) => {
             setIsLoading(true);
             const loadPDF = async (certi) => {
                 try {
-                    const documentEndPoint = 'https://muditgarg48.github.io/portfolio_data/documents/';
+                    const documentEndPoint = 'https://muditgarg48.github.io/portfolio_data/documents/certifications';
                     const doc = await fetch(`${documentEndPoint}${certi}`);
                     setPdfFile(doc.url);
                 } catch (error) {
