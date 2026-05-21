@@ -66,12 +66,12 @@ export function SiteModeProvider({ children }) {
     const themeColor = document.querySelector('meta[name="theme-color"]');
 
     if (mode === 'freelance') {
-      if (favicon) favicon.href = `favicon-freelance.ico?v=${Date.now()}`;
-      if (appleTouchIcon) appleTouchIcon.href = `logo192-freelance.png?v=${Date.now()}`;
+      if (favicon) favicon.href = `/favicon-freelance.ico?v=${Date.now()}`;
+      if (appleTouchIcon) appleTouchIcon.href = `/logo192-freelance.png?v=${Date.now()}`;
       if (themeColor) themeColor.setAttribute('content', '#2d5a3d');
     } else {
-      if (favicon) favicon.href = `favicon-recruiter.ico?v=${Date.now()}`;
-      if (appleTouchIcon) appleTouchIcon.href = `logo192-recruiter.png?v=${Date.now()}`;
+      if (favicon) favicon.href = `/favicon-recruiter.ico?v=${Date.now()}`;
+      if (appleTouchIcon) appleTouchIcon.href = `/logo192-recruiter.png?v=${Date.now()}`;
       if (themeColor) themeColor.setAttribute('content', '#00abf0');
     }
   }, [mode, applyPalette]);
@@ -81,7 +81,7 @@ export function SiteModeProvider({ children }) {
   }, []);
 
   return (
-    <SiteModeContext.Provider value={{ mode, toggleMode, isFreelance, primaryColor }}>
+    <SiteModeContext.Provider value={{ mode, toggleMode, setMode, isFreelance, primaryColor }}>
       {children}
     </SiteModeContext.Provider>
   );

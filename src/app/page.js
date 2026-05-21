@@ -1,4 +1,5 @@
 import HomePage from "../sections/HomePage/HomePage";
+import { fetchAllFreelanceProjects } from "../services/freelanceUtils";
 
 const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
@@ -12,7 +13,7 @@ const DATA_FILES = {
   about: 'about_data.json',
   welcome: 'welcome_data.json',
   // Freelance
-  freelanceProjects: 'freelance_projects_data.json',
+  // freelanceProjects: 'freelance_projects_data.json',
   freelanceProcess: 'freelance_process_data.json',
   freelanceAbout: 'freelance_about_data.json',
   freelanceServices: 'freelance_services_data.json',
@@ -57,7 +58,7 @@ export default async function Page() {
       aboutMeData={data.about.about}
       welcomeData={data.welcome.welcome}
       // Freelance data
-      freelanceProjectsData={data.freelanceProjects.projects || []}
+      freelanceProjectsData={await fetchAllFreelanceProjects()}
       freelanceProcessData={data.freelanceProcess.process || []}
       freelanceAboutData={data.freelanceAbout.about || {}}
       freelanceServicesData={data.freelanceServices.services || []}
