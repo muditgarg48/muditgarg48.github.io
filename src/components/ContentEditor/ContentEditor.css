@@ -71,7 +71,9 @@
 .content-editor-preview-text,
 .content-editor-preview-image,
 .content-editor-preview-code,
-.content-editor-preview-link {
+.content-editor-preview-link,
+.content-editor-preview-quote,
+.content-editor-preview-subheading {
   display: flex;
   align-items: center;
   gap: 0.4rem;

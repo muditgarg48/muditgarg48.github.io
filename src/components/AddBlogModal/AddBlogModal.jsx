@@ -10,7 +10,8 @@ const CONTENT_TYPES = {
   IMAGE: 'image',
   CODE: 'code',
   LINK: 'link',
-  QUOTE: 'quote'
+  QUOTE: 'quote',
+  SUBHEADING: 'subheading'
 };
 
 const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
@@ -27,7 +28,7 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   
   // Content editor state
-  const [contentType, setContentType] = useState(null);
+  const [contentType, setContentType] = useState(CONTENT_TYPES.TEXT);
   const [textValue, setTextValue] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -37,6 +38,7 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
   const [linkPlaceholder, setLinkPlaceholder] = useState('');
   const [linkValue, setLinkValue] = useState('');
   const [quoteValue, setQuoteValue] = useState('');
+  const [subheadingValue, setSubheadingValue] = useState('');
   const [editingContentIndex, setEditingContentIndex] = useState(null);
 
   useEffect(() => {
@@ -181,6 +183,16 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
           value: quoteValue.trim()
         };
 
+      case CONTENT_TYPES.SUBHEADING:
+        if (!subheadingValue.trim()) {
+          alert('Please enter subheading content');
+          return null;
+        }
+        return {
+          type: 'subheading',
+          value: subheadingValue.trim()
+        };
+
       default:
         return null;
     }
@@ -205,7 +217,7 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
   };
 
   const resetContentForm = () => {
-    setContentType(null);
+    setContentType(CONTENT_TYPES.TEXT);
     setTextValue('');
     setImageFile(null);
     setImagePreview(null);
@@ -215,6 +227,7 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
     setLinkPlaceholder('');
     setLinkValue('');
     setQuoteValue('');
+    setSubheadingValue('');
     setEditingContentIndex(null);
   };
 
@@ -242,6 +255,9 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
         break;
       case 'quote':
         setQuoteValue(contentItem.value);
+        break;
+      case 'subheading':
+        setSubheadingValue(contentItem.value);
         break;
       default:
         break;
@@ -454,55 +470,59 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
           <ContentEditor content={content} onChange={setContent} onEditContent={handleEditContent} />
           
           <div className="add-blog-content-form">
-            <div className="add-content-type-selector">
-              <h3 className="add-content-type-title">Select Content Type</h3>
-              <div className="add-content-type-grid">
-                <button
-                  type="button"
-                  className={`add-content-type-option ${contentType === CONTENT_TYPES.TEXT ? 'selected' : ''}`}
-                  onClick={() => setContentType(CONTENT_TYPES.TEXT)}
-                >
-                  <span className="add-content-type-icon">📝</span>
-                  <span className="add-content-type-label">Text</span>
-                </button>
-                <button
-                  type="button"
-                  className={`add-content-type-option ${contentType === CONTENT_TYPES.IMAGE ? 'selected' : ''}`}
-                  onClick={() => setContentType(CONTENT_TYPES.IMAGE)}
-                >
-                  <span className="add-content-type-icon">🖼️</span>
-                  <span className="add-content-type-label">Image</span>
-                </button>
-                <button
-                  type="button"
-                  className={`add-content-type-option ${contentType === CONTENT_TYPES.CODE ? 'selected' : ''}`}
-                  onClick={() => setContentType(CONTENT_TYPES.CODE)}
-                >
-                  <span className="add-content-type-icon">💻</span>
-                  <span className="add-content-type-label">Code</span>
-                </button>
-                <button
-                  type="button"
-                  className={`add-content-type-option ${contentType === CONTENT_TYPES.LINK ? 'selected' : ''}`}
-                  onClick={() => setContentType(CONTENT_TYPES.LINK)}
-                >
-                  <span className="add-content-type-icon">🔗</span>
-                  <span className="add-content-type-label">Link</span>
-                </button>
-                <button
-                  type="button"
-                  className={`add-content-type-option ${contentType === CONTENT_TYPES.QUOTE ? 'selected' : ''}`}
-                  onClick={() => setContentType(CONTENT_TYPES.QUOTE)}
-                >
-                  <span className="add-content-type-icon">💬</span>
-                  <span className="add-content-type-label">Quote</span>
-                </button>
-              </div>
+            <div className="add-content-tabs-grid">
+              <button
+                type="button"
+                className={`add-content-type-option ${contentType === CONTENT_TYPES.TEXT ? 'selected' : ''}`}
+                onClick={() => setContentType(CONTENT_TYPES.TEXT)}
+              >
+                <span className="add-content-type-icon">📝</span>
+                <span className="add-content-type-label">Text</span>
+              </button>
+              <button
+                type="button"
+                className={`add-content-type-option ${contentType === CONTENT_TYPES.IMAGE ? 'selected' : ''}`}
+                onClick={() => setContentType(CONTENT_TYPES.IMAGE)}
+              >
+                <span className="add-content-type-icon">🖼️</span>
+                <span className="add-content-type-label">Image</span>
+              </button>
+              <button
+                type="button"
+                className={`add-content-type-option ${contentType === CONTENT_TYPES.CODE ? 'selected' : ''}`}
+                onClick={() => setContentType(CONTENT_TYPES.CODE)}
+              >
+                <span className="add-content-type-icon">💻</span>
+                <span className="add-content-type-label">Code</span>
+              </button>
+              <button
+                type="button"
+                className={`add-content-type-option ${contentType === CONTENT_TYPES.LINK ? 'selected' : ''}`}
+                onClick={() => setContentType(CONTENT_TYPES.LINK)}
+              >
+                <span className="add-content-type-icon">🔗</span>
+                <span className="add-content-type-label">Link</span>
+              </button>
+              <button
+                type="button"
+                className={`add-content-type-option ${contentType === CONTENT_TYPES.QUOTE ? 'selected' : ''}`}
+                onClick={() => setContentType(CONTENT_TYPES.QUOTE)}
+              >
+                <span className="add-content-type-icon">💬</span>
+                <span className="add-content-type-label">Quote</span>
+              </button>
+              <button
+                type="button"
+                className={`add-content-type-option ${contentType === CONTENT_TYPES.SUBHEADING ? 'selected' : ''}`}
+                onClick={() => setContentType(CONTENT_TYPES.SUBHEADING)}
+              >
+                <span className="add-content-type-icon">H</span>
+                <span className="add-content-type-label">Subheading</span>
+              </button>
             </div>
 
             {contentType && (
-              <>
-                <div className="add-content-form-divider"></div>
+              <div className="add-content-tab-panel">
                 {contentType === CONTENT_TYPES.TEXT && (
                   <div className="modal-field-group">
                     <label htmlFor="text-content" className="modal-label">
@@ -642,6 +662,22 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
                   </div>
                 )}
 
+                {contentType === CONTENT_TYPES.SUBHEADING && (
+                  <div className="modal-field-group">
+                    <label htmlFor="subheading-content" className="modal-label">
+                      Subheading Content <span className="add-blog-required">*</span>
+                    </label>
+                    <input
+                      id="subheading-content"
+                      type="text"
+                      value={subheadingValue}
+                      onChange={(e) => setSubheadingValue(e.target.value)}
+                      placeholder="Enter your subheading..."
+                      className="modal-input"
+                    />
+                  </div>
+                )}
+
                 <div className="add-content-actions">
                   <button
                     type="button"
@@ -658,7 +694,7 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
                     {editingContentIndex !== null ? 'Update Content' : 'Add Content'}
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>

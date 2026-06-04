@@ -76,6 +76,16 @@ const ContentEditor = ({ content = [], onChange, onEditContent }) => {
           </div>
         );
 
+      case 'subheading':
+        return (
+          <div className="content-editor-preview-subheading">
+            <span className="content-editor-preview-label">Subheading:</span>
+            <span className="content-editor-preview-value">
+              {item.value.length > 100 ? `${item.value.substring(0, 100)}...` : item.value}
+            </span>
+          </div>
+        );
+
       default:
         return null;
     }

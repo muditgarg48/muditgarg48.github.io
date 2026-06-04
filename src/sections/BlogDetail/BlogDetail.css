@@ -476,6 +476,21 @@
   max-width: 80%;
 }
 
+.blog-content-subheading {
+  margin: 2.5rem 0 1rem 0;
+  text-align: left;
+}
+
+.blog-content-subheading h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--font-primary-color);
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
 .blog-detail-error {
   display: flex;
   flex-direction: column;
@@ -535,6 +550,14 @@
 
   .blog-content-text p {
     font-size: 0.9rem;
+  }
+
+  .blog-content-subheading {
+    margin: 2rem 0 0.8rem 0;
+  }
+
+  .blog-content-subheading h2 {
+    font-size: 1.25rem;
   }
 
   .blog-content-code-block {

@@ -61,6 +61,16 @@ export const processBlogContent = async (content, authorId, blogId) => {
           placeholder: item.placeholder,
           value: item.value
         };
+      } else if (item.type === 'quote') {
+        return {
+          type: 'quote',
+          value: item.value
+        };
+      } else if (item.type === 'subheading') {
+        return {
+          type: 'subheading',
+          value: item.value
+        };
       }
       return null;
     })

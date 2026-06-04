@@ -27,7 +27,7 @@
     "rotating-text": "^1.0.4"
   },
   "scripts": {
-    "dev": "next dev -p 5173",
+    "dev": "next dev -p 5172",
     "build": "next build",
     "predeploy": "set GITHUB_ACTIONS=true&& npm run build",
     "deploy": "copy out\\index.html out\\404.html && gh-pages -d out",

@@ -176,6 +176,13 @@ const BlogDetail = () => {
           </div>
         );
 
+      case 'subheading':
+        return (
+          <div key={index} className="blog-content-subheading">
+            <h2>{block.value}</h2>
+          </div>
+        );
+
       default:
         return null;
     }
