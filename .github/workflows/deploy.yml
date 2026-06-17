@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+  schedule:
+    # Rebuild every 3 hours so new blog routes are generated for GitHub Pages static export
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write

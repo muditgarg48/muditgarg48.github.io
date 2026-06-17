@@ -348,7 +348,9 @@ const AddBlogModal = ({ onClose, editMode = false, blogData = null }) => {
         });
 
         // Success - close modal and reset form
-        alert('Blog published successfully!');
+        alert(
+          'Blog published successfully! It is live on the Blog Wall now. On muditgarg48.github.io the post URL will work within about 3 hours, or sooner.'
+        );
         onClose();
 
         // Reset form
