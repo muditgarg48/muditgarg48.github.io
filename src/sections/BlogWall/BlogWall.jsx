@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import './BlogWall.css';
 import { fetchAllBlogs, fetchAuthorById, getAuthorId, getAuthorDisplayName, formatBlogDate, isBlogLiked, shareBlog } from '../../services/blogUtils';
@@ -220,12 +220,49 @@ const BlogWall = () => {
                   <h3 className="blog-card-title">
                     {blog.title || 'Untitled'}
                   </h3>
-                  {authors[blog.id] && getAuthorDisplayName(authors[blog.id]) && (
+                  {blog.authorDisplayName && blog.authorDisplayName !== 'Unknown Author' && (
                     <div className="blog-card-author">
                       <span className="blog-card-author-label">By</span>
-                      <span className="blog-card-author-name">{getAuthorDisplayName(authors[blog.id])}</span>
+                      <span className="blog-card-author-name">{blog.authorDisplayName}</span>
                     </div>
                   )}
+                </div>
+
+                <div className="blog-card-meta-row">
+                  <span className="blog-card-date">
+                    {formatBlogDate(blog.createdAt)}
+                  </span>
+                  <div className="blog-card-stats">
+                    <div className="blog-card-stat-display">
+                      <div className="blog-card-stat-icon" title="Views">
+                        <EyeIcon />
+                      </div>
+                      <span className="blog-card-stats-text">
+                        {blog.views || 0}
+                      </span>
+                    </div>
+                    {blog.likes != null && (
+                      <div className={`blog-card-stat-display ${isBlogLiked(blog.id) ? 'liked' : ''}`}>
+                        <div className="blog-card-like-icon" title="Likes">
+                          <HeartIcon filled={isBlogLiked(blog.id)} />
+                        </div>
+                        <span className="blog-card-stats-text">
+                          {blog.likes}
+                        </span>
+                      </div>
+                    )}
+                    <div className="blog-card-stat-item">
+                      <button
+                        className="blog-card-share-button"
+                        onClick={(e) => handleShare(e, blog.id)}
+                        title="Share blog"
+                      >
+                        <div className="blog-card-share-icon">
+                          <ShareIcon />
+                        </div>
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 
                 {blog.subtitle && (
@@ -240,8 +277,8 @@ const BlogWall = () => {
                   </div>
                 )}
 
-                <div className="blog-card-tags-stats-row">
-                  {blog.tags?.length > 0 && (
+                {blog.tags?.length > 0 && (
+                  <div className="blog-card-tags-row">
                     <div className="blog-card-tags">
                       {blog.tags.map((tag, index) => (
                         <span key={index} className="blog-card-tag">
@@ -249,44 +286,8 @@ const BlogWall = () => {
                         </span>
                       ))}
                     </div>
-                  )}
-                  <div className="blog-card-meta-stats">
-                    <span className="blog-card-date-pill">
-                      {formatBlogDate(blog.createdAt)}
-                    </span>
-                    <div className="blog-card-stats">
-                      <div className="blog-card-stat-item">
-                        <div className="blog-card-stat-icon" title="Views">
-                          <EyeIcon />
-                        </div>
-                        <span className="blog-card-stats-text">
-                          {blog.views || 0}
-                        </span>
-                      </div>
-                      {blog.likes != null && (
-                        <div className={`blog-card-stat-item ${isBlogLiked(blog.id) ? 'liked' : ''}`}>
-                          <div className="blog-card-like-icon" title="Likes">
-                            <HeartIcon filled={isBlogLiked(blog.id)} />
-                          </div>
-                          <span className="blog-card-stats-text">
-                            {blog.likes}
-                          </span>
-                        </div>
-                      )}
-                      <div className="blog-card-stat-item">
-                        <button
-                          className="blog-card-share-button"
-                          onClick={(e) => handleShare(e, blog.id)}
-                          title="Share blog"
-                        >
-                          <div className="blog-card-share-icon">
-                            <ShareIcon />
-                          </div>
-                        </button>
-                      </div>
-                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </BlogPostCard>
           ))}

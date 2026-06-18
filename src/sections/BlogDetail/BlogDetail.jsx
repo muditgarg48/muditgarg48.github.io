@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import './BlogDetail.css';
-import { fetchBlogById, fetchAuthorById, fetchAllBlogs, getAuthorId, getAuthorDisplayName, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
+import { fetchBlogById, fetchAuthorById, fetchAdjacentBlogs, getAuthorId, getAuthorDisplayName, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
 import BackIcon from '../../assets/svg/BackIcon';
 import HeartIcon from '../../assets/svg/HeartIcon';
 import EyeIcon from '../../assets/svg/EyeIcon';
@@ -13,6 +13,9 @@ import Toast from '../../components/Toast/Toast';
 import Modal from '../../components/Modal/Modal';
 import EditVerificationModal from '../../components/EditVerificationModal/EditVerificationModal';
 import AddBlogModal from '../../components/AddBlogModal/AddBlogModal';
+import BlogSectionNav from '../../components/BlogSectionNav/BlogSectionNav';
+
+const MIN_PARAGRAPH_INDENT_CHARS = 120;
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -29,12 +32,19 @@ const BlogDetail = () => {
   const [showEditVerificationModal, setShowEditVerificationModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const viewCountedRef = useRef(false);
+  const headerRef = useRef(null);
+  const headerSentinelRef = useRef(null);
+  const maxHeaderOffsetRef = useRef(0);
+  const [headerOffset, setHeaderOffset] = useState(0);
+  const [isHeaderPinned, setIsHeaderPinned] = useState(false);
 
   useEffect(() => {
     const loadBlog = async () => {
       try {
         setLoading(true);
         setError(null);
+        setPrevBlog(null);
+        setNextBlog(null);
         const fetchedBlog = await fetchBlogById(id);
         if (!fetchedBlog) {
           setError('Blog not found');
@@ -85,40 +95,127 @@ const BlogDetail = () => {
   }, [id, blog, loading, error]);
 
   useEffect(() => {
-    const loadNavigationBlogs = async () => {
+    const loadAdjacentBlogs = async () => {
       if (!blog) return;
 
       try {
-        const allBlogs = await fetchAllBlogs();
-        const currentIndex = allBlogs.findIndex(b => b.id === id);
-
-        if (currentIndex > 0) {
-          setPrevBlog(allBlogs[currentIndex - 1]);
-        } else {
-          setPrevBlog(null);
-        }
-
-        if (currentIndex < allBlogs.length - 1) {
-          setNextBlog(allBlogs[currentIndex + 1]);
-        } else {
-          setNextBlog(null);
-        }
+        const { prev, next } = await fetchAdjacentBlogs(blog);
+        setPrevBlog(prev);
+        setNextBlog(next);
       } catch (err) {
-        console.error('Error loading navigation blogs:', err);
+        console.error('Error loading adjacent blogs:', err);
       }
     };
 
-    loadNavigationBlogs();
-  }, [blog, id]);
+    loadAdjacentBlogs();
+  }, [blog]);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const updateHeaderOffset = () => {
+      const height = header.offsetHeight;
+      maxHeaderOffsetRef.current = Math.max(maxHeaderOffsetRef.current, height);
+      const offset = maxHeaderOffsetRef.current;
+
+      setHeaderOffset(offset);
+      document.documentElement.style.setProperty('--blog-header-offset', `${offset}px`);
+      document.documentElement.style.scrollPaddingTop = `${offset + 16}px`;
+    };
+
+    updateHeaderOffset();
+
+    const resizeObserver = new ResizeObserver(updateHeaderOffset);
+    resizeObserver.observe(header);
+
+    const sentinel = headerSentinelRef.current;
+    const pinObserver = sentinel
+      ? new IntersectionObserver(
+          ([entry]) => {
+            setIsHeaderPinned(!entry.isIntersecting);
+            requestAnimationFrame(updateHeaderOffset);
+          },
+          { threshold: 0 }
+        )
+      : null;
+
+    if (sentinel && pinObserver) {
+      pinObserver.observe(sentinel);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+      pinObserver?.disconnect();
+      maxHeaderOffsetRef.current = 0;
+      setHeaderOffset(0);
+      document.documentElement.style.removeProperty('--blog-header-offset');
+      document.documentElement.style.removeProperty('scroll-padding-top');
+    };
+  }, [blog]);
+
+  const firstTextBlockIndex = blog?.content?.findIndex((block) => block.type === 'text') ?? -1;
+
+  const sectionNavItems = blog?.content
+    ?.map((block, index) =>
+      block.type === 'subheading'
+        ? { id: `blog-section-${index}`, label: block.value }
+        : null
+    )
+    .filter(Boolean) ?? [];
+
+  const handleToggleLike = useCallback(async () => {
+    if (isLiking || blog?.likes == null) return;
+
+    setIsLiking(true);
+    const previousLiked = isLiked;
+    const previousLikes = blog.likes || 0;
+
+    setIsLiked(!previousLiked);
+    setBlog((prev) => ({
+      ...prev,
+      likes: previousLiked ? previousLikes - 1 : previousLikes + 1,
+    }));
+
+    try {
+      await toggleBlogLike(id);
+    } catch (err) {
+      console.error('Error toggling like:', err);
+      setIsLiked(previousLiked);
+      setBlog((prev) => ({
+        ...prev,
+        likes: previousLikes,
+      }));
+    } finally {
+      setIsLiking(false);
+    }
+  }, [blog, id, isLiked, isLiking]);
 
   const renderContentBlock = (block, index) => {
     switch (block.type) {
-      case 'text':
+      case 'text': {
+        const isLead = index === firstTextBlockIndex;
+        const textLength = block.value?.length ?? 0;
+        const shouldIndent = !isLead && textLength >= MIN_PARAGRAPH_INDENT_CHARS;
+        const className = [
+          'blog-content-text',
+          isLead && 'blog-content-text--lead',
+          shouldIndent && 'blog-content-text--indent',
+        ].filter(Boolean).join(' ');
+
         return (
-          <div key={index} className="blog-content-text">
-            <p>{block.value}</p>
+          <div key={index} className={className}>
+            {isLead && textLength > 0 ? (
+              <p>
+                <span className="blog-drop-cap" aria-hidden="true">{block.value[0]}</span>
+                {block.value.slice(1)}
+              </p>
+            ) : (
+              <p>{block.value}</p>
+            )}
           </div>
         );
+      }
 
       case 'image':
         return (
@@ -178,8 +275,9 @@ const BlogDetail = () => {
 
       case 'subheading':
         return (
-          <div key={index} className="blog-content-subheading">
+          <div key={index} id={`blog-section-${index}`} className="blog-content-subheading">
             <h2>{block.value}</h2>
+            <span className="blog-subheading-rule" aria-hidden="true" />
           </div>
         );
 
@@ -235,7 +333,12 @@ const BlogDetail = () => {
   }
 
   return (
-    <div className="blog-detail">
+    <div className="blog-detail-page">
+      {sectionNavItems.length > 0 && (
+        <BlogSectionNav sections={sectionNavItems} headerOffset={headerOffset} />
+      )}
+
+      <div className="blog-detail">
       <button 
         className="back-button"
         onClick={() => router.push('/blogs')}
@@ -248,8 +351,13 @@ const BlogDetail = () => {
         <div className="back-button-glow"></div>
       </button>
 
-      <article className="blog-detail-content">
-        <header className="blog-detail-header">
+      <article className="blog-detail-article">
+        <div ref={headerSentinelRef} className="blog-header-sentinel" aria-hidden="true" />
+
+        <header
+          ref={headerRef}
+          className={`blog-detail-header${isHeaderPinned ? ' is-pinned' : ''}`}
+        >
           <div className="blog-detail-title-author-row">
             <h1 className="blog-detail-title">
               {blog.title || 'Untitled'}
@@ -263,85 +371,56 @@ const BlogDetail = () => {
           </div>
 
           <div className="blog-detail-stats-row">
-            <div className="blog-detail-meta-stats">
-              <span className="blog-detail-date-pill">
-                {formatBlogDate(blog.createdAt, { year: 'numeric', month: 'long', day: 'numeric' }, true)}
-              </span>
-              <div className="blog-detail-stats">
+            <span className="blog-detail-date">
+              {formatBlogDate(blog.createdAt, { year: 'numeric', month: 'long', day: 'numeric' }, true)}
+            </span>
+            <div className="blog-detail-stats">
+              <div className="blog-stat-display">
+                <div className="blog-stat-icon" title="Views">
+                  <EyeIcon />
+                </div>
+                <span className="blog-detail-stats-text">
+                  {blog.views || 0}
+                </span>
+              </div>
+              {blog.likes != null && (
                 <div className="blog-stat-item">
-                  <div className="blog-stat-icon" title="Views">
-                    <EyeIcon />
-                  </div>
+                  <button
+                    className={`blog-like-button ${isLiked ? 'liked' : ''}`}
+                    onClick={handleToggleLike}
+                    disabled={isLiking}
+                    title={isLiked ? 'Unlike this blog' : 'Like this blog'}
+                  >
+                    <div className="blog-like-icon">
+                      <HeartIcon filled={isLiked} />
+                    </div>
+                  </button>
                   <span className="blog-detail-stats-text">
-                    {blog.views || 0}
+                    {blog.likes}
                   </span>
                 </div>
-                {blog.likes != null && (
-                  <div className="blog-stat-item">
-                    <button
-                      className={`blog-like-button ${isLiked ? 'liked' : ''}`}
-                      onClick={async () => {
-                        if (isLiking) return;
-                        
-                        setIsLiking(true);
-                        const previousLiked = isLiked;
-                        const previousLikes = blog.likes || 0;
-                        
-                        // Optimistic update
-                        setIsLiked(!previousLiked);
-                        setBlog(prev => ({
-                          ...prev,
-                          likes: previousLiked ? previousLikes - 1 : previousLikes + 1
-                        }));
-                        
-                        try {
-                          await toggleBlogLike(id);
-                        } catch (err) {
-                          console.error('Error toggling like:', err);
-                          // Revert optimistic update on error
-                          setIsLiked(previousLiked);
-                          setBlog(prev => ({
-                            ...prev,
-                            likes: previousLikes
-                          }));
-                        } finally {
-                          setIsLiking(false);
-                        }
-                      }}
-                      disabled={isLiking}
-                      title={isLiked ? 'Unlike this blog' : 'Like this blog'}
-                    >
-                      <div className="blog-like-icon">
-                        <HeartIcon filled={isLiked} />
-                      </div>
-                    </button>
-                    <span className="blog-detail-stats-text">
-                      {blog.likes}
-                    </span>
+              )}
+              <div className="blog-stat-item">
+                <button
+                  className="blog-edit-button"
+                  onClick={handleEditClick}
+                  title="Edit blog"
+                >
+                  <div className="blog-edit-icon">
+                    ✏️
                   </div>
-                )}
-                <div className="blog-stat-item">
-                  <button
-                    className="blog-edit-button"
-                    onClick={handleEditClick}
-                    title="Edit blog"
-                  >
-                    <div className="blog-edit-icon">
-                      ✏️
-                    </div>
-                  </button>
-                </div>
-                <div className="blog-stat-item">
-                  <button
-                    className="blog-share-button"
-                    onClick={handleShare}
-                    title="Share blog"
-                  >
-                    <div className="blog-share-icon">
-                      <ShareIcon />
-                    </div>
-                  </button>
-                </div>
+                </button>
+              </div>
+              <div className="blog-stat-item">
+                <button
+                  className="blog-share-button"
+                  onClick={handleShare}
+                  title="Share blog"
+                >
+                  <div className="blog-share-icon">
+                    <ShareIcon />
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -428,6 +507,7 @@ const BlogDetail = () => {
           blogData={blog}
         />
       </Modal>
+      </div>
     </div>
   );
 };

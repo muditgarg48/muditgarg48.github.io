@@ -2,6 +2,8 @@ import {
   collection,
   query,
   orderBy,
+  where,
+  limit,
   getDocs,
   getDoc,
   doc,
@@ -31,6 +33,56 @@ export const fetchAllBlogs = async () => {
   } catch (error) {
     console.error('Error fetching all blogs:', error);
     throw error;
+  }
+};
+
+const toNavSummary = (docSnapshot) => {
+  const data = docSnapshot.data();
+  return {
+    id: docSnapshot.id,
+    title: data.title || 'Untitled',
+  };
+};
+
+/**
+ * Fetches the chronologically adjacent blogs for prev/next navigation.
+ * Prev = newer post, Next = older post (matches newest-first blog wall order).
+ */
+export const fetchAdjacentBlogs = async (blog) => {
+  if (!blog?.createdAt) {
+    return { prev: null, next: null };
+  }
+
+  try {
+    const blogsRef = collection(db, 'blogs');
+    const createdAt = blog.createdAt;
+
+    const [newerSnapshot, olderSnapshot] = await Promise.all([
+      getDocs(
+        query(
+          blogsRef,
+          where('createdAt', '>', createdAt),
+          orderBy('createdAt', 'asc'),
+          limit(1)
+        )
+      ),
+      getDocs(
+        query(
+          blogsRef,
+          where('createdAt', '<', createdAt),
+          orderBy('createdAt', 'desc'),
+          limit(1)
+        )
+      ),
+    ]);
+
+    return {
+      prev: newerSnapshot.empty ? null : toNavSummary(newerSnapshot.docs[0]),
+      next: olderSnapshot.empty ? null : toNavSummary(olderSnapshot.docs[0]),
+    };
+  } catch (error) {
+    console.error('Error fetching adjacent blogs:', error);
+    return { prev: null, next: null };
   }
 };
 
