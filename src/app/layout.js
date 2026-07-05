@@ -1,6 +1,8 @@
 import { Montserrat, Pacifico, Roboto_Mono, Passion_One, Archivo, Playwrite_AR } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SiteModeProvider } from "../context/SiteModeContext";
+import { getDefaultSiteMode, MODE_ASSETS } from "../config/siteMode";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -58,16 +60,20 @@ export const metadata = {
   },
 };
 
-import { SiteModeProvider } from "../context/SiteModeContext";
-
-
 export default function RootLayout({ children }) {
+  const defaultMode = getDefaultSiteMode();
+  const modeAssets = MODE_ASSETS[defaultMode];
+
   return (
-    <html lang="en" className={`${montserrat.variable} ${pacifico.variable} ${robotoMono.variable} ${passionOne.variable} ${archivo.variable} ${carpenter.variable} ${playwriteAR.variable}`}>
+    <html
+      lang="en"
+      data-mode={defaultMode}
+      className={`${montserrat.variable} ${pacifico.variable} ${robotoMono.variable} ${passionOne.variable} ${archivo.variable} ${carpenter.variable} ${playwriteAR.variable}`}
+    >
       <head>
-        <link id="favicon" rel="icon" href="/favicon-recruiter.ico" />
-        <link id="apple-touch-icon" rel="apple-touch-icon" href="/logo192-recruiter.png" />
-        <meta name="theme-color" content="#00abf0" />
+        <link id="favicon" rel="icon" href={modeAssets.favicon} />
+        <link id="apple-touch-icon" rel="apple-touch-icon" href={modeAssets.appleTouchIcon} />
+        <meta name="theme-color" content={modeAssets.themeColor} />
       </head>
       <body>
         <script

@@ -1,4 +1,5 @@
-:root {
+:root,
+[data-mode="recruiter"] {
   --primary-color: #00abf0;
   --secondary-color: #00acf0b4;
   --bg-color: #081b29;
@@ -9,7 +10,8 @@
   --font-primary-color: var(--primary-color);
   --font-secondary-color: var(--secondary-color);
   --font-highlight-color: #FFF5EE;
-  
+  --hello-color: yellow;
+
   /* Next.js Font Variables */
   --font-style: var(--font-montserrat), sans-serif;
   --logo-font-style: var(--font-pacifico);
@@ -17,6 +19,20 @@
   --hello-font-style: var(--font-playwrite-ar), cursive;
 
   transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+[data-mode="freelance"] {
+  --primary-color: #2d5a3d;
+  --secondary-color: #2d5a3d99;
+  --bg-color: #f8f6f1;
+  --text-color: #1c2b1e;
+  --card-bg: #eae6dc;
+  --nav-bg: #f8f6f1ee;
+
+  --font-primary-color: #2d5a3d;
+  --font-secondary-color: #2d5a3d99;
+  --font-highlight-color: #1c2b1e;
+  --hello-color: #c45720;
 }
 
 body {
@@ -174,7 +190,7 @@ body {
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #081b29;
+  background-color: var(--bg-color);
   position: fixed;
   top: 0;
   left: 0;
@@ -186,7 +202,7 @@ body {
 .pulse-logo-failsafe {
   font-family: var(--font-pacifico), cursive;
   font-size: 3.5rem;
-  color: #00abf0;
+  color: var(--primary-color);
   font-weight: bold;
   animation: pulse-failsafe 1.5s infinite ease-in-out;
 }

@@ -1,55 +1,31 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-
-const PALETTES = {
-  recruiter: {
-    '--bg-color': '#081b29',
-    '--text-color': '#ededed',
-    '--primary-color': '#00abf0',
-    '--secondary-color': '#00acf0b4',
-    '--card-bg': '#112240',
-    '--nav-bg': '#081b29ee',
-    '--font-primary-color': '#00abf0',
-    '--font-secondary-color': '#00acf0b4',
-    '--font-highlight-color': '#FFF5EE',
-    '--hello-color': 'yellow',
-  },
-  freelance: {
-    '--bg-color': '#f8f6f1',
-    '--text-color': '#1c2b1e',
-    '--primary-color': '#2d5a3d',
-    '--secondary-color': '#2d5a3d99',
-    '--card-bg': '#eae6dc',
-    '--nav-bg': '#f8f6f1ee',
-    '--font-primary-color': '#2d5a3d',
-    '--font-secondary-color': '#2d5a3d99',
-    '--font-highlight-color': '#1c2b1e',
-    '--hello-color': '#c45720',
-  },
-};
+import { getDefaultSiteMode, MODE_ASSETS } from '../config/siteMode';
 
 const SiteModeContext = createContext(undefined);
 
-export function SiteModeProvider({ children }) {
-  const defaultMode =
-    process.env.NEXT_PUBLIC_DEFAULT_MODE === 'freelance' ? 'freelance' : 'recruiter';
+function updateModeAssets(mode) {
+  document.documentElement.setAttribute('data-mode', mode);
 
+  const assets = MODE_ASSETS[mode];
+  const favicon = document.getElementById('favicon');
+  const appleTouchIcon = document.getElementById('apple-touch-icon');
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+
+  if (favicon) favicon.href = assets.favicon;
+  if (appleTouchIcon) appleTouchIcon.href = assets.appleTouchIcon;
+  if (themeColor) themeColor.setAttribute('content', assets.themeColor);
+}
+
+export function SiteModeProvider({ children }) {
+  const defaultMode = getDefaultSiteMode();
   const [mode, setMode] = useState(defaultMode);
 
   const isFreelance = mode === 'freelance';
-  const primaryColor = PALETTES[mode]['--primary-color'];
-
-  const applyPalette = useCallback((currentMode) => {
-    const palette = PALETTES[currentMode];
-    const root = document.documentElement;
-    Object.entries(palette).forEach(([prop, value]) => {
-      root.style.setProperty(prop, value);
-    });
-  }, []);
+  const primaryColor = MODE_ASSETS[mode].primaryColor;
 
   useEffect(() => {
-    // Cleanup old service workers from previous Vite version
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         for (const registration of registrations) {
@@ -57,24 +33,11 @@ export function SiteModeProvider({ children }) {
         }
       });
     }
+  }, []);
 
-    applyPalette(mode);
-
-    // Update Favicon and Apple Touch Icon
-    const favicon = document.getElementById('favicon');
-    const appleTouchIcon = document.getElementById('apple-touch-icon');
-    const themeColor = document.querySelector('meta[name="theme-color"]');
-
-    if (mode === 'freelance') {
-      if (favicon) favicon.href = `/favicon-freelance.ico?v=${Date.now()}`;
-      if (appleTouchIcon) appleTouchIcon.href = `/logo192-freelance.png?v=${Date.now()}`;
-      if (themeColor) themeColor.setAttribute('content', '#2d5a3d');
-    } else {
-      if (favicon) favicon.href = `/favicon-recruiter.ico?v=${Date.now()}`;
-      if (appleTouchIcon) appleTouchIcon.href = `/logo192-recruiter.png?v=${Date.now()}`;
-      if (themeColor) themeColor.setAttribute('content', '#00abf0');
-    }
-  }, [mode, applyPalette]);
+  useEffect(() => {
+    updateModeAssets(mode);
+  }, [mode]);
 
   const toggleMode = useCallback(() => {
     setMode((prev) => (prev === 'recruiter' ? 'freelance' : 'recruiter'));
