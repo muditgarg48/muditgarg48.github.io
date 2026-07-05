@@ -23,6 +23,14 @@ import skillset_icon from "../../assets/icons/recruiter/skillset.json";
 import services_offered_icon from "../../assets/icons/freelance/services_offered.json";
 import credentials_icon from "../../assets/icons/freelance/credentials.json";
 
+function scrollActiveTabIntoView(tabsContainer) {
+    if (!tabsContainer || window.innerWidth > 800) return;
+    const activeTab = tabsContainer.querySelector('.skill-tab-item.active');
+    if (!activeTab) return;
+    const left = activeTab.offsetLeft - tabsContainer.clientWidth / 2 + activeTab.clientWidth / 2;
+    tabsContainer.scrollTo({ left, behavior: 'smooth' });
+}
+
 const AboutSection = ({ facts, skills, about_me, freelance_about_me, freelance_services, forcedMode }) => {
     const { isFreelance: contextIsFreelance } = useSiteMode();
     const isFreelance = forcedMode ? (forcedMode === 'freelance') : contextIsFreelance;
@@ -198,16 +206,7 @@ const ServicesSection = ({ services }) => {
     const tabsRef = useRef(null);
 
     useEffect(() => {
-        if (window.innerWidth <= 800) {
-            const activeTab = tabsRef.current?.querySelector('.skill-tab-item.active');
-            if (activeTab) {
-                activeTab.scrollIntoView({
-                    behavior: 'smooth',
-                    inline: 'center',
-                    block: 'nearest'
-                });
-            }
-        }
+        scrollActiveTabIntoView(tabsRef.current);
     }, [activeService]);
 
     const ServiceIcon = ({ type }) => {
@@ -415,16 +414,7 @@ const SkillSection = memo(({ skills }) => {
     const tabsRef = useRef(null);
 
     useEffect(() => {
-        if (window.innerWidth <= 800) {
-            const activeTab = tabsRef.current?.querySelector('.skill-tab-item.active');
-            if (activeTab) {
-                activeTab.scrollIntoView({
-                    behavior: 'smooth',
-                    inline: 'center',
-                    block: 'nearest'
-                });
-            }
-        }
+        scrollActiveTabIntoView(tabsRef.current);
     }, [activeCategory]);
 
     return (
