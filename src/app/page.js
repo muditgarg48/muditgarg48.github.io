@@ -1,6 +1,6 @@
 import HomePage from "../sections/HomePage/HomePage";
 import { fetchAllFreelanceProjects } from "../services/freelanceUtils";
-import { fetchPortfolioDataLastUpdated } from "../services/portfolioDataUtils";
+import { fetchPortfolioDataLastUpdated, enrichProjectsWithRepoLastUpdated } from "../services/portfolioDataUtils";
 
 const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
@@ -51,10 +51,12 @@ export default async function Page() {
     return <div>Error loading data. Please try again later.</div>;
   }
 
+  const projectsData = await enrichProjectsWithRepoLastUpdated(data.projects.projects);
+
   return (
     <HomePage
       factsData={data.facts.facts}
-      projectsData={data.projects.projects}
+      projectsData={projectsData}
       certificatesData={data.certificates.certificates}
       experienceData={data.experience.experiences}
       educationHistoryData={data.education.educations}

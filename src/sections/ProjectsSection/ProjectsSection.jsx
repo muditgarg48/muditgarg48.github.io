@@ -6,7 +6,7 @@ import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import FilterBar from "../../components/FilterBar/FilterBar";
 import useFiltering from "../../hooks/useFiltering";
-import { getBranchInfo, getCommitsList, getCommitDetails } from "../../services/githubCache";
+import { getCommitsList, getCommitDetails } from "../../services/githubCache";
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import git_repo from "../../assets/icons/recruiter/repo.json";
@@ -69,26 +69,6 @@ const ProjectPill = memo(({ speciality }) => {
 function formatDate(dateString) {
     const options = { year: 'numeric', month: 'short', day: '2-digit' };
     return new Date(dateString).toLocaleDateString('en-US', options);
-}
-
-function useGitHubData(github) {
-    const [lastUpdated, setLastUpdated] = useState("Fetching...");
-    const [lastUpdatedError, setLastUpdatedError] = useState(null);
-
-    useEffect(() => {
-        if (!github?.repo_owner || !github?.repo_name || !github?.repo_branch) return;
-
-        getBranchInfo(github.repo_owner, github.repo_name, github.repo_branch)
-            .then(data => {
-                setLastUpdated(formatDate(data.commit.commit.committer.date));
-            })
-            .catch(error => {
-                // We handle logging in the service layer, only log unexpected errors here if needed
-                setLastUpdatedError(error.message || error.toString());
-            });
-    }, [github]);
-
-    return { lastUpdated, lastUpdatedError };
 }
 
 const ProjectKPIs = memo(({ kpis }) => {
@@ -212,8 +192,9 @@ const CommitHistory = memo(({
 });
 
 const ProjectListItem = memo(({ project, isExpanded, onToggle }) => {
-    const { name, desc, speciality, tech_stack, kpis, github, deployment, other_btns, image, planned_tasks } = project;
-    const { lastUpdated, lastUpdatedError } = useGitHubData(github);
+    const { name, desc, speciality, tech_stack, kpis, github, deployment, other_btns, image, planned_tasks, repoLastUpdated, repoLastUpdatedError } = project;
+    const lastUpdated = repoLastUpdated;
+    const lastUpdatedError = repoLastUpdatedError;
 
     // Commit History Logic
     const [latestCommitHistory, setLatestCommitHistory] = useState([]);
@@ -288,7 +269,7 @@ const ProjectListItem = memo(({ project, isExpanded, onToggle }) => {
                 <div className="list-item-meta" suppressHydrationWarning>
                     {isPrivate ? <PrivateRibbon /> : (
                         lastUpdatedError ? <ErrorMessage error={lastUpdatedError} /> : (
-                            <ActivityTag lastUpdated={lastUpdated} />
+                            lastUpdated ? <ActivityTag lastUpdated={lastUpdated} /> : null
                         )
                     )}
                 </div>
@@ -460,31 +441,23 @@ const EmblaCarousel = memo(({ projects }) => {
 // --- Main Section ---
 
 const ProjectsSection = memo(({ projects_data }) => {
-    const [projectDates, setProjectDates] = useState({});
     const [expandedIndex, setExpandedIndex] = useState(0);
 
     const toggleExpand = (index) => {
         setExpandedIndex(current => current === index ? null : index);
     };
 
-    // Fetch all dates for sorting when "Last Updated" is selected or on load
-    useEffect(() => {
-        if (!projects_data) return;
-        const fetchAllDates = async () => {
-            const dates = { ...projectDates };
-            await Promise.all(projects_data.map(async (p) => {
-                if (p.github && p.github.repo_owner && p.github.repo_name && !dates[p.name]) {
-                    try {
-                        const data = await getBranchInfo(p.github.repo_owner, p.github.repo_name, p.github.repo_branch || 'main');
-                        dates[p.name] = new Date(data.commit.commit.committer.date).getTime();
-                    } catch (e) {
-                        dates[p.name] = null; // Mark as null for error/missing
-                    }
-                }
-            }));
-            setProjectDates(dates);
-        };
-        fetchAllDates();
+    const projectDates = useMemo(() => {
+        if (!projects_data) return {};
+        const dates = {};
+        projects_data.forEach((project) => {
+            if (project.repoLastUpdatedAt) {
+                dates[project.name] = new Date(project.repoLastUpdatedAt).getTime();
+            } else if (project.repoLastUpdatedError) {
+                dates[project.name] = null;
+            }
+        });
+        return dates;
     }, [projects_data]);
 
     const filteringConfig = useMemo(() => ({
