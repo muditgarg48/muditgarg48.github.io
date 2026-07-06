@@ -1,5 +1,6 @@
 import HomePage from "../sections/HomePage/HomePage";
 import { fetchAllFreelanceProjects } from "../services/freelanceUtils";
+import { fetchPortfolioDataLastUpdated } from "../services/portfolioDataUtils";
 
 const DATA_ENDPOINT = 'https://muditgarg48.github.io/portfolio_data/data/';
 
@@ -41,7 +42,10 @@ async function getPortfolioData() {
 }
 
 export default async function Page() {
-  const data = await getPortfolioData();
+  const [data, portfolioDataLastUpdated] = await Promise.all([
+    getPortfolioData(),
+    fetchPortfolioDataLastUpdated(),
+  ]);
 
   if (!data) {
     return <div>Error loading data. Please try again later.</div>;
@@ -64,6 +68,7 @@ export default async function Page() {
       freelanceServicesData={data.freelanceServices.services || []}
       freelanceWelcomeData={data.freelanceWelcome.welcome || {}}
       freelanceTestimonialsData={data.freelanceTestimonials.testimonials || []}
+      portfolioDataLastUpdated={portfolioDataLastUpdated}
     />
   );
 }

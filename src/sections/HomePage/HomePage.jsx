@@ -40,7 +40,8 @@ const HomePage = ({
   freelanceAboutData,
   freelanceServicesData,
   freelanceWelcomeData,
-  freelanceTestimonialsData
+  freelanceTestimonialsData,
+  portfolioDataLastUpdated,
 }) => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isChatbotMainModalOpen, setIsChatbotMainModalOpen] = useState(false);
@@ -161,7 +162,7 @@ const HomePage = ({
       </AnimatePresence>
 
       {/* Chatbot — common, no animation */}
-      <Footer/>
+      <Footer dataLastUpdated={portfolioDataLastUpdated} />
       <FloatingButton 
         onClick={() => setIsChatbotMainModalOpen(true)} 
         isVisible={!isChatbotMainModalOpen && !isChatbotMiniModalOpen}
