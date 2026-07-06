@@ -531,7 +531,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Passion One';
+  font-family: var(--font-passion-one), sans-serif;
   margin: 2rem 0;
   text-align: center;
 }

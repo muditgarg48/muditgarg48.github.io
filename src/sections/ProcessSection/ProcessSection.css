@@ -115,7 +115,7 @@
     bottom: 0px;
     font-size: 8rem;
     font-weight: 900;
-    font-family: 'Passion One';
+    font-family: var(--font-passion-one), sans-serif;
     color: var(--font-primary-color);
     opacity: 0.1;
     pointer-events: none;

@@ -6,5 +6,5 @@
     letter-spacing: 2px;
     font-size: 2rem;
     color: var(--font-secondary-color);
-    font-family: "Archivo", sans-serif;
+    font-family: var(--font-archivo), sans-serif;
 }

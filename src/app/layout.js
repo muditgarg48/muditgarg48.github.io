@@ -1,4 +1,4 @@
-import { Montserrat, Pacifico, Roboto_Mono, Passion_One, Archivo, Playwrite_AR } from "next/font/google";
+import { Montserrat, Pacifico, Passion_One, Archivo, Playwrite_AR } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SiteModeProvider } from "../context/SiteModeContext";
@@ -13,11 +13,6 @@ const pacifico = Pacifico({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-pacifico",
-});
-
-const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
-  variable: "--font-roboto-mono",
 });
 
 const passionOne = Passion_One({
@@ -68,7 +63,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       data-mode={defaultMode}
-      className={`${montserrat.variable} ${pacifico.variable} ${robotoMono.variable} ${passionOne.variable} ${archivo.variable} ${carpenter.variable} ${playwriteAR.variable}`}
+      className={`${montserrat.variable} ${pacifico.variable} ${passionOne.variable} ${archivo.variable} ${carpenter.variable} ${playwriteAR.variable}`}
     >
       <head>
         <link id="favicon" rel="icon" href={modeAssets.favicon} />
