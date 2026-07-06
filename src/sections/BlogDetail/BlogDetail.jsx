@@ -3,12 +3,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import './BlogDetail.css';
-import { fetchBlogById, fetchAuthorById, fetchAdjacentBlogs, getAuthorId, getAuthorDisplayName, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
+import { fetchBlogById, getAuthorDisplayName, formatBlogDate, trackBlogView, isBlogLiked, toggleBlogLike, shareBlog } from '../../services/blogUtils';
 import BackIcon from '../../assets/svg/BackIcon';
 import HeartIcon from '../../assets/svg/HeartIcon';
 import EyeIcon from '../../assets/svg/EyeIcon';
 import ShareIcon from '../../assets/svg/ShareIcon';
-import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import Toast from '../../components/Toast/Toast';
 import Modal from '../../components/Modal/Modal';
 import EditVerificationModal from '../../components/EditVerificationModal/EditVerificationModal';
@@ -17,18 +16,23 @@ import BlogSectionNav from '../../components/BlogSectionNav/BlogSectionNav';
 
 const MIN_PARAGRAPH_INDENT_CHARS = 120;
 
-const BlogDetail = () => {
+const BlogDetail = ({
+  initialBlog = null,
+  initialAuthor = null,
+  initialPrevBlog = null,
+  initialNextBlog = null,
+  notFound = false,
+}) => {
   const { id } = useParams();
   const router = useRouter();
-  const [blog, setBlog] = useState(null);
-  const [author, setAuthor] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [blog, setBlog] = useState(initialBlog);
+  const [author, setAuthor] = useState(initialAuthor);
+  const [error, setError] = useState(notFound ? 'Blog not found' : null);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [prevBlog, setPrevBlog] = useState(null);
-  const [nextBlog, setNextBlog] = useState(null);
+  const [prevBlog, setPrevBlog] = useState(initialPrevBlog);
+  const [nextBlog, setNextBlog] = useState(initialNextBlog);
   const [showEditVerificationModal, setShowEditVerificationModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const viewCountedRef = useRef(false);
@@ -39,50 +43,42 @@ const BlogDetail = () => {
   const [isHeaderPinned, setIsHeaderPinned] = useState(false);
 
   useEffect(() => {
-    const loadBlog = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        setPrevBlog(null);
-        setNextBlog(null);
-        const fetchedBlog = await fetchBlogById(id);
-        if (!fetchedBlog) {
-          setError('Blog not found');
-        } else {
-          setBlog(fetchedBlog);
-          setIsLiked(isBlogLiked(id));
-          
-          const authorId = getAuthorId(fetchedBlog);
-          if (authorId) {
-            try {
-              const fetchedAuthor = await fetchAuthorById(authorId);
-              if (fetchedAuthor) {
-                setAuthor(fetchedAuthor);
-              }
-            } catch (err) {
-              console.error('Error fetching author:', err);
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Error loading blog:', err);
-        setError('Failed to load blog. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (id) {
-      loadBlog();
+      setIsLiked(isBlogLiked(id));
     }
   }, [id]);
 
   useEffect(() => {
+    if (!id || !initialBlog) return;
+
+    let cancelled = false;
+    fetchBlogById(id)
+      .then((freshBlog) => {
+        if (cancelled || !freshBlog) return;
+        setBlog((prev) => (
+          prev ? { ...prev, views: freshBlog.views, likes: freshBlog.likes } : prev
+        ));
+      })
+      .catch((err) => {
+        console.error('Error refreshing blog stats:', err);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, initialBlog]);
+
+  useEffect(() => {
     const trackView = async () => {
-      if (!id || viewCountedRef.current || loading || error) return;
+      if (!id || viewCountedRef.current || error || !blog) return;
 
       try {
-        await trackBlogView(id);
+        const tracked = await trackBlogView(id);
+        if (tracked) {
+          setBlog((prev) => (
+            prev ? { ...prev, views: (prev.views || 0) + 1 } : prev
+          ));
+        }
         viewCountedRef.current = true;
       } catch (err) {
         console.error('Error tracking view:', err);
@@ -92,23 +88,7 @@ const BlogDetail = () => {
     if (blog && !viewCountedRef.current) {
       trackView();
     }
-  }, [id, blog, loading, error]);
-
-  useEffect(() => {
-    const loadAdjacentBlogs = async () => {
-      if (!blog) return;
-
-      try {
-        const { prev, next } = await fetchAdjacentBlogs(blog);
-        setPrevBlog(prev);
-        setNextBlog(next);
-      } catch (err) {
-        console.error('Error loading adjacent blogs:', err);
-      }
-    };
-
-    loadAdjacentBlogs();
-  }, [blog]);
+  }, [id, blog, error]);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -307,10 +287,6 @@ const BlogDetail = () => {
   const handleEditModalClose = () => {
     setShowEditModal(false);
   };
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   if (error || !blog) {
     return (

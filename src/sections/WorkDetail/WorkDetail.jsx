@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { fetchFreelanceProjectById, fetchFreelanceTestimonials } from '../../services/freelanceUtils';
+import { useRouter } from 'next/navigation';
 import ImageLoader from '../../components/LoadingLogo/ImageLoader';
 import WebsiteLogo from '../../components/WebsiteLogo/WebsiteLogo';
-import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import { useSiteMode } from '../../context/SiteModeContext';
 import TestimonialsSection from '../TestimonialsSection/TestimonialsSection';
 import './WorkDetail.css';
@@ -108,14 +106,12 @@ const EfficiencyBlocks = ({ before, after, title, desc, color }) => {
 };
 
 // Main WorkDetail Case Study component
-const WorkDetail = () => {
-  const { id } = useParams();
+const WorkDetail = ({ initialProject = null, initialTestimonials = [] }) => {
   const router = useRouter();
   const { setMode } = useSiteMode();
-  const [project, setProject] = useState(null);
-  const [testimonials, setTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [project] = useState(initialProject);
+  const [testimonials] = useState(initialTestimonials);
+  const [error] = useState(!initialProject ? 'Case study not found' : null);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
 
   useEffect(() => {
@@ -123,40 +119,6 @@ const WorkDetail = () => {
       setMode('freelance');
     }
   }, [setMode]);
-
-  useEffect(() => {
-    const loadProject = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const fetchedProject = await fetchFreelanceProjectById(id);
-        if (!fetchedProject) {
-          setError('Case study not found');
-        } else {
-          setProject(fetchedProject);
-
-          // Fetch and filter testimonials matching this project
-          try {
-            const allTestimonials = await fetchFreelanceTestimonials();
-            const projectCode = fetchedProject.project_code || fetchedProject.id;
-            const filtered = allTestimonials.filter(t => t.project_ref === projectCode);
-            setTestimonials(filtered);
-          } catch (tErr) {
-            console.error('Error loading testimonials for project:', tErr);
-          }
-        }
-      } catch (err) {
-        console.error('Error loading project details:', err);
-        setError('Failed to load project details. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      loadProject();
-    }
-  }, [id]);
 
   // Auto-change gallery images every 5 seconds
   useEffect(() => {
@@ -168,10 +130,6 @@ const WorkDetail = () => {
 
     return () => clearInterval(interval);
   }, [project, activeImgIndex]);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   if (error || !project) {
     return (

@@ -44,6 +44,27 @@ const toNavSummary = (docSnapshot) => {
   };
 };
 
+function toFirestoreComparableDate(createdAt) {
+  if (!createdAt) return null;
+  if (createdAt.toDate) return createdAt;
+  return Timestamp.fromDate(new Date(createdAt));
+}
+
+function serializeTimestampField(value) {
+  if (!value) return value;
+  if (value.toDate) return value.toDate().toISOString();
+  return value;
+}
+
+export function serializeBlogForTransfer(blog) {
+  if (!blog) return null;
+  return {
+    ...blog,
+    createdAt: serializeTimestampField(blog.createdAt),
+    updatedAt: serializeTimestampField(blog.updatedAt),
+  };
+}
+
 /**
  * Fetches the chronologically adjacent blogs for prev/next navigation.
  * Prev = newer post, Next = older post (matches newest-first blog wall order).
@@ -55,7 +76,7 @@ export const fetchAdjacentBlogs = async (blog) => {
 
   try {
     const blogsRef = collection(db, 'blogs');
-    const createdAt = blog.createdAt;
+    const createdAt = toFirestoreComparableDate(blog.createdAt);
 
     const [newerSnapshot, olderSnapshot] = await Promise.all([
       getDocs(

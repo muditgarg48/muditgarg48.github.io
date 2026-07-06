@@ -1,5 +1,5 @@
 import WorkDetail from "../../../sections/WorkDetail/WorkDetail";
-import { fetchFreelanceProjectById, fetchAllFreelanceProjects } from "../../../services/freelanceUtils";
+import { fetchFreelanceProjectById, fetchAllFreelanceProjects, fetchFreelanceTestimonials } from "../../../services/freelanceUtils";
 
 export async function generateStaticParams() {
   const projects = await fetchAllFreelanceProjects();
@@ -46,6 +46,13 @@ export default async function WorkDetailPage({ params }) {
   const { id } = await params;
   const project = await fetchFreelanceProjectById(id);
 
+  let testimonials = [];
+  if (project) {
+    const allTestimonials = await fetchFreelanceTestimonials();
+    const projectCode = project.project_code || project.id;
+    testimonials = allTestimonials.filter((t) => t.project_ref === projectCode);
+  }
+
   return (
     <>
       {project && (
@@ -73,7 +80,7 @@ export default async function WorkDetailPage({ params }) {
           }}
         />
       )}
-      <WorkDetail />
+      <WorkDetail initialProject={project} initialTestimonials={testimonials} />
     </>
   );
 }
