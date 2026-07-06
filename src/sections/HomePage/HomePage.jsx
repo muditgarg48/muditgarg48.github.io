@@ -14,10 +14,14 @@ import dynamic from 'next/dynamic';
 const CertificatesSection = dynamic(() => import('../CertificatesSection/CertificatesSection'), {
   ssr: false,
 });
+
+const ChatWindowContainer = dynamic(() => import('../ChatbotSection/ChatWindowContainer'), {
+  ssr: false,
+});
+
 import Footer from '../Footer/Footer';
 import FloatingButton from '../../components/FloatingButton/FloatingButton';
 import Modal from '../../components/Modal/Modal';
-import ChatWindowContainer from '../ChatbotSection/ChatWindowContainer';
 import WorksSection from '../WorksSection/WorksSection';
 import ProcessSection from '../ProcessSection/ProcessSection';
 import TestimonialsSection from '../TestimonialsSection/TestimonialsSection';
