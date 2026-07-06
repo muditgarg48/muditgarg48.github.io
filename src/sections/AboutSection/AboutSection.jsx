@@ -78,7 +78,7 @@ const RecruiterContent = ({ about_me, skills, facts }) => {
                     </div>
                 </div>
                 <div id="portrait-container">
-                    <img id="my-potrait" src={portrait_link} alt="My Portrait" />
+                    <img id="my-potrait" src={portrait_link} alt="My Portrait" loading="lazy" />
                 </div>
             </div>
 
@@ -141,7 +141,7 @@ const FreelanceContent = ({ about_me, services }) => {
                     </div>
                 </div>
                 <div id="portrait-container">
-                    <img id="my-potrait" src={portrait_link} alt="My Portrait" />
+                    <img id="my-potrait" src={portrait_link} alt="My Portrait" loading="lazy" />
                 </div>
             </div>
 
@@ -452,7 +452,7 @@ const SkillSection = memo(({ skills }) => {
                             {activeCategory && skills[activeCategory] && skills[activeCategory].map((skill, index) => (
                                 <div key={skill.name || index} className="skill-minimal-pill">
                                     <div className="skill-icon-wrapper">
-                                        <img src={skill.icon} alt={skill.name} />
+                                        <img src={skill.icon} alt={skill.name} loading="lazy" />
                                     </div>
                                     <span className="skill-pill-name">{skill.name}</span>
                                 </div>

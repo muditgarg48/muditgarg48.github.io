@@ -270,7 +270,7 @@ const WorkDetail = () => {
                         className={`thumb-btn ${i === activeImgIndex ? 'selected-thumb' : ''}`}
                         onClick={() => setActiveImgIndex(i)}
                       >
-                        <img src={img.url} alt={`Thumbnail preview ${i + 1}`} />
+                        <img src={img.url} alt={`Thumbnail preview ${i + 1}`} loading="lazy" />
                         <div className="thumb-blur-overlay"></div>
                       </button>
                     ))}
