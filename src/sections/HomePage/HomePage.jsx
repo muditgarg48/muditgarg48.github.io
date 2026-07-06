@@ -2,14 +2,23 @@
 
 import { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { useSiteMode } from '../../context/SiteModeContext';
 import { useScrollToTopOnModeSwitch } from '../../components/NavBar/NavBar';
 import NavBar from '../../components/NavBar/NavBar';
 import WelcomeSection from '../WelcomeSection/WelcomeSection';
 import AboutSection from '../AboutSection/AboutSection';
-import ExperienceSection from '../ExperienceSection/ExperienceSection';
-import ProjectsSection from '../ProjectsSection/ProjectsSection';
-import dynamic from 'next/dynamic';
+import Footer from '../Footer/Footer';
+import FloatingButton from '../../components/FloatingButton/FloatingButton';
+import Modal from '../../components/Modal/Modal';
+import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
+import './HomePage.css';
+
+const ExperienceSection = dynamic(() => import('../ExperienceSection/ExperienceSection'));
+const ProjectsSection = dynamic(() => import('../ProjectsSection/ProjectsSection'));
+const WorksSection = dynamic(() => import('../WorksSection/WorksSection'));
+const ProcessSection = dynamic(() => import('../ProcessSection/ProcessSection'));
+const TestimonialsSection = dynamic(() => import('../TestimonialsSection/TestimonialsSection'));
 
 const CertificatesSection = dynamic(() => import('../CertificatesSection/CertificatesSection'), {
   ssr: false,
@@ -18,15 +27,6 @@ const CertificatesSection = dynamic(() => import('../CertificatesSection/Certifi
 const ChatWindowContainer = dynamic(() => import('../ChatbotSection/ChatWindowContainer'), {
   ssr: false,
 });
-
-import Footer from '../Footer/Footer';
-import FloatingButton from '../../components/FloatingButton/FloatingButton';
-import Modal from '../../components/Modal/Modal';
-import WorksSection from '../WorksSection/WorksSection';
-import ProcessSection from '../ProcessSection/ProcessSection';
-import TestimonialsSection from '../TestimonialsSection/TestimonialsSection';
-import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
-import './HomePage.css';
 
 
 const HomePage = ({
