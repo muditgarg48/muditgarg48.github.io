@@ -8,7 +8,7 @@
     "@emotion/react": "^11.14.0",
     "@lordicon/react": "^1.11.0",
     "@uidotdev/usehooks": "^2.4.1",
-    "axios": "^1.16.0",
+    "axios": "^1.18.0",
     "embla-carousel-auto-height": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
