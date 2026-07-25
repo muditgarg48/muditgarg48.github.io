@@ -170,7 +170,7 @@ const HomePage = ({
       <FloatingButton 
         onClick={() => setIsChatbotMainModalOpen(true)} 
         isVisible={!isChatbotMainModalOpen && !isChatbotMiniModalOpen}
-        text="Ask A.L.F.R.E.D."
+        text="A.L.F.R.E.D."
         title="Chat with A.L.F.R.E.D."
       />
       {!isChatbotMiniModalOpen && (
