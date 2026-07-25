@@ -9,10 +9,33 @@ import { RotatingText } from 'rotating-text';
 import 'rotating-text/dist/index.css';
 import { Twirl as Hamburger } from 'hamburger-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useWindowSize } from "@uidotdev/usehooks";
 import WebsiteLogo from "../WebsiteLogo/WebsiteLogo";
 import redirect_icon from "../../assets/icons/recruiter/redirect.json";
 import { useSiteMode } from "../../context/SiteModeContext";
+
+export const SITE_SCROLL_ID = 'site-scroll';
+const NAV_MOBILE_BREAKPOINT = 1000;
+
+function useNavIsMobile() {
+    const [isMobile, setIsMobile] = useState(true);
+
+    useEffect(() => {
+        const container = document.getElementById(SITE_SCROLL_ID);
+        if (!container) {
+            setIsMobile(window.innerWidth < NAV_MOBILE_BREAKPOINT);
+            return undefined;
+        }
+
+        const update = () => setIsMobile(container.clientWidth < NAV_MOBILE_BREAKPOINT);
+        update();
+
+        const observer = new ResizeObserver(update);
+        observer.observe(container);
+        return () => observer.disconnect();
+    }, []);
+
+    return isMobile;
+}
 
 const RECRUITER_NAV_ITEMS = [
     { content: "ABOUT", dest: "about-section" },
@@ -27,8 +50,6 @@ const FREELANCE_NAV_ITEMS = [
     { content: "PROCESS", dest: "process-section" },
     { content: "TESTIMONIALS", dest: "testimonials-section" },
 ];
-
-// ==================== MODE TOGGLE ====================
 
 const ModeToggle = () => {
     const { isFreelance, toggleMode } = useSiteMode();
@@ -52,124 +73,114 @@ const ModeToggle = () => {
 };
 
 const NavBar = () => {
-    const size = useWindowSize();
-    const isMobile = size.width < 1000;
-
-    if (isMobile)
-        return <MobileNavBar />;
-    else
-        return <DesktopNavBar />;
-}
-
-// ==================== DESKTOP ====================
+    const isMobile = useNavIsMobile();
+    return isMobile ? <MobileNavBar /> : <DesktopNavBar />;
+};
 
 const DesktopNavBar = () => {
     const { isFreelance } = useSiteMode();
     const navItems = isFreelance ? FREELANCE_NAV_ITEMS : RECRUITER_NAV_ITEMS;
 
     return (
-        <div id="navbar">
-            <ScrollLink
-                to="welcome-section"
-                className="desktop-logo-link"
-                smooth={true}
-                duration={500}
-            >
-                <WebsiteLogo />
-            </ScrollLink>
-            <div id="navlist-full">
-                {navItems.map(item => (
-                    <DesktopNavItem
-                        key={item.content}
-                        content={item.content}
-                        dest={item.dest}
-                    />
-                ))}
-            </div>
-            {!isFreelance && (
-                <div id="blog-nav-item-container">
-                    <DesktopBlogItem />
+        <div className="navbar-sticky-slot">
+            <div id="navbar">
+                <ScrollLink
+                    to="welcome-section"
+                    className="desktop-logo-link"
+                    containerId={SITE_SCROLL_ID}
+                    smooth={true}
+                    duration={500}
+                >
+                    <WebsiteLogo />
+                </ScrollLink>
+                <div id="navlist-full">
+                    {navItems.map(item => (
+                        <DesktopNavItem
+                            key={item.content}
+                            content={item.content}
+                            dest={item.dest}
+                        />
+                    ))}
                 </div>
-            )}
-            <div id="mode-toggle-desktop-container">
-                <ModeToggle />
+                {!isFreelance && (
+                    <div id="blog-nav-item-container">
+                        <DesktopBlogItem />
+                    </div>
+                )}
+                <div id="mode-toggle-desktop-container">
+                    <ModeToggle />
+                </div>
             </div>
         </div>
     );
-}
+};
 
-const DesktopNavItem = ({ content, dest }) => {
-    return (
-        <ScrollLink
-            to={dest}
-            className="navlistItem"
-            activeClass="activeTab"
-            spy={true}
-            smooth={true}
-            duration={500}
-        >
-            <RotatingText
-                text={content}
-                stagger={0.1}
-                timing={0.5}
-                className="rotating-text"
-                styles={{ fontSize: '100px', whiteSpace: 'pre' }}
-            />
-        </ScrollLink>
-    );
-}
+const DesktopNavItem = ({ content, dest }) => (
+    <ScrollLink
+        to={dest}
+        className="navlistItem"
+        activeClass="activeTab"
+        containerId={SITE_SCROLL_ID}
+        spy={true}
+        smooth={true}
+        duration={500}
+    >
+        <RotatingText
+            text={content}
+            stagger={0.1}
+            timing={0.5}
+            className="rotating-text"
+            styles={{ fontSize: '100px', whiteSpace: 'pre' }}
+        />
+    </ScrollLink>
+);
 
-const DesktopBlogItem = () => {
-    return (
-        <Link href="/blogs" className="blogNavItem">
-            <RotatingText
-                text="BLOGS"
-                stagger={0.1}
-                timing={0.5}
-                className="rotating-text"
-                styles={{ fontSize: '100px', whiteSpace: 'pre' }}
-            />
-            <AnimatedIcon icon={redirect_icon} class_name="nocss" icon_size={16} />
-        </Link>
-    );
-}
-
-// ==================== MOBILE ====================
+const DesktopBlogItem = () => (
+    <Link href="/blogs" className="blogNavItem">
+        <RotatingText
+            text="BLOGS"
+            stagger={0.1}
+            timing={0.5}
+            className="rotating-text"
+            styles={{ fontSize: '100px', whiteSpace: 'pre' }}
+        />
+        <AnimatedIcon icon={redirect_icon} class_name="nocss" icon_size={16} />
+    </Link>
+);
 
 const MobileNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { primaryColor } = useSiteMode();
 
     return (
-        <div id="navbar">
-            <ScrollLink
-                to="welcome-section"
-                smooth={true}
-                duration={500}
-                className="navbar-logo-link"
-                onClick={() => setIsOpen(false)}
-            >
-                <WebsiteLogo />
-            </ScrollLink>
-            <div id="hamburger-icon">
-                <Hamburger
-                    color={primaryColor}
-                    toggled={isOpen}
-                    toggle={setIsOpen}
-                    rounded
-                    size={22}
-                />
-            </div>
-            <AnimatePresence>
-                {isOpen && (
-                    <FullScreenNav
-                        setIsOpen={setIsOpen}
+        <div className="navbar-sticky-slot">
+            <div id="navbar">
+                <ScrollLink
+                    to="welcome-section"
+                    containerId={SITE_SCROLL_ID}
+                    smooth={true}
+                    duration={500}
+                    className="navbar-logo-link"
+                    onClick={() => setIsOpen(false)}
+                >
+                    <WebsiteLogo />
+                </ScrollLink>
+                <div id="hamburger-icon">
+                    <Hamburger
+                        color={primaryColor}
+                        toggled={isOpen}
+                        toggle={setIsOpen}
+                        rounded
+                        size={22}
                     />
-                )}
-            </AnimatePresence>
+                </div>
+                <AnimatePresence>
+                    {isOpen && <FullScreenNav setIsOpen={setIsOpen} />}
+                </AnimatePresence>
+            </div>
         </div>
     );
-}
+};
 
 const FullScreenNav = ({ setIsOpen }) => {
     const { isFreelance } = useSiteMode();
@@ -194,6 +205,7 @@ const FullScreenNav = ({ setIsOpen }) => {
                         to={item.dest}
                         className="fullscreen-nav-item"
                         activeClass="fullscreen-nav-item-active"
+                        containerId={SITE_SCROLL_ID}
                         spy={true}
                         smooth={true}
                         duration={500}
@@ -218,38 +230,33 @@ const FullScreenNav = ({ setIsOpen }) => {
             </nav>
         </motion.div>
     );
-}
-
-// ==================== SCROLL-TO-TOP ON MODE SWITCH ====================
+};
 
 export function useScrollToTopOnModeSwitch() {
     const { mode } = useSiteMode();
     const prevMode = useRef(mode);
 
     useEffect(() => {
-        if (prevMode.current !== mode) {
-            // Sections that exist in recruiter mode
-            const recruiterSections = ['experience-section', 'projects-section', 'certificates-section'];
-            // Sections that exist in freelance mode
-            const freelanceSections = ['works-section', 'process-section', 'testimonials-section', 'about-section'];
+        if (prevMode.current === mode) return;
 
-            const removedSections = mode === 'freelance' ? recruiterSections : freelanceSections;
+        const recruiterSections = ['experience-section', 'projects-section', 'certificates-section'];
+        const freelanceSections = ['works-section', 'process-section', 'testimonials-section', 'about-section'];
+        const removedSections = mode === 'freelance' ? recruiterSections : freelanceSections;
 
-            // Check if user is currently viewing a section that won't exist in the new mode
-            const scrollY = window.scrollY;
-            const shouldScroll = removedSections.some(id => {
-                const el = document.getElementById(id);
-                if (!el) return false;
-                const rect = el.getBoundingClientRect();
-                return rect.top <= window.innerHeight / 2 && rect.bottom >= 0;
-            });
+        const scroller = document.getElementById(SITE_SCROLL_ID);
+        const viewportHeight = scroller?.clientHeight ?? window.innerHeight;
+        const shouldScroll = removedSections.some(id => {
+            const el = document.getElementById(id);
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            return rect.top <= viewportHeight / 2 && rect.bottom >= 0;
+        });
 
-            if (shouldScroll) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-
-            prevMode.current = mode;
+        if (shouldScroll) {
+            (scroller ?? window).scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        prevMode.current = mode;
     }, [mode]);
 }
 

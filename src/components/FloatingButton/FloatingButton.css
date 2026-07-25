@@ -1,128 +1,92 @@
-.floating-button {
+.alfred-ribbon {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  top: 50%;
+  right: 0;
+  z-index: 1000;
+  transform: translateY(-50%);
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  width: 48px;
+  padding: 0 14px;
+  overflow: hidden;
+  border: none;
+  border-radius: 12px 0 0 12px;
   background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--font-secondary-color) 100%);
   color: var(--bg-color);
-  border: none;
-  border-radius: 999px;
+  font-family: var(--font-style);
   font-size: 0.8125rem;
   font-weight: 600;
   line-height: 1;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 6px 24px color-mix(in srgb, var(--primary-color) 35%, transparent);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: var(--font-style);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow: -4px 4px 20px color-mix(in srgb, var(--primary-color) 35%, transparent);
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              gap 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.28s ease;
+}
+
+.alfred-ribbon:hover,
+.alfred-ribbon:focus-visible {
+  width: 148px;
   gap: 8px;
-  height: 44px;
-  padding: 0 18px 0 14px;
-  overflow: hidden;
-  will-change: transform, box-shadow;
+  box-shadow: -6px 6px 28px color-mix(in srgb, var(--primary-color) 50%, transparent);
+  outline: none;
 }
 
-.floating-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+.alfred-ribbon:active {
+  box-shadow: -3px 3px 14px color-mix(in srgb, var(--primary-color) 40%, transparent);
 }
 
-.floating-button:hover::before {
-  left: 100%;
-}
-
-.floating-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px color-mix(in srgb, var(--primary-color) 50%, transparent);
-}
-
-.floating-button:active {
-  transform: translateY(-1px) scale(0.98);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--primary-color) 40%, transparent);
-}
-
-.fab-icon {
+.alfred-ribbon-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-  position: relative;
-  z-index: 1;
 }
 
-.fab-icon svg {
+.alfred-ribbon-icon svg {
   width: 100%;
   height: 100%;
   stroke-width: 2;
 }
 
-.fab-text {
-  position: relative;
-  z-index: 1;
-  letter-spacing: 0.02em;
+.alfred-ribbon-label {
   white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease 0.05s,
+              max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.fab-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, color-mix(in srgb, var(--primary-color) 30%, transparent) 0%, transparent 70%);
-  border-radius: inherit;
-  opacity: 0;
-  animation: pulse-glow 3s ease-in-out infinite;
-  pointer-events: none;
-  will-change: opacity;
+.alfred-ribbon:hover .alfred-ribbon-label,
+.alfred-ribbon:focus-visible .alfred-ribbon-label {
+  opacity: 1;
+  max-width: 100px;
+}
+
+@media (max-width: 800px) {
+  .alfred-ribbon,
+  .alfred-ribbon:hover,
+  .alfred-ribbon:focus-visible {
+    width: 44px;
+    height: 44px;
+    padding: 0 12px;
+    gap: 0;
+  }
+
+  .alfred-ribbon-label {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fab-glow {
-    animation: none;
-  }
-
-  .floating-button,
-  .floating-button::before {
+  .alfred-ribbon,
+  .alfred-ribbon-label {
     transition: none;
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.45;
-  }
-}
-
-@media (max-width: 999px) {
-  .floating-button {
-    bottom: 20px;
-    right: 20px;
-    width: 52px;
-    height: 52px;
-    padding: 0;
-    gap: 0;
-    border-radius: 50%;
-  }
-
-  .fab-icon {
-    width: 22px;
-    height: 22px;
-  }
-
-  .fab-text {
-    display: none;
   }
 }

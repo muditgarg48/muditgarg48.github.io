@@ -16,7 +16,7 @@ const getInitMessage = (isFreelance) => ({
   sources: [],
 });
 
-const ChatWindowContainer = ({ onClose, onMinimize, onPopup }) => {
+const ChatWindowContainer = ({ onClose }) => {
   const { isFreelance } = useSiteMode();
   
   const [query, setQuery] = useState("");
@@ -142,8 +142,6 @@ const ChatWindowContainer = ({ onClose, onMinimize, onPopup }) => {
       handleSubmit={handleSubmit}
       resetChat={resetChat}
       onClose={onClose}
-      onMinimize={onMinimize}
-      onPopup={onPopup}
     />
   );
 };

@@ -2,28 +2,29 @@ import React, { memo } from 'react';
 import './FloatingButton.css';
 import ChatIcon from '../../assets/svg/ChatIcon';
 
-const FloatingButton = ({ 
-  onClick, 
+const FloatingButton = ({
+  onClick,
   isVisible = true,
-  text = "Click Me",
+  text = "A.L.F.R.E.D.",
   title,
   className = ''
 }) => {
   if (!isVisible) return null;
-  
+
   const buttonTitle = title || text;
-  
+
   return (
-    <button 
-      className={`floating-button ${className}`}
-      onClick={onClick} 
+    <button
+      type="button"
+      className={`alfred-ribbon ${className}`}
+      onClick={onClick}
       title={buttonTitle}
+      aria-label={buttonTitle}
     >
-      <div className="fab-icon" suppressHydrationWarning>
+      <span className="alfred-ribbon-icon" suppressHydrationWarning>
         <ChatIcon />
-      </div>
-      {text && <span className="fab-text">{text}</span>}
-      <div className="fab-glow" suppressHydrationWarning></div>
+      </span>
+      {text && <span className="alfred-ribbon-label">{text}</span>}
     </button>
   );
 };
