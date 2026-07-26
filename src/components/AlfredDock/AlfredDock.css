@@ -5,7 +5,8 @@
   flex-direction: column;
   overflow: hidden;
   background-color: var(--bg-color);
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.35);
+  border-left: 1px solid color-mix(in srgb, var(--font-highlight-color) 10%, transparent);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.22);
   box-sizing: border-box;
 }
 

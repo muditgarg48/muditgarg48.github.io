@@ -6,20 +6,10 @@ body:has(.app-layout) {
 
 .app-layout {
   --alfred-dock-width: 420px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 0px;
+  position: relative;
   width: 100%;
   height: 100dvh;
   overflow: hidden;
-  transition: grid-template-columns 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.app-layout.alfred-open {
-  grid-template-columns: minmax(0, 1fr) var(--alfred-dock-width);
-}
-
-.app-layout.alfred-open.alfred-fullscreen {
-  grid-template-columns: 0px minmax(0, 1fr);
 }
 
 .site-pane {
@@ -45,25 +35,62 @@ body:has(.app-layout) {
   --cert-grid-min: clamp(240px, 22cqi + 40px, 280px);
   --nav-item-pad-x: clamp(0.25rem, 0.15rem + 0.3cqi, 0.5rem);
 
-  min-width: 0;
+  width: 100%;
   height: 100%;
+  min-width: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   position: relative;
   container-type: inline-size;
   container-name: site;
+  /* Instant width change only — animating this with cqi thrashs layout every frame */
+}
+
+.app-layout.alfred-open:not(.alfred-fullscreen) .site-pane {
+  width: calc(100% - var(--alfred-dock-width));
+}
+
+.app-layout.alfred-open.alfred-fullscreen .site-pane {
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .alfred-pane {
-  min-width: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  width: min(var(--alfred-dock-width), 100%);
   height: 100%;
   overflow: hidden;
   background-color: var(--bg-color);
+  /* Transform-only motion stays on the compositor; grid/width animation does not */
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  pointer-events: none;
+  contain: layout paint;
+}
+
+.app-layout.alfred-open .alfred-pane {
+  transform: translate3d(0, 0, 0);
+  pointer-events: auto;
+}
+
+.app-layout.alfred-open.alfred-fullscreen .alfred-pane {
+  width: 100%;
+}
+
+.app-layout.alfred-mounted:not(.alfred-open) .alfred-pane {
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-layout {
+  .alfred-pane {
     transition: none;
   }
 }

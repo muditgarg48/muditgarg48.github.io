@@ -1,91 +1,37 @@
-.bot-intro-modal-body {
-    padding: 0;
-}
-
-.bot-intro-modal-header {
-    background: var(--card-bg);
-    padding: 25px 20px 20px;
-    border-bottom: 1px solid var(--font-secondary-color);
-    text-align: center;
+.bot-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
 }
 
 .bot-intro-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--font-highlight-color);
-    margin: 0 0 10px 0;
-    letter-spacing: 0.5px;
+  margin: 0;
+  font-family: var(--special-font-style), var(--font-style);
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--font-highlight-color);
+  line-height: 1.15;
 }
 
 .bot-intro-acronym {
-    font-size: 0.95rem;
-    color: var(--font-primary-color);
-    margin: 0 0 8px 0;
-    font-weight: 500;
-    line-height: 1.4;
-}
-
-.bot-intro-acronym strong {
-    color: var(--font-highlight-color);
-    font-weight: 600;
-}
-
-.bot-intro-patent {
-    font-size: 0.75rem;
-    color: var(--font-secondary-color);
-    font-style: italic;
-    margin: 0;
-}
-
-.bot-intro-modal-body-content {
-    padding: 20px;
-    line-height: 1.6;
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--font-primary-color);
 }
 
 .bot-intro-description {
-    font-size: 0.95rem;
-    color: var(--font-highlight-color);
-    margin: 0 0 18px 0;
-    text-align: justify;
+  margin: 4px 0 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--font-highlight-color) 84%, transparent);
 }
 
 .bot-intro-tech {
-    background: var(--card-bg);
-    border-left: 3px solid var(--font-primary-color);
-    padding: 15px;
-    border-radius: 8px;
-    margin: 18px 0;
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--font-highlight-color) 52%, transparent);
 }
-
-.bot-intro-tech-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--font-primary-color);
-    margin: 0 0 10px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.bot-intro-tech p {
-    font-size: 0.85rem;
-    color: var(--font-secondary-color);
-    margin: 0;
-    text-align: justify;
-    line-height: 1.5;
-}
-
-.bot-intro-tech strong {
-    color: var(--font-primary-color);
-    font-weight: 600;
-}
-
-.bot-intro-cta {
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--font-primary-color);
-    margin: 20px 0 0 0;
-    padding-top: 15px;
-    border-top: 1px solid var(--font-secondary-color);
-}
-

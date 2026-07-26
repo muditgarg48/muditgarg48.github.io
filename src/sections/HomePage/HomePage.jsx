@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useSiteMode } from '../../context/SiteModeContext';
@@ -25,7 +25,9 @@ const CertificatesSection = dynamic(() => import('../CertificatesSection/Certifi
   ssr: false,
 });
 
-const ChatWindowContainer = dynamic(() => import('../ChatbotSection/ChatWindowContainer'), {
+const loadChatWindowContainer = () => import('../ChatbotSection/ChatWindowContainer');
+
+const ChatWindowContainer = dynamic(loadChatWindowContainer, {
   ssr: false,
 });
 
@@ -51,9 +53,12 @@ const HomePage = ({
 }) => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isAlfredOpen, setIsAlfredOpen] = useState(false);
+  const [isAlfredMounted, setIsAlfredMounted] = useState(false);
   const [isAlfredFullscreen, setIsAlfredFullscreen] = useState(false);
   const { isFreelance, mode } = useSiteMode();
   const prevModeRef = useRef(mode);
+  const shouldUnmountAlfredRef = useRef(false);
+  const openAlfredRafRef = useRef(0);
 
   useScrollToTopOnModeSwitch();
 
@@ -70,6 +75,12 @@ const HomePage = ({
     return () => window.removeEventListener('resize', sync);
   }, []);
 
+  useEffect(() => () => {
+    if (openAlfredRafRef.current) {
+      cancelAnimationFrame(openAlfredRafRef.current);
+    }
+  }, []);
+
   const direction = useMemo(() => {
     const dir = mode === 'freelance' ? 1 : -1;
     prevModeRef.current = mode;
@@ -84,16 +95,78 @@ const HomePage = ({
 
   const transition = { duration: 0.5, ease: 'easeInOut' };
 
+  const preloadAlfred = useCallback(() => {
+    loadChatWindowContainer();
+  }, []);
+
+  const openAlfred = useCallback(() => {
+    shouldUnmountAlfredRef.current = false;
+
+    const reveal = () => {
+      // Double rAF: paint the off-screen dock first, then slide in
+      openAlfredRafRef.current = requestAnimationFrame(() => {
+        openAlfredRafRef.current = requestAnimationFrame(() => {
+          setIsAlfredOpen(true);
+        });
+      });
+    };
+
+    if (isAlfredMounted) {
+      reveal();
+      return;
+    }
+
+    setIsAlfredMounted(true);
+    reveal();
+  }, [isAlfredMounted]);
+
+  // Yellow traffic light — hide dock, keep chat session mounted
+  const minimizeAlfred = useCallback(() => {
+    shouldUnmountAlfredRef.current = false;
+    setIsAlfredOpen(false);
+  }, []);
+
+  const unmountAlfredSession = useCallback(() => {
+    if (!shouldUnmountAlfredRef.current) return;
+    shouldUnmountAlfredRef.current = false;
+    setIsAlfredMounted(false);
+  }, []);
+
+  // Red traffic light — slide out, then tear down session after transform ends
+  const closeAlfred = useCallback(() => {
+    shouldUnmountAlfredRef.current = true;
+    setIsAlfredOpen(false);
+
+    // No transitionend when motion is reduced — unmount on the next frame
+    if (typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      requestAnimationFrame(unmountAlfredSession);
+    }
+  }, [unmountAlfredSession]);
+
+  const handleAlfredPaneTransitionEnd = useCallback((event) => {
+    if (event.target !== event.currentTarget) return;
+    if (event.propertyName !== 'transform') return;
+    if (isAlfredOpen) return;
+    unmountAlfredSession();
+  }, [isAlfredOpen, unmountAlfredSession]);
+
+  // Safety net if transitionend is skipped by the browser
+  useEffect(() => {
+    if (isAlfredOpen || !isAlfredMounted || !shouldUnmountAlfredRef.current) return undefined;
+    const timeoutId = window.setTimeout(unmountAlfredSession, 400);
+    return () => window.clearTimeout(timeoutId);
+  }, [isAlfredOpen, isAlfredMounted, unmountAlfredSession]);
+
   if (!isHydrated) {
     return <LoadingScreen />;
   }
-
-  const closeAlfred = () => setIsAlfredOpen(false);
 
   return (
     <div
       className={[
         'app-layout',
+        isAlfredMounted && 'alfred-mounted',
         isAlfredOpen && 'alfred-open',
         isAlfredOpen && isAlfredFullscreen && 'alfred-fullscreen',
       ].filter(Boolean).join(' ')}
@@ -171,17 +244,23 @@ const HomePage = ({
         <Footer dataLastUpdated={portfolioDataLastUpdated} />
 
         <FloatingButton
-          onClick={() => setIsAlfredOpen(true)}
+          onClick={openAlfred}
+          onPointerEnter={preloadAlfred}
+          onFocus={preloadAlfred}
           isVisible={!isAlfredOpen}
           text="A.L.F.R.E.D."
           title="Chat with A.L.F.R.E.D."
         />
       </div>
 
-      <div className="alfred-pane">
-        {isAlfredOpen && (
-          <AlfredDock onClose={closeAlfred}>
-            <ChatWindowContainer onClose={closeAlfred} />
+      <div
+        className="alfred-pane"
+        aria-hidden={!isAlfredOpen}
+        onTransitionEnd={handleAlfredPaneTransitionEnd}
+      >
+        {isAlfredMounted && (
+          <AlfredDock onMinimize={minimizeAlfred}>
+            <ChatWindowContainer onMinimize={minimizeAlfred} onClose={closeAlfred} />
           </AlfredDock>
         )}
       </div>

@@ -4,6 +4,8 @@ import ChatIcon from '../../assets/svg/ChatIcon';
 
 const FloatingButton = ({
   onClick,
+  onPointerEnter,
+  onFocus,
   isVisible = true,
   text = "A.L.F.R.E.D.",
   title,
@@ -18,6 +20,8 @@ const FloatingButton = ({
       type="button"
       className={`alfred-ribbon ${className}`}
       onClick={onClick}
+      onPointerEnter={onPointerEnter}
+      onFocus={onFocus}
       title={buttonTitle}
       aria-label={buttonTitle}
     >

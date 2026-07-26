@@ -3,14 +3,14 @@
 import { useEffect, memo } from 'react';
 import './AlfredDock.css';
 
-const AlfredDock = ({ onClose, children }) => {
+const AlfredDock = ({ onMinimize, children }) => {
   useEffect(() => {
     const onKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') onMinimize?.();
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  }, [onMinimize]);
 
   return (
     <aside className="alfred-dock" role="dialog" aria-label="A.L.F.R.E.D. chat">
