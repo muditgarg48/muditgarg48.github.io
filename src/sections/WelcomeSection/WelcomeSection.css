@@ -10,7 +10,7 @@
 .welcome-content {
     max-width: 900px;
     width: 100%;
-    padding: 0 5vw;
+    padding: 0 5%;
     box-sizing: border-box;
     font-size: 1rem;
     text-wrap: pretty;
@@ -56,7 +56,7 @@
     display: flex;
 }
 
-@media (max-width: 1000px) {
+@container site (max-width: 1000px) {
     #contact {
         gap: 1rem;
         flex-direction: column;
@@ -114,7 +114,7 @@
 
 #contact_icons .contact_icon {
     border: none;
-    margin-right: 1.5vw;
+    margin-right: 1.5cqi;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

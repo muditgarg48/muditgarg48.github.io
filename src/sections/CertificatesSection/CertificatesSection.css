@@ -213,7 +213,7 @@
 }
 
 /* --- Media Queries --- */
-@media (max-width: 800px) {
+@container site (max-width: 800px) {
     #certificates-grid {
         grid-template-columns: 1fr;
     }

@@ -1,10 +1,12 @@
 #experience-section {
     min-height: 90vh;
     height: fit-content;
-    width: 89.5vw;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     overflow-x: hidden;
     color: var(--font-primary-color);
-    padding: 5vw;
+    padding: 5%;
 }
 
 .experience-list-container {
@@ -149,7 +151,7 @@
 
 .item-role-title {
     margin: 0;
-    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    font-size: clamp(1.1rem, 3cqi, 1.4rem);
     font-weight: 800;
     color: var(--font-primary-color);
     letter-spacing: 0.02em;
@@ -159,7 +161,7 @@
 
 .item-company-subtitle {
     margin: 0;
-    font-size: clamp(0.85rem, 2vw, 1rem);
+    font-size: clamp(0.85rem, 2cqi, 1rem);
     font-weight: 500;
     color: var(--font-highlight-color);
     letter-spacing: 0.05em;
@@ -247,7 +249,7 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-@media (max-width: 600px) {
+@container site (max-width: 600px) {
     .list-item-top {
         flex-direction: column;
         align-items: flex-start;

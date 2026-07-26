@@ -22,9 +22,10 @@ import did_you_know_icon from "../../assets/icons/recruiter/interesting.json";
 import skillset_icon from "../../assets/icons/recruiter/skillset.json";
 import services_offered_icon from "../../assets/icons/freelance/services_offered.json";
 import credentials_icon from "../../assets/icons/freelance/credentials.json";
+import { getSitePaneWidth } from "../../hooks/sitePane";
 
 function scrollActiveTabIntoView(tabsContainer) {
-    if (!tabsContainer || window.innerWidth > 800) return;
+    if (!tabsContainer || getSitePaneWidth() > 800) return;
     const activeTab = tabsContainer.querySelector('.skill-tab-item.active');
     if (!activeTab) return;
     const left = activeTab.offsetLeft - tabsContainer.clientWidth / 2 + activeTab.clientWidth / 2;

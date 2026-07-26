@@ -29,6 +29,8 @@ body:has(.app-layout) {
   overflow-y: auto;
   overscroll-behavior: contain;
   position: relative;
+  container-type: inline-size;
+  container-name: site;
 }
 
 .alfred-pane {
@@ -36,31 +38,6 @@ body:has(.app-layout) {
   height: 100%;
   overflow: hidden;
   background-color: var(--bg-color);
-}
-
-/* Rebind vw-based section widths to the site pane (must beat `#id { width: 89.5vw }`) */
-.site-pane #welcome-section,
-.site-pane #about-section,
-.site-pane #experience-section,
-.site-pane #projects-section,
-.site-pane #certificates-section,
-.site-pane #works-section,
-.site-pane #process-section,
-.site-pane #testimonials-section {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.site-pane #about-section,
-.site-pane #experience-section,
-.site-pane #projects-section,
-.site-pane #certificates-section,
-.site-pane #works-section,
-.site-pane #process-section,
-.site-pane #testimonials-section {
-  padding-left: 5%;
-  padding-right: 5%;
 }
 
 @media (prefers-reduced-motion: reduce) {

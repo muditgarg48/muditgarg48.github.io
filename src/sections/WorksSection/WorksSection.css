@@ -1,9 +1,11 @@
 #works-section {
     min-height: 90vh;
     height: fit-content;
-    width: 89.5vw;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     color: var(--font-primary-color);
-    padding: 5vw;
+    padding: 5%;
 }
 
 .works-content {
@@ -151,12 +153,12 @@
     transform: translateX(4px);
 }
 
-@media (max-width: 600px) {
+@container site (max-width: 600px) {
     .works-grid {
         grid-template-columns: 1fr;
     }
     
     #works-section {
-        width: calc(100vw - 10vw);
+        width: 100%;
     }
 }

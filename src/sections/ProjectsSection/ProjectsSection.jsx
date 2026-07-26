@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useWindowSize } from "@uidotdev/usehooks";
+import { useSitePaneWidth } from "../../hooks/sitePane";
 import './ProjectsSection.css';
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
@@ -322,8 +322,7 @@ const ProjectListItem = memo(({ project, isExpanded, onToggle }) => {
 // --- Embla Carousel Implementation ---
 
 const EmblaCarousel = memo(({ projects }) => {
-    const { width } = useWindowSize();
-    const isMobile = width < 700;
+    const isMobile = useSitePaneWidth() < 700;
 
     const [emblaRef, emblaApi] = useEmblaCarousel(
         {

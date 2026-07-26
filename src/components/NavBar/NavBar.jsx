@@ -12,30 +12,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import WebsiteLogo from "../WebsiteLogo/WebsiteLogo";
 import redirect_icon from "../../assets/icons/recruiter/redirect.json";
 import { useSiteMode } from "../../context/SiteModeContext";
+import { SITE_SCROLL_ID, useSitePaneWidth } from "../../hooks/sitePane";
 
-export const SITE_SCROLL_ID = 'site-scroll';
+export { SITE_SCROLL_ID };
+
 const NAV_MOBILE_BREAKPOINT = 1000;
-
-function useNavIsMobile() {
-    const [isMobile, setIsMobile] = useState(true);
-
-    useEffect(() => {
-        const container = document.getElementById(SITE_SCROLL_ID);
-        if (!container) {
-            setIsMobile(window.innerWidth < NAV_MOBILE_BREAKPOINT);
-            return undefined;
-        }
-
-        const update = () => setIsMobile(container.clientWidth < NAV_MOBILE_BREAKPOINT);
-        update();
-
-        const observer = new ResizeObserver(update);
-        observer.observe(container);
-        return () => observer.disconnect();
-    }, []);
-
-    return isMobile;
-}
 
 const RECRUITER_NAV_ITEMS = [
     { content: "ABOUT", dest: "about-section" },
@@ -73,7 +54,7 @@ const ModeToggle = () => {
 };
 
 const NavBar = () => {
-    const isMobile = useNavIsMobile();
+    const isMobile = useSitePaneWidth() < NAV_MOBILE_BREAKPOINT;
     return isMobile ? <MobileNavBar /> : <DesktopNavBar />;
 };
 

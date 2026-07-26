@@ -140,7 +140,7 @@
 .fullscreen-nav-item {
     color: var(--font-highlight-color);
     text-decoration: none;
-    font-size: clamp(0.85rem, 2.2vw, 1.05rem);
+    font-size: clamp(0.85rem, 2.2cqi, 1.05rem);
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;

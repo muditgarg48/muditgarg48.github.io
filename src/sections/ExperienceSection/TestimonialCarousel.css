@@ -108,7 +108,7 @@
     transform: scale(1);
 }
 
-@media (max-width: 800px) {
+@container site (max-width: 800px) {
     .testimonial-controls {
         padding: 0;
         margin-top: 2rem;

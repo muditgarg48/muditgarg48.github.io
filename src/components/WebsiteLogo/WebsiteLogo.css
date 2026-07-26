@@ -6,13 +6,13 @@
     transition: font-size 0.3s ease;
 }
 
-@media (max-width: 1000px) {
+@container site (max-width: 1000px) {
     .website_logo {
         font-size: 1.8rem;
     }
 }
 
-@media (max-width: 480px) {
+@container site (max-width: 480px) {
     .website_logo {
         font-size: 1.5rem;
     }

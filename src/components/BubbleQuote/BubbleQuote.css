@@ -120,7 +120,7 @@
     transform: translateY(-2px);
 }
 
-@media (max-width: 800px) {
+@container site (max-width: 800px) {
     .bubble-quote-container {
         padding: 1.5rem;
         margin: 2% 1%;
