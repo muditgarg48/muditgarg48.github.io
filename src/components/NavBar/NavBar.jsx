@@ -16,7 +16,7 @@ import { SITE_SCROLL_ID, useSitePaneWidth } from "../../hooks/sitePane";
 
 export { SITE_SCROLL_ID };
 
-const NAV_MOBILE_BREAKPOINT = 1000;
+const NAV_MOBILE_BREAKPOINT = 1100;
 
 const RECRUITER_NAV_ITEMS = [
     { content: "ABOUT", dest: "about-section" },

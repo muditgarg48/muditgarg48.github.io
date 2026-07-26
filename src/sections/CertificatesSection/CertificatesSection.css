@@ -11,8 +11,8 @@
 /* --- Certificates Grid --- */
 #certificates-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(var(--cert-grid-min, 280px), 1fr));
+    gap: var(--space-stack, 1.5rem);
     padding: 1rem 0;
 }
 
@@ -27,7 +27,7 @@
 /* --- 3D Card Container --- */
 .certificate-card-container {
     background-color: transparent;
-    height: 480px;
+    height: var(--cert-card-min-h, 440px);
     perspective: 1500px;
 }
 
@@ -57,7 +57,7 @@
     background: rgba(255, 255, 255, 0.02);
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
+    padding: var(--cert-card-pad, 1.5rem);
     box-sizing: border-box;
 }
 
@@ -68,7 +68,7 @@
 /* --- Front Styles --- */
 .certificate-title-group h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: var(--type-subhead, 1.1rem);
     color: var(--font-highlight-color);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -219,6 +219,6 @@
     }
 
     .certificate-card-container {
-        height: 520px; /* Slightly taller for mobile text wrapping */
+        height: max(var(--cert-card-min-h, 440px), 380px);
     }
 }

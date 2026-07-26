@@ -151,7 +151,7 @@
 
 .item-role-title {
     margin: 0;
-    font-size: clamp(1.1rem, 3cqi, 1.4rem);
+    font-size: var(--type-role, 1.25rem);
     font-weight: 800;
     color: var(--font-primary-color);
     letter-spacing: 0.02em;
@@ -161,7 +161,7 @@
 
 .item-company-subtitle {
     margin: 0;
-    font-size: clamp(0.85rem, 2cqi, 1rem);
+    font-size: var(--type-role-sub, 0.95rem);
     font-weight: 500;
     color: var(--font-highlight-color);
     letter-spacing: 0.05em;
@@ -224,7 +224,7 @@
 }
 
 .experience-desc li {
-    font-size: 0.95rem;
+    font-size: var(--type-desc, 0.95rem);
     line-height: 1.6;
     color: var(--font-primary-color);
     opacity: 0.9;

@@ -23,6 +23,28 @@ body:has(.app-layout) {
 }
 
 .site-pane {
+  /* Fluid scale: ~1000px pane ≈ comfortable Alfred-open desktop */
+  --type-hero-name: clamp(1.65rem, 1.1rem + 1.8cqi, 2.2rem);
+  --type-hero-brief: clamp(1.15rem, 0.9rem + 1.1cqi, 1.35rem);
+  --type-hero-summary: clamp(0.95rem, 0.85rem + 0.4cqi, 1.05rem);
+  --type-body: clamp(0.92rem, 0.85rem + 0.35cqi, 1.05rem);
+  --type-subhead: clamp(1rem, 0.85rem + 0.7cqi, 1.15rem);
+  --type-role: clamp(1.05rem, 0.9rem + 0.9cqi, 1.25rem);
+  --type-role-sub: clamp(0.8rem, 0.7rem + 0.5cqi, 0.95rem);
+  --type-desc: clamp(0.85rem, 0.78rem + 0.35cqi, 0.95rem);
+  --type-logo: clamp(1.6rem, 1.2rem + 1.4cqi, 2.2rem);
+  --size-portrait: clamp(200px, 18cqi + 80px, 320px);
+  --space-stack: clamp(0.85rem, 0.5rem + 1cqi, 1.5rem);
+  --space-about-gap: clamp(1.25rem, 0.75rem + 1.5cqi, 3rem);
+  --skill-tab-pad-y: clamp(0.55rem, 0.35rem + 0.5cqi, 1rem);
+  --skill-tab-pad-x: clamp(0.75rem, 0.5rem + 0.7cqi, 1.5rem);
+  --skill-pill-pad-y: clamp(0.4rem, 0.3rem + 0.3cqi, 0.6rem);
+  --skill-pill-pad-x: clamp(0.75rem, 0.55rem + 0.5cqi, 1.2rem);
+  --cert-card-pad: clamp(1rem, 0.7rem + 0.8cqi, 1.5rem);
+  --cert-card-min-h: clamp(340px, 28cqi + 120px, 440px);
+  --cert-grid-min: clamp(240px, 22cqi + 40px, 280px);
+  --nav-item-pad-x: clamp(0.25rem, 0.15rem + 0.3cqi, 0.5rem);
+
   min-width: 0;
   height: 100%;
   overflow-x: hidden;

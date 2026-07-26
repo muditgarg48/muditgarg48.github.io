@@ -240,6 +240,7 @@
     margin: 0;
     color: var(--font-primary-color);
     letter-spacing: -0.02em;
+    font-size: var(--type-role, 1.15rem);
     /* text-transform: uppercase; */
 }
 
@@ -327,7 +328,7 @@
 
 /* Content & Data Tiers */
 .item-desc {
-    font-size: 0.95rem;
+    font-size: var(--type-desc, 0.95rem);
     line-height: 1.6;
     color: var(--font-primary-color);
     opacity: 0.9;
@@ -398,7 +399,7 @@
 }
 
 .list-planned-tasks li {
-    font-size: 0.8rem;
+    font-size: var(--type-desc, 0.85rem);
     color: var(--font-primary-color);
     opacity: 0.8;
     margin-bottom: 4px;
@@ -515,6 +516,6 @@
 /* Responsive adjustments */
 @container site (max-width: 600px) {
     .item-name {
-        font-size: 1.25rem;
+        font-size: var(--type-role, 1.1rem);
     }
 }

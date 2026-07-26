@@ -25,7 +25,7 @@
 }
 
 #name {
-    font-size: 2.2rem;
+    font-size: var(--type-hero-name, 2.2rem);
     font-weight: 500;
     font-family: var(--font-style); /* Montserrat */
     text-transform: none;
@@ -42,14 +42,13 @@
 }
 
 #brief {
-    font-size: 1.5rem;
+    font-size: var(--type-hero-brief, 1.35rem);
     color: var(--font-secondary-color);
 }
 
 #summary {
     color: var(--font-secondary-color);
-    font-size: 1.05rem;
-    /* Consistent with other sections */
+    font-size: var(--type-hero-summary, 1.05rem);
 }
 
 #contact {
@@ -73,7 +72,7 @@
     display: flex;
     text-decoration: none;
     align-items: center;
-    padding: 0.8rem 1.5rem;
+    padding: clamp(0.55rem, 0.4rem + 0.4cqi, 0.8rem) clamp(1rem, 0.75rem + 0.7cqi, 1.5rem);
     border: none;
     background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--font-secondary-color) 100%);
     color: var(--bg-color);
