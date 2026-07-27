@@ -16,7 +16,7 @@ import { SITE_SCROLL_ID, useSitePaneWidth } from "../../hooks/sitePane";
 
 export { SITE_SCROLL_ID };
 
-const NAV_MOBILE_BREAKPOINT = 1100;
+const NAV_MOBILE_BREAKPOINT = 920;
 
 const RECRUITER_NAV_ITEMS = [
     { content: "ABOUT", dest: "about-section" },
@@ -111,7 +111,6 @@ const DesktopNavItem = ({ content, dest }) => (
             stagger={0.1}
             timing={0.5}
             className="rotating-text"
-            styles={{ fontSize: '100px', whiteSpace: 'pre' }}
         />
     </ScrollLink>
 );
@@ -123,9 +122,8 @@ const DesktopBlogItem = () => (
             stagger={0.1}
             timing={0.5}
             className="rotating-text"
-            styles={{ fontSize: '100px', whiteSpace: 'pre' }}
         />
-        <AnimatedIcon icon={redirect_icon} class_name="nocss" icon_size={16} />
+        <AnimatedIcon icon={redirect_icon} class_name="nocss" icon_size={14} />
     </Link>
 );
 

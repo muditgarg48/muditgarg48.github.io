@@ -23,6 +23,8 @@ body:has(.app-layout) {
   --type-role-sub: clamp(0.8rem, 0.7rem + 0.5cqi, 0.95rem);
   --type-desc: clamp(0.85rem, 0.78rem + 0.35cqi, 0.95rem);
   --type-logo: clamp(1.6rem, 1.2rem + 1.4cqi, 2.2rem);
+  /* Between mode-toggle (0.72rem) and fullscreen nav (~0.85–1.05rem) */
+  --type-nav: clamp(0.72rem, 0.68rem + 0.35cqi, 0.82rem);
   --size-portrait: clamp(200px, 18cqi + 80px, 320px);
   --space-stack: clamp(0.85rem, 0.5rem + 1cqi, 1.5rem);
   --space-about-gap: clamp(1.25rem, 0.75rem + 1.5cqi, 3rem);
@@ -33,7 +35,7 @@ body:has(.app-layout) {
   --cert-card-pad: clamp(1rem, 0.7rem + 0.8cqi, 1.5rem);
   --cert-card-min-h: clamp(340px, 28cqi + 120px, 440px);
   --cert-grid-min: clamp(240px, 22cqi + 40px, 280px);
-  --nav-item-pad-x: clamp(0.25rem, 0.15rem + 0.3cqi, 0.5rem);
+  --nav-item-pad-x: clamp(0.2rem, 0.1rem + 0.25cqi, 0.4rem);
 
   width: 100%;
   height: 100%;
