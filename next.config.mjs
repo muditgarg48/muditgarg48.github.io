@@ -7,6 +7,7 @@ const nextConfig = {
     unoptimized: true,
   },
   transpilePackages: ["@lordicon/react"],
+  allowedDevOrigins: ['192.168.1.100'],
 };
 
 export default nextConfig;
