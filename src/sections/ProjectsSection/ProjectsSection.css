@@ -125,7 +125,7 @@
 }
 
 #projects-section .view-label {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--font-highlight-color);
     text-transform: uppercase;
     font-weight: 700;
@@ -299,7 +299,7 @@
 
 /* Pills */
 .category-pill {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     padding: 2.5px 10px;
     border-radius: 50px;
     text-transform: uppercase;
@@ -351,7 +351,7 @@
 }
 
 .kpi-pill {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--font-highlight-color);
     background: rgba(var(--font-highlight-color-rgb), 0.05);
@@ -368,7 +368,7 @@
 }
 
 .tech-pill {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--font-secondary-color);
     background: rgba(255, 255, 255, 0.03);
@@ -500,7 +500,7 @@
 .commit-details {
     display: flex;
     justify-content: space-between;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--font-secondary-color);
 }

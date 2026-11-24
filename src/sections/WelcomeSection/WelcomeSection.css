@@ -74,7 +74,7 @@
     align-items: center;
     padding: clamp(0.55rem, 0.4rem + 0.4cqi, 0.8rem) clamp(1rem, 0.75rem + 0.7cqi, 1.5rem);
     border: none;
-    background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--font-secondary-color) 100%);
+    background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--secondary-color) 100%);
     color: var(--bg-color);
     font-weight: bolder;
     border-radius: 50px;
@@ -104,7 +104,7 @@
 #resume_btn:hover {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 12px 40px color-mix(in srgb, var(--primary-color) 60%, transparent), 0 0 20px color-mix(in srgb, var(--primary-color) 30%, transparent);
-    background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--font-secondary-color) 100%);
+    background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--secondary-color) 100%);
 }
 
 #resume_btn:active {

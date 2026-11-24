@@ -2,6 +2,7 @@
 
 import './WelcomeSection.css';
 import { TypeAnimation } from 'react-type-animation';
+import { useReducedMotion } from 'framer-motion';
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import linkedin_icon_recruiter from "../../assets/icons/recruiter/linkedin.json";
 import gmail_icon_recruiter from "../../assets/icons/recruiter/gmail.json";
@@ -17,6 +18,7 @@ import ExternalLinkIcon from "../../assets/svg/ExternalLinkIcon";
 const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) => {
     const { isFreelance: contextIsFreelance } = useSiteMode();
     const isFreelance = forcedMode ? (forcedMode === 'freelance') : contextIsFreelance;
+    const reduceMotion = useReducedMotion();
 
     const activeData = isFreelance ? freelance_welcome_data : welcome_data;
     const { brief, summary, ctaText, ctaLink } = activeData || {};
@@ -40,12 +42,16 @@ const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) =>
     return (
         <div id="welcome-section">
             <div className="welcome-content">
-                <TypeAnimation
-                    sequence={hello_sequence_v2}
-                    speed={50}
-                    repeat={Infinity}
-                    className="hello"
-                />
+                {reduceMotion ? (
+                    <span className="hello">Hello!</span>
+                ) : (
+                    <TypeAnimation
+                        sequence={hello_sequence_v2}
+                        speed={50}
+                        repeat={Infinity}
+                        className="hello"
+                    />
+                )}
                 <h1 id="name">My name is <span>Mudit Garg</span></h1>
                 <div id="brief">
                     {brief}

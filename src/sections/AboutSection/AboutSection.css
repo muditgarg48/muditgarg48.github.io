@@ -97,7 +97,7 @@
 
 .basic_info_title {
     text-transform: uppercase;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     letter-spacing: 0.08em;
     color: var(--font-secondary-color);
 }
@@ -110,7 +110,7 @@
 
 .basic_info_footer {
     color: var(--font-secondary-color);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     opacity: 0.8;
 }
 
@@ -197,7 +197,7 @@
     content: "";
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, var(--font-secondary-color), transparent);
+    background: linear-gradient(90deg, var(--secondary-color), transparent);
     opacity: 0.4;
 }
 
@@ -597,7 +597,7 @@
 }
 
 .credential-tag {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     padding: 0.4rem 0.8rem;

@@ -24,7 +24,7 @@ body:has(.app-layout) {
   --type-desc: clamp(0.85rem, 0.78rem + 0.35cqi, 0.95rem);
   --type-logo: clamp(1.6rem, 1.2rem + 1.4cqi, 2.2rem);
   /* Between mode-toggle (0.72rem) and fullscreen nav (~0.85–1.05rem) */
-  --type-nav: clamp(0.72rem, 0.68rem + 0.35cqi, 0.82rem);
+  --type-nav: clamp(0.75rem, 0.68rem + 0.35cqi, 0.82rem);
   --size-portrait: clamp(200px, 18cqi + 80px, 320px);
   --space-stack: clamp(0.85rem, 0.5rem + 1cqi, 1.5rem);
   --space-about-gap: clamp(1.25rem, 0.75rem + 1.5cqi, 3rem);

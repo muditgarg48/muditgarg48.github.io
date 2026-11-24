@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useSiteMode } from '../../context/SiteModeContext';
 import { useScrollToTopOnModeSwitch } from '../../components/NavBar/NavBar';
@@ -62,6 +62,7 @@ const HomePage = ({
 
   useScrollToTopOnModeSwitch();
 
+  // Keep the loader up until the page is ready in the browser
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -163,6 +164,7 @@ const HomePage = ({
   }
 
   return (
+    <MotionConfig reducedMotion="user">
     <div
       className={[
         'app-layout',
@@ -265,6 +267,7 @@ const HomePage = ({
         )}
       </div>
     </div>
+    </MotionConfig>
   );
 };
 

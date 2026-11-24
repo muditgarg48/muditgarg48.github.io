@@ -13,7 +13,7 @@
   overflow: hidden;
   border: none;
   border-radius: 12px 0 0 12px;
-  background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--font-secondary-color) 100%);
+  background: linear-gradient(135deg, var(--font-primary-color) 0%, var(--secondary-color) 100%);
   color: var(--bg-color);
   font-family: var(--font-style);
   font-size: 0.8125rem;

@@ -110,7 +110,7 @@
 }
 
 .category-pill {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     padding: 2.5px 10px;
     border-radius: 50px;
     text-transform: uppercase;
@@ -240,7 +240,7 @@
 }
 
 .tech-pill {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--font-secondary-color);
     background: rgba(255, 255, 255, 0.03);
