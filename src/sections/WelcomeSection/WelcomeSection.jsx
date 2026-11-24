@@ -2,7 +2,7 @@
 
 import './WelcomeSection.css';
 import { TypeAnimation } from 'react-type-animation';
-import { useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import AnimatedIcon from "../../components/AnimatedIcon/AnimatedIcon";
 import linkedin_icon_recruiter from "../../assets/icons/recruiter/linkedin.json";
 import gmail_icon_recruiter from "../../assets/icons/recruiter/gmail.json";
@@ -14,6 +14,13 @@ import github_icon_freelance from "../../assets/icons/freelance/github.json";
 import hello_sequence from "../../assets/data/differentHellos.json";
 import { useSiteMode } from '../../context/SiteModeContext';
 import ExternalLinkIcon from "../../assets/svg/ExternalLinkIcon";
+
+// Hero lines arrive one after another, once
+const heroContainer = { hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } };
+const heroItem = {
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
 
 const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) => {
     const { isFreelance: contextIsFreelance } = useSiteMode();
@@ -41,7 +48,8 @@ const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) =>
 
     return (
         <div id="welcome-section">
-            <div className="welcome-content">
+            <motion.div className="welcome-content" variants={heroContainer} initial="hidden" animate="show">
+                <motion.div variants={heroItem}>
                 {reduceMotion ? (
                     <span className="hello">Hello!</span>
                 ) : (
@@ -52,16 +60,17 @@ const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) =>
                         className="hello"
                     />
                 )}
-                <h1 id="name">My name is <span>Mudit Garg</span></h1>
-                <div id="brief">
+                </motion.div>
+                <motion.h1 id="name" variants={heroItem}>My name is <span>Mudit Garg</span></motion.h1>
+                <motion.div id="brief" variants={heroItem}>
                     {brief}
-                </div>
+                </motion.div>
                 &nbsp;
-                <div id="summary">
+                <motion.div id="summary" variants={heroItem}>
                     {summary}
-                </div>
+                </motion.div>
                 &nbsp;
-                <div id="contact">
+                <motion.div id="contact" variants={heroItem}>
                     <div id="contact_icons">
                         <AnimatedIcon icon={linkedin_icon} link="https://linkedin.com/in/muditgarg48" />
                         <AnimatedIcon icon={github_icon} link="https://github.com/muditgarg48" />
@@ -72,8 +81,8 @@ const WelcomeSection = ({ welcome_data, freelance_welcome_data, forcedMode }) =>
                         &nbsp;
                         {ctaText}
                     </a>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </div>
     );
 }

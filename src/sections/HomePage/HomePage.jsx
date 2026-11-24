@@ -13,6 +13,7 @@ import Footer from '../Footer/Footer';
 import FloatingButton from '../../components/FloatingButton/FloatingButton';
 import AlfredDock from '../../components/AlfredDock/AlfredDock';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
+import Reveal from '../../components/Reveal/Reveal';
 import './HomePage.css';
 
 const ExperienceSection = dynamic(() => import('../ExperienceSection/ExperienceSection'));
@@ -205,17 +206,25 @@ const HomePage = ({
               exit="exit"
               transition={transition}
             >
-              <WorksSection projects={freelanceProjectsData} />
-              <AboutSection
-                facts={factsData}
-                skills={skillsData}
-                about_me={aboutMeData}
-                freelance_about_me={freelanceAboutData}
-                freelance_services={freelanceServicesData}
-                forcedMode="freelance"
-              />
-              <ProcessSection steps={freelanceProcessData} />
-              <TestimonialsSection testimonials={freelanceTestimonialsData} />
+              <Reveal>
+                <WorksSection projects={freelanceProjectsData} />
+              </Reveal>
+              <Reveal>
+                <AboutSection
+                  facts={factsData}
+                  skills={skillsData}
+                  about_me={aboutMeData}
+                  freelance_about_me={freelanceAboutData}
+                  freelance_services={freelanceServicesData}
+                  forcedMode="freelance"
+                />
+              </Reveal>
+              <Reveal>
+                <ProcessSection steps={freelanceProcessData} />
+              </Reveal>
+              <Reveal>
+                <TestimonialsSection testimonials={freelanceTestimonialsData} />
+              </Reveal>
             </motion.div>
           ) : (
             <motion.div
@@ -227,18 +236,26 @@ const HomePage = ({
               exit="exit"
               transition={transition}
             >
-              <AboutSection
-                facts={factsData}
-                skills={skillsData}
-                about_me={aboutMeData}
-                forcedMode="recruiter"
-              />
-              <ExperienceSection
-                experience_data={experienceData}
-                education_history={educationHistoryData}
-              />
-              <ProjectsSection projects_data={projectsData} />
-              <CertificatesSection certificates_data={certificatesData} />
+              <Reveal>
+                <AboutSection
+                  facts={factsData}
+                  skills={skillsData}
+                  about_me={aboutMeData}
+                  forcedMode="recruiter"
+                />
+              </Reveal>
+              <Reveal>
+                <ExperienceSection
+                  experience_data={experienceData}
+                  education_history={educationHistoryData}
+                />
+              </Reveal>
+              <Reveal>
+                <ProjectsSection projects_data={projectsData} />
+              </Reveal>
+              <Reveal>
+                <CertificatesSection certificates_data={certificatesData} />
+              </Reveal>
             </motion.div>
           )}
         </AnimatePresence>
