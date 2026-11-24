@@ -19,7 +19,7 @@ export const MODE_ASSETS = {
   freelance: {
     favicon: '/favicon-freelance.ico',
     appleTouchIcon: '/logo192-freelance.png',
-    themeColor: '#2d5a3d',
-    primaryColor: '#2d5a3d',
+    themeColor: '#00679a',
+    primaryColor: '#00679a',
   },
 };

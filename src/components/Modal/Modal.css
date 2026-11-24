@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(8, 27, 41, 0);
+  background-color: rgba(10, 18, 25, 0);
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
   z-index: 2000;
@@ -53,7 +53,7 @@
   }
   to {
     opacity: 1;
-    background-color: rgba(8, 27, 41, 0.7);
+    background-color: rgba(10, 18, 25, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
@@ -62,13 +62,13 @@
 @keyframes overlayFadeOut {
   from {
     opacity: 1;
-    background-color: rgba(8, 27, 41, 0.7);
+    background-color: rgba(10, 18, 25, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
   to {
     opacity: 0;
-    background-color: rgba(8, 27, 41, 0);
+    background-color: rgba(10, 18, 25, 0);
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
   }

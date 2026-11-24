@@ -1,19 +1,21 @@
 :root,
 [data-mode="recruiter"] {
-  --primary-color: #00abf0;
-  --secondary-color: #00acf0b4;
-  --bg-color: #081b29;
-  --text-color: #ededed;
-  --card-bg: #112240;
-  --nav-bg: #081b29ee;
+  /* Night version of the brand. Accent is the college blue (hue 197). Contrast is vs bg / card. */
+  --primary-color: #00abf0;        /* accent: 7.26:1 / 6.38:1 */
+  --secondary-color: #00abf0b4;    /* translucent accent for fills, gradients, scrollbar */
+  --bg-color: #0a1219;             /* surface */
+  --text-color: #e6edf2;           /* content: 15.95:1 / 14.03:1 */
+  --card-bg: #132029;              /* card */
+  --nav-bg: #0a1219ee;
 
   --font-primary-color: var(--primary-color);
-  --font-secondary-color: #8fa9bd; /* solid: 7.15:1 on bg, 6.47:1 on card */
-  --font-highlight-color: #FFF5EE;
-  --hello-color: yellow;
+  --font-secondary-color: #8fa3b3; /* muted: 7.24:1 / 6.36:1 */
+  --font-highlight-color: #f4f8fb;
+  --hello-color: #ffc857;          /* signal: 12.26:1 / 10.78:1 */
 
-  /* Next.js Font Variables */
+  /* Fonts */
   --font-style: var(--font-montserrat), sans-serif;
+  --heading-font-style: var(--font-archivo), sans-serif;
   --logo-font-style: var(--font-pacifico);
   --special-font-style: var(--font-carpenter);
   --hello-font-style: var(--font-playwrite-ar), cursive;
@@ -22,17 +24,18 @@
 }
 
 [data-mode="freelance"] {
-  --primary-color: #2d5a3d;
-  --secondary-color: #2d5a3d99;
-  --bg-color: #f8f6f1;
-  --text-color: #1c2b1e;
-  --card-bg: #eae6dc;
-  --nav-bg: #f8f6f1ee;
+  /* Day version of the brand: college blue deepened to read on white. Contrast is vs bg / card. */
+  --primary-color: #00679a;        /* accent: 5.74:1 / 5.19:1, white text on it 6.16:1 */
+  --secondary-color: #00679a99;
+  --bg-color: #f6f7f5;             /* surface */
+  --text-color: #13202a;           /* content: 15.41:1 / 13.94:1 */
+  --card-bg: #e9ecec;              /* card */
+  --nav-bg: #f6f7f5ee;
 
-  --font-primary-color: #2d5a3d;
-  --font-secondary-color: #3f6a4f; /* solid: 5.74:1 on bg, 4.98:1 on card */
-  --font-highlight-color: #1c2b1e;
-  --hello-color: #c45720;
+  --font-primary-color: #00679a;
+  --font-secondary-color: #4a5a66; /* muted: 6.63:1 / 6.00:1 */
+  --font-highlight-color: #13202a;
+  --hello-color: #b4471f;          /* signal: 5.06:1 / 4.58:1 */
 }
 
 body {
