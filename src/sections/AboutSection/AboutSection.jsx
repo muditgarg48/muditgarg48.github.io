@@ -1,5 +1,6 @@
 import { useState, memo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import './AboutSection.css';
 import { useSiteMode } from '../../context/SiteModeContext';
 
@@ -23,6 +24,9 @@ import skillset_icon from "../../assets/icons/recruiter/skillset.json";
 import services_offered_icon from "../../assets/icons/freelance/services_offered.json";
 import credentials_icon from "../../assets/icons/freelance/credentials.json";
 import { getSitePaneWidth } from "../../hooks/sitePane";
+
+// WebGL graph: client-only, and kept out of the main bundle.
+const SkillGraph = dynamic(() => import("../../components/SkillGraph/SkillGraph"), { ssr: false });
 
 function scrollActiveTabIntoView(tabsContainer) {
     if (!tabsContainer || getSitePaneWidth() > 800) return;
@@ -409,61 +413,14 @@ const DidYouKnowSection = ({ facts }) => {
     );
 }
 
-const SkillSection = memo(({ skills }) => {
-    const categories = Object.keys(skills);
-    const [activeCategory, setActiveCategory] = useState(categories[0] || '');
-    const tabsRef = useRef(null);
-
-    useEffect(() => {
-        scrollActiveTabIntoView(tabsRef.current);
-    }, [activeCategory]);
-
-    return (
-        <div id="skills-section-wrapper">
-            <h3 className="about-subheading">
-                <AnimatedIcon icon={skillset_icon} link="" icon_size={24} />
-                MY SKILLSET
-            </h3>
-            <div id="skills-layout-container">
-                <div className="skills-vertical-tabs" ref={tabsRef}>
-                    {categories.map((cat) => (
-                        <div
-                            key={cat}
-                            className={`skill-tab-item ${activeCategory === cat ? 'active' : ''}`}
-                            onClick={() => setActiveCategory(cat)}
-                        >
-                            <span>{cat}</span>
-                            {activeCategory === cat && (
-                                <motion.div layoutId="skill-tab-indicator" className="skill-tab-indicator" />
-                            )}
-                        </div>
-                    ))}
-                </div>
-
-                <div className="skills-content-panel">
-                    <AnimatePresence mode="popLayout">
-                        <motion.div
-                            key={activeCategory}
-                            initial={{ opacity: 0, x: 10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -10 }}
-                            transition={{ duration: 0.2 }}
-                            className="skills-grid"
-                        >
-                            {activeCategory && skills[activeCategory] && skills[activeCategory].map((skill, index) => (
-                                <div key={skill.name || index} className="skill-minimal-pill">
-                                    <div className="skill-icon-wrapper">
-                                        <img src={skill.icon} alt={skill.name} loading="lazy" />
-                                    </div>
-                                    <span className="skill-pill-name">{skill.name}</span>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
-            </div>
-        </div>
-    );
-});
+const SkillSection = memo(({ skills }) => (
+    <div id="skills-section-wrapper">
+        <h3 className="about-subheading">
+            <AnimatedIcon icon={skillset_icon} link="" icon_size={24} />
+            MY SKILLSET
+        </h3>
+        <SkillGraph graph={skills} />
+    </div>
+));
 
 export default AboutSection;

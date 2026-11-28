@@ -1,0 +1,279 @@
+/* Fluid sizing, scaled like the rest of the site (cqi = the `site` container; inside the full-screen popup there's
+   no container, so cqi falls back to the viewport). Site tokens get fallbacks because the popup sits outside
+   .site-pane, where they're defined. */
+.skill-graph,
+.skill-graph-placeholder {
+    --sg-control: clamp(34px, 30px + 0.6cqi, 38px);   /* toolbar buttons / search height */
+    --sg-gizmo: calc(var(--sg-control) + 14px);
+    --sg-text: var(--type-nav, clamp(0.75rem, 0.68rem + 0.35cqi, 0.82rem));
+    --sg-small: clamp(0.7rem, 0.66rem + 0.15cqi, 0.78rem);
+    --sg-height: clamp(400px, 260px + 36cqi, 620px);  /* ~620px on desktop, ~410px on a phone */
+    --sg-inset: clamp(0.6rem, 0.4rem + 0.6cqi, 1rem);
+    --sg-gap: clamp(0.35rem, 0.25rem + 0.3cqi, 0.5rem);
+}
+
+.skill-graph {
+    position: relative; /* anchors the toolbar and axis button */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.skill-graph-canvas {
+    position: relative; /* GraphCanvas fills this absolutely */
+    height: var(--sg-height);
+    border-radius: 20px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--primary-color) 8%, transparent) 0%, transparent 70%);
+    cursor: grab;
+}
+
+.skill-graph-canvas:active {
+    cursor: grabbing;
+}
+
+/* Under the canvas (it comes first in the DOM). */
+.skill-graph-hint {
+    order: 1;
+    margin: 0.6rem 0 0;
+    font-size: var(--sg-small);
+    line-height: 1.45;
+    color: var(--font-secondary-color);
+    opacity: 0.7;
+}
+
+.skill-graph.is-fullscreen .skill-graph-hint {
+    padding: 0 var(--sg-inset);
+}
+
+/* Top-right controls over the canvas: search, 2D/3D, expand all, full screen. */
+.skill-graph-toolbar {
+    position: absolute;
+    top: var(--sg-inset);
+    right: var(--sg-inset);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: var(--sg-gap);
+}
+
+.skill-graph-search,
+.skill-graph-dims,
+.skill-graph-icon-btn {
+    height: var(--sg-control);
+    box-sizing: border-box;
+    border: 1px solid color-mix(in srgb, var(--font-secondary-color) 30%, transparent);
+    background: color-mix(in srgb, var(--bg-color) 70%, transparent);
+    backdrop-filter: blur(10px);
+    color: var(--font-secondary-color);
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.skill-graph-search {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0 0.85em;
+    border-radius: 50px;
+    font-size: var(--sg-text);
+    cursor: text;
+}
+
+.skill-graph-search svg {
+    flex-shrink: 0;
+}
+
+.skill-graph-search:focus-within {
+    border-color: var(--font-primary-color);
+    color: var(--font-primary-color);
+}
+
+.skill-graph-search.no-match {
+    border-color: color-mix(in srgb, #f87171 60%, transparent);
+}
+
+.skill-graph-search input {
+    width: clamp(150px, 120px + 8cqi, 200px);
+    border: none;
+    outline: none;
+    background: none;
+    color: var(--font-highlight-color);
+    font: inherit;
+    font-size: var(--sg-text);
+}
+
+.skill-graph-search input::placeholder {
+    color: var(--font-secondary-color);
+    opacity: 0.8;
+}
+
+.skill-graph-dims {
+    display: flex;
+    padding: 3px;
+    border-radius: 50px;
+}
+
+.skill-graph-dims button {
+    padding: 0 0.85em;
+    border: none;
+    border-radius: 50px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: var(--sg-small);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.skill-graph-dims button.on {
+    background: color-mix(in srgb, var(--primary-color) 22%, transparent);
+    color: var(--font-highlight-color);
+}
+
+.skill-graph-icon-btn {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: var(--sg-control);
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.skill-graph-icon-btn:hover {
+    color: var(--font-primary-color);
+    border-color: var(--font-primary-color);
+}
+
+/* Under the toolbar, centred on the full-screen button. */
+.skill-graph-gizmo {
+    position: absolute;
+    top: calc(var(--sg-inset) + var(--sg-control) + 0.5rem);
+    right: calc(var(--sg-inset) - (var(--sg-gizmo) - var(--sg-control)) / 2);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: var(--sg-gizmo);
+    height: var(--sg-gizmo);
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* The bubble only appears on hover/focus, so at rest it's just the axes. */
+.skill-graph-gizmo:hover,
+.skill-graph-gizmo:focus-visible {
+    background: color-mix(in srgb, var(--bg-color) 70%, transparent);
+    border-color: color-mix(in srgb, var(--font-secondary-color) 30%, transparent);
+    backdrop-filter: blur(10px);
+}
+
+.skill-graph-gizmo-tip {
+    position: absolute;
+    right: calc(100% + 0.5rem); /* opens leftwards, into the canvas */
+    top: 50%;
+    translate: 0 -50%;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--bg-color) 85%, transparent);
+    border: 1px solid color-mix(in srgb, var(--font-secondary-color) 25%, transparent);
+    color: var(--font-highlight-color);
+    font-size: var(--sg-small);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.skill-graph-gizmo:hover .skill-graph-gizmo-tip,
+.skill-graph-gizmo:focus-visible .skill-graph-gizmo-tip {
+    opacity: 1;
+}
+
+/* Keeps the section's height (canvas + hint) while the graph lives in the popup. */
+.skill-graph-placeholder {
+    height: calc(var(--sg-height) + 2rem);
+}
+
+.skill-graph-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    padding: 3vh 3vw;
+    background: color-mix(in srgb, var(--bg-color) 75%, transparent);
+    backdrop-filter: blur(6px);
+    animation: skill-graph-fade 0.25s ease;
+}
+
+.skill-graph.is-fullscreen {
+    height: 100%;
+    padding-bottom: var(--sg-inset);
+    box-sizing: border-box;
+    border-radius: 20px;
+    background: var(--bg-color);
+    border: 1px solid color-mix(in srgb, var(--font-secondary-color) 20%, transparent);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.skill-graph.is-fullscreen .skill-graph-canvas {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+}
+
+@keyframes skill-graph-fade {
+    from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skill-graph-backdrop { animation: none; }
+}
+
+/* Narrow screens (class set from JS so it also applies inside the full-screen popup, which is outside the
+   `site` container): the toolbar becomes one row above the graph instead of covering it. */
+.skill-graph.is-narrow .skill-graph-toolbar {
+    position: static;
+    margin-bottom: 0.6rem;
+}
+
+.skill-graph.is-narrow .skill-graph-search {
+    flex: 1;
+    min-width: 0;
+    padding: 0 0.7em;
+}
+
+.skill-graph.is-narrow .skill-graph-search input {
+    width: 100%;
+    min-width: 0;
+}
+
+.skill-graph.is-narrow .skill-graph-dims button {
+    padding: 0 0.6em;
+}
+
+/* Axis button: just inside the graph's top-right corner, under the toolbar row. */
+.skill-graph.is-narrow .skill-graph-gizmo {
+    top: calc(var(--sg-control) + 0.6rem + 0.25rem);
+    right: 0;
+}
+
+.skill-graph.is-narrow.is-fullscreen .skill-graph-toolbar {
+    padding: var(--sg-inset) var(--sg-inset) 0;
+}
+
+.skill-graph.is-narrow.is-fullscreen .skill-graph-gizmo {
+    top: calc(var(--sg-inset) + var(--sg-control) + 0.6rem + 0.25rem);
+    right: var(--sg-inset);
+}
+
+@container site (max-width: 1000px) {
+    /* toolbar row + canvas + two-line hint */
+    .skill-graph-placeholder {
+        height: calc(var(--sg-control) + 0.6rem + var(--sg-height) + 3rem);
+    }
+}

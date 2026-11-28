@@ -23,10 +23,14 @@
     "react-scroll": "^1.9.3",
     "react-tabs": "^6.1.1",
     "react-type-animation": "^3.2.0",
+    "reagraph": "^4.32.0",
     "rotating-text": "^1.0.4"
   },
   "overrides": {
-    "rotating-text": { "react": "$react", "react-dom": "$react-dom" }
+    "rotating-text": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   },
   "scripts": {
     "dev": "next dev -p 5172",

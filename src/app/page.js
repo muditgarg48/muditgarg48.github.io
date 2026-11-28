@@ -60,7 +60,7 @@ export default async function Page() {
       certificatesData={data.certificates.certificates}
       experienceData={data.experience.experiences}
       educationHistoryData={data.education.educations}
-      skillsData={data.skills.skills}
+      skillsData={data.skills}
       aboutMeData={data.about.about}
       welcomeData={data.welcome.welcome}
       // Freelance data
